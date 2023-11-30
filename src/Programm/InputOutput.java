@@ -7,9 +7,8 @@ import assets.*;
 public class InputOutput {
 
     public static void startSimulation() {
-        System.out.println("Hallo liebes Programm!");
+        //System.out.println("Hallo liebes Programm!");
     }
-
 
     //@author Louis
     public static void startupHeader() {
@@ -25,11 +24,11 @@ public class InputOutput {
 
             System.out.print("\n\n--Loading Simulation--");
             Thread.sleep(800);
-            System.out.print(".");
+            System.out.print("..........................");
             Thread.sleep(500);
-            System.out.print("..");
+            System.out.print("..........");
             Thread.sleep(1000);
-            System.out.print("...");
+            System.out.print(".................");
             Thread.sleep(600);
             System.out.print("finshed");
             Thread.sleep(800);
@@ -37,12 +36,13 @@ public class InputOutput {
             System.out.print("type in 'help' for information");
             System.out.print("\n\n");
         } catch (Exception e) {
+
         }
 
     }
 
-    public void PrintHelp() {
-        System.out.println("----------------- HELP -----------------");
+    public static void PrintHelp() {
+        System.out.println("--------------- HELP -----------------");
         System.out.println("help 				 = (This window)");
         System.out.println("overview  	 		 = open overview");
         System.out.println("oilrig [oilrig ID] 	 = open oilrig");
@@ -57,49 +57,66 @@ public class InputOutput {
 		help, overview, oilrig, ship, move, evacuate, exit;
 	}*/
 
-    public void InputHandler() {
-        Scanner scannerInputHandler = new Scanner(System.in);
-        try {
-            String input = scannerInputHandler.nextLine();
-            String[] arguments = input.split(" ");
 
-            switch(arguments[0]) {
-                case "help":
-                    PrintHelp();
-                    break;
-                case "overview":
-                    break;
-                //assets.Oilrig.GetInformationOverview();
-                case "oilrig": //@autor Jonas
-                    int id = Integer.parseInt(arguments[1]);
-                    if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1-4 Infos werden ausgegeben
-                        Oilrig or = getPlatByID(id);
-                        if (or == null) {							//immer lieber überprüfen
-                            System.out.println("Oilrig not found!");
+
+    public static void InputHandler() {
+        Scanner scanner = new Scanner(System.in);
+        String input = "";
+        while(true) {
+            try {
+                input = scanner.nextLine();
+                String[] arguments = input.split(" ");
+                switch (arguments[0]) {
+                    case "help":
+                        PrintHelp();
+                        break;
+                    case "overview":
+                        for (int i = 1; i < 5; i++) {
+                            Oilrig or = getPlatByID(i);
+                            if (or == null) {                            //immer lieber überprüfen
+                                System.out.println("Oilrig not found!");
+                            }
+                            System.out.println(or.GetInformationOverview());
                         }
-                        String result = or.GetInformationOilrig();
-                    }
-                    else System.out.println("Wrong ID! Please use an ID between 1 and 4.");
+                        break;
+                    case "oilrig": //@autor Jonas
+                        int id = Integer.parseInt(arguments[1]);
+                        if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1, 2, 3, oder 4 Infos werden ausgegeben
+                            Oilrig or = getPlatByID(id);
+                            if (or == null) {                            //immer lieber überprüfen
+                                System.out.println("Oilrig not found!");
+                            }
+                            System.out.println(or.GetInformationOilrig());
+                        } else System.out.println("Wrong ID! Please use an ID between 1 and 4.");
+                        break;
+                    case "ship":// + id:
 
-                    break;
-                //assets.Oilrig.GetInformationOilrig(id);
-                case "ship":// + id:
-                    break;
-                //assets.Ship.GetInformationShip(id);
-                case "move":// + id:
-                    break;
-                //assets.Ship.move(id);
-                case "evacuate":// + id:
-                    break;
-                //assets.Oilrig.evacuate(id)
-                case "exit":
-                    ExitProgramm();
-                    break;
+                        break;
+                    case "move":// + id:
+                        break;
+                    case "evacuate":// + id
+                        int ip = Integer.parseInt(arguments[1]);
+                        if (ip == 1 || ip == 2 || ip == 3 || ip == 4) { //Oilrig 1, 2, 3, oder 4 Infos werden ausgegeben
+                            Oilrig or = getPlatByID(ip);
+                            if (or == null) {                            //immer lieber überprüfen
+                                System.out.println("Oilrig not found!");
+                            }
+                            //assets.Oilrig.Evacuate(or);
+                        } else System.out.println("Wrong ID! Please use an ID between 1 and 4.");
+                        break;
+                    case "exit":
+                        System.exit(0);
+                        System.out.println("System32 wurde geschlossen");
+                        break;
+                    default:
+                        System.out.println("This Command does not exist ");
+                        break;
+                }
+
+            } catch (Exception e) {
+
             }
-        } catch (Exception e) {
-
         }
-        scannerInputHandler.close();
     }
 
     public void ExitProgramm() {
@@ -120,8 +137,22 @@ public class InputOutput {
 
     // @author Jonas
     public static ArrayList<Oilrig> a_opf = new ArrayList<Oilrig>();
+    private static int shipCounter = 1;
+    private static int workerCounter = 1;
+    public static int getWorkerCounter() {
+        return workerCounter;
+    }
+    public static void addWorkerCounter(){
+        workerCounter++;
+    }
+    public static int getShipCounter() {
+        return shipCounter;
+    }
+    public static void addShipCounter(){
+        shipCounter++;
+    }
 
-    public void initializePlatforms() {
+    public static void initializePlatforms() {
 
         // Erstellen der Ölplattformen um sie mit ihrer vorgegebenen Konfiguration zu
         // initialisieren
@@ -135,7 +166,7 @@ public class InputOutput {
         a_opf.add(platform3);
         a_opf.add(platform4);
     }
-    //WICHTG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
+    //WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
     public static Oilrig getPlatByID(int ID) {
         try {
             for (Oilrig opf : a_opf) {
@@ -147,6 +178,18 @@ public class InputOutput {
         }
         return null;
     }
+
+   /* public static Ship getShipByID(int ID) {
+        try {
+            for (Oilrig opf : a_opf) {
+                if (ID == opf.getId())
+                    return opf;
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return null;
+    }*/
 
 	/*
 	public void OilrigMenuID(int ID) {

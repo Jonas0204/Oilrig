@@ -2,12 +2,15 @@ package assets;
 
 import java.util.ArrayList;
 
+import Programm.InputOutput;
+import Programm.InputOutput.*;
+
 public class Oilrig {
 
-    private int id;
-    private ArrayList<Worker> workersOnPlatform;
-    private ArrayList<ShipSmall> smallShipsOnPlatform;
-    private ArrayList<ShipBig> bigShipsOnPlatform;
+    private final int id;
+    private ArrayList<Worker> workersOnPlatform = new ArrayList<Worker>();
+    private ArrayList<ShipSmall> smallShipsOnPlatform = new ArrayList<ShipSmall>();
+    private ArrayList<ShipBig> bigShipsOnPlatform = new ArrayList<ShipBig>();
     private final int initialCrew;
     private final int initialBigShips;
     private final int initialSmallShips;
@@ -60,7 +63,7 @@ public class Oilrig {
         if (i < 1) {
             return true;
         }
-        return false;
+        else return false;
     }
 
     private boolean BigShipCountBelowMax(){
@@ -100,22 +103,55 @@ public class Oilrig {
         this.initialBigShips = initialBigShips;
         this.initialSmallShips = initialSmallShips;
 
-        for (int i = 1; i <= workerToBegin; i++) {
-            workersOnPlatform.add(new Worker(i));
+        int shipIdCounter = InputOutput.getShipCounter();
+
+        for (int i = 1; i < workerToBegin; i++) {
+            this.workersOnPlatform.add(new Worker(i, "helmut", 30));
         }
 
-        for (int i = 1; i <= initialSmallShips; i++) {
-            smallShipsOnPlatform.add(new ShipSmall());
+
+        for (int i = shipIdCounter; i <= initialSmallShips; i++) {
+            this.smallShipsOnPlatform.add(new ShipSmall());
+            shipIdCounter++;
+            InputOutput.addShipCounter();
         }
 
-        for (int i = 1; i <= initialBigShips; i++) {
-            bigShipsOnPlatform.add(new ShipBig());
+        for (int i = shipIdCounter; i <= initialBigShips; i++) {
+            this.bigShipsOnPlatform.add(new ShipBig());
+            shipIdCounter++;
+            InputOutput.addShipCounter();
         }
     }
 
+    // Platform id 1-4,
+    // bigship id 1-5,
+    // 14
 
 
-    public void Evacuate() {
+    //@author Louis
+    public void Evacuate(Oilrig or) {
+        int endangeredWorkers = or.workersOnPlatform.size();
+        int shipsOnSite = or.smallShipsOnPlatform.size() + or.bigShipsOnPlatform.size();
+        int availableCapacity = 0;
+        int neededCapacityFromOutside;
+
+        for(int i = 0; i < smallShipsOnPlatform.size(); i++){
+            availableCapacity += or.smallShipsOnPlatform.get(i).maxCapacity - or.smallShipsOnPlatform.get(i).crew.size();
+        }
+        for(int i = 0; i < bigShipsOnPlatform.size(); i++){
+            availableCapacity += or.bigShipsOnPlatform.get(i).maxCapacity - or.bigShipsOnPlatform.get(i).crew.size();
+        }
+
+        neededCapacityFromOutside = endangeredWorkers - availableCapacity;
+
+        if(neededCapacityFromOutside <= 0){
+            System.out.println("Schiffe von Platform genügen zum evakuieren");
+        }
+        else{
+            System.out.println("Schiffe von anderen Plattformen werden benötigt");
+        }
+
+
 
     }
 

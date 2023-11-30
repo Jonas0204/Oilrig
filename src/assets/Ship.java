@@ -5,23 +5,21 @@ import java.util.ArrayList;
 //@author Matthias
 public abstract class Ship {
     ArrayList<Worker> crew = new ArrayList<Worker> ();
-    private int capacity = crew.size();
-
-    //für die Ausgabe
     private int id;
     protected int maxCapacity;
-    private int freeCapacity = maxCapacity - capacity;
 
+    //Get Methods
+    public int getId() {
+        return id;
+    }
+
+    //Add Worker to Crew
     public void receiveWorker(Worker worker) {
         if (checkCapacity(crew.size(), 1)) {
             crew.add(worker);
         }else {
-            System.out.println("SHIP is full");
+            System.out.println("Ship is full");
         }
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void receiveWorker(ArrayList<Worker> worker) {
@@ -30,21 +28,28 @@ public abstract class Ship {
                 crew.addAll(worker);
             }
         }else {
-            System.out.println("SHIP is full");
+            System.out.println("Ship is full");
         }
     }
 
+    //Departure Worker from ship and remove him from crew
     public Worker departureWorker(int id) {
-        return crew.get(id);
+        Worker temp = crew.get(id);
+        crew.remove(id);
+        return temp;
     }
 
     public ArrayList<Worker> departureAll() {
-        return crew;
+        ArrayList<Worker> temp = crew;
+        crew.clear();
+        return temp;
     }
 
     public boolean isEmpty(){
-        if (capacity == 0 ) return true;
-        else return false;
+        if (crew.size() == 0) {
+            return true;
+        }
+        return false;
     }
 
     public abstract boolean checkCapacity(int currently, int numberofworker); {
@@ -53,24 +58,21 @@ public abstract class Ship {
 
     //@author Louis
     public String GetShipInformation() {
+        int freeCapacity = maxCapacity - crew.size();
         String result = "";
         String workersOnBoard = "|";
 
-        for(int i = 0; i < capacity; i++) {
-            workersOnBoard += crew.get(i).getId();
+        for(int i = 0; i < crew.size(); i++) {
+            workersOnBoard += Integer.toString(crew.get(i).getId()) + "|";
         }
-
-        //Integer.toString(workersOnPlatform.get(i).getId()) + "|";
 
         result += "Ship ID: " + id + "\n";
         result += "------------------------------\n";
         result += "max.capacity    : " + maxCapacity + "\n";
-        result += "used capacity   : " + capacity + "\n";
+        result += "used capacity   : " + crew.size() + "\n";
         result += "free capacity   : " + freeCapacity + "\n";
         result += "workers on board: " + workersOnBoard + "\n";
 
         return result;
     }
-
-
 }
