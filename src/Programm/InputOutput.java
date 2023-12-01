@@ -101,7 +101,7 @@ public class InputOutput {
                             if (or == null) {                            //immer lieber überprüfen
                                 System.out.println("Oilrig not found!");
                             }
-                            //assets.Oilrig.Evacuate(or);
+                            or.Evacuate();
                         } else System.out.println("Wrong ID! Please use an ID between 1 and 4.");
                         break;
                     case "exit":
