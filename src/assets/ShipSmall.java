@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class ShipSmall {
 
+    // Louis: Wo ist Ship Class? Brauche für Methode. GetInfo ist sonst doppelt z.B.
+
     ArrayList<Worker> crew = new ArrayList<Worker> ();
-    private int id;
+    private int id;// ID nicht fortlaufend?
     protected int maxCapacity = 50;
 
     public ShipSmall(int id){
@@ -62,10 +64,15 @@ public class ShipSmall {
         String result = "";
         String workersOnBoard = "|";
 
+        //Integer.toString kann NullPointerException werfen
         for(int i = 0; i < crew.size(); i++) {
-            workersOnBoard += Integer.toString(crew.get(i).getId()) + "|";
+            try{
+                workersOnBoard += Integer.toString(crew.get(i).getId()) + "|";
+            }catch(NullPointerException npe){
+                System.out.println(npe.getMessage());
+            }
         }
-
+        //Output
         result += "Ship ID: " + id + "\n";
         result += "------------------------------\n";
         result += "max.capacity    : " + maxCapacity + "\n";

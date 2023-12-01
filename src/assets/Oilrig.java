@@ -106,18 +106,31 @@ public class Oilrig {
         String smallShipsOnPlatformString = "|";
         String workersOnPlatformString = "|";
 
+        //Integer.toString kann NullPointerException werfen
         for(int i = 0; i < bigShipsOnPlatform.size(); i++) {
-            bigShipsOnPlatformString += Integer.toString(bigShipsOnPlatform.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
+            try{
+                bigShipsOnPlatformString += Integer.toString(bigShipsOnPlatform.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
+            }catch (NullPointerException npe){
+               System.out.println("an error occured: " + npe.getMessage());
+            }
         }
 
         for(int i = 0; i < smallShipsOnPlatform.size(); i++) {
-            smallShipsOnPlatformString += Integer.toString(smallShipsOnPlatform.get(i).getId()) + "|";
+            try{
+                smallShipsOnPlatformString += Integer.toString(smallShipsOnPlatform.get(i).getId()) + "|";
+            }catch(NullPointerException npe){
+                System.out.println("an error occured: " + npe.getMessage());
+            }
         }
 
         for(int i = 0; i < workersOnPlatform.size(); i++) {
-            workersOnPlatformString += Integer.toString(workersOnPlatform.get(i).getId()) + "|";
+            try{
+                workersOnPlatformString += Integer.toString(workersOnPlatform.get(i).getId()) + "|";
+            }catch(NullPointerException npe){
+                System.out.println("an error occured: " + npe.getMessage());
+            }
         }
-
+        //Output
         result += "Oilrig ID: " + id + "\n";
         result += "---------------------------------------------------------------------------------------------------------\n";
         result += "big ships   : " + bigShipsOnPlatformString + "\n";

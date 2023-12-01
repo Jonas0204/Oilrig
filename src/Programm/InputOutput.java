@@ -11,6 +11,7 @@ public class InputOutput {
 
     //Initialise Oilrigsplattforms with Ships
 
+    //Spezifikation der Exceptions wäre besser
     public static void InputHandler(ArrayList<Oilrig> oilrigs) {
         Scanner scanner = new Scanner(System.in);
         String input = "";
@@ -19,7 +20,7 @@ public class InputOutput {
         while (true) {
             try {
                 input = scanner.nextLine();
-                String[] arguments = input.split(" ");
+                String[] arguments = input.split(" ");  //Louis: führt zu einem Fehler: nach korrektem Input kann beliebiger Text eingefügt werden
                 switch (arguments[0]) {
                     case "help":
                         Methods.PrintHelp();
@@ -39,7 +40,7 @@ public class InputOutput {
                                 }
                             }
                         } catch (Exception e) {
-                            System.out.println("ERROR");
+                            System.out.println("ERROR");//unzureichende Info
                         }
                         break;
                     case "moveemptysmallship":
@@ -59,7 +60,7 @@ public class InputOutput {
                                 }
                             }
                         } catch (Exception e) {
-                            System.out.println("ERROR");
+                            System.out.println("ERROR");//unzureichende Info
                         }
                         break;
                     case "movecrew":
@@ -87,7 +88,7 @@ public class InputOutput {
                                 }
                             }
                         } catch (Exception e) {
-                            System.out.println("ERROR");
+                            System.out.println("ERROR");//unzureichende Info
                         }
                         break;
                     case "evacuate":
@@ -105,25 +106,32 @@ public class InputOutput {
                         */
                         break;
                     //@author Jonas
-                    case "overview":
+                    case "overview": // Louis: Input 'overview x' funktioniert, muss behoben werden!
                         try {
                             for (Oilrig i : oilrigs) {
                                 System.out.println(i.GetInformationOverview());
                             }
                         } catch (Exception e) {
-                            System.out.println("ERROR");
+                            System.out.println("ERROR");//unzureichende Info
                         }
                         break;
                     //@autor Jonas
-                    case "oilrig":
+                    case "oilrig": // Louis: gibt falschen output, Methode für Details fehlt - Update: fixed
                         try {
-                            for (Oilrig i : oilrigs) {
-                                if (Integer.parseInt(arguments[1]) == i.getId()) {
-                                    System.out.println(i.GetInformationOverview());
+                            //Louis: try catch für Integer.parseInt einfügen
+                            if(Integer.parseInt(arguments[1]) >= 5 || Integer.parseInt(arguments[1]) <= 0){ //ID muss geprüft werden, wie ID einfügen?
+                                System.out.println("oilrig with id " + Integer.parseInt(arguments[1]) + " not found");
+                            }
+                            else{
+                                for (Oilrig i : oilrigs) { //Louis: Input: 'Oilrig e' führt zu Error, Input: 'Oilrig 5' zu nichts
+                                    if (Integer.parseInt(arguments[1]) == i.getId()) {
+                                        System.out.println(i.GetInformationOilrig()); // Ship-IDs nicht fortlaufend?
+                                    }
                                 }
                             }
-                        } catch (Exception e) {
-                            System.out.println("ERROR");
+                            // Louis: Nutzung des try-catch als if-else ist nicht gut. Es muss vorher geprüft werden, ob id korrekt
+                        } catch (Exception e) {// was kann exception werfen? getID()? dann Nullexception?
+                            System.out.println("ERROR");//unzureichende Info
                         }
                         break;
                     case "exit":

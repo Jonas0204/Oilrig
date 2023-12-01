@@ -5,6 +5,8 @@ import assets.Oilrig;
 
 import java.util.ArrayList;
 
+import static Programm.Methods.startupHeader;
+
 public class Main {
     //@author Matthias
     public static void main(String[] args) {
@@ -21,6 +23,7 @@ public class Main {
         //Show fancy Headline
         //Methods.startupHeader();
         //Start Inputhandler in while(true)
+        startupHeader();
         InputOutput.InputHandler(oilrigs);
     }
 }

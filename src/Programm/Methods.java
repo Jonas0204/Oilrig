@@ -5,6 +5,7 @@ import assets.Oilrig;
 //Only Static Methods are implemented here
 public class Methods {
 
+    //@author Ayman, Louis
     public static void startupHeader() {
         try {
             System.out.print("\n\n");
@@ -16,7 +17,7 @@ public class Methods {
             System.out.println("|    |j    l|     T|  .  Y j  l |     |");
             System.out.println("\\____/|____jl_____jl__j\\_j|____jl___,_/");
 
-            System.out.print("\n\n--Loading Simulation--");
+            System.out.print("\n\nLoading   ");
             Thread.sleep(800);
             System.out.print("..........................");
             Thread.sleep(500);
@@ -24,27 +25,29 @@ public class Methods {
             Thread.sleep(1000);
             System.out.print(".................");
             Thread.sleep(600);
-            System.out.print("finshed");
+            System.out.print("   finshed");
             Thread.sleep(800);
             System.out.print("\n\n");
             System.out.print("type in 'help' for information");
             System.out.print("\n\n");
-        } catch (Exception e) {
-
+        } catch (InterruptedException ie) {             //Thread.sleep kann InterruptedException werfen
+            System.out.println("an error occured: " + ie.getMessage());
         }
 
     }
 
     //@author Louis
+    // Louis: move empty big ship und empty small ship zusammenfassen
+    // Louis: move empty behandeln als move mit amount workers = 0
     public static void PrintHelp() {
         System.out.println("--------------------------- HELP -----------------------------");
-        System.out.println("help 				 = (This window)");
-        System.out.println("overview  	 		 = open overview");
-        System.out.println("oilrig [oilrig ID] 	 = open oilrig");
-        System.out.println("moveemptybigship [sender Oilrig id] [reciver Oilrig id] = move an empty BigShip to another destination");
-        System.out.println("moveemptysmallship [sender Oilrig id] [reciver Oilrig id] = move an empty SmallShip to another destination");
+        System.out.println("help 				                                        = (This window)");
+        System.out.println("overview  	 		                                        = open overview");
+        System.out.println("oilrig [oilrig ID] 	                                        = open oilrig");
+        System.out.println("moveemptybigship [sender Oilrig id] [reciver Oilrig id]     = move an empty BigShip to another destination");
+        System.out.println("moveemptysmallship [sender Oilrig id] [reciver Oilrig id]   = move an empty SmallShip to another destination");
         System.out.println("movecrew [amount] [sender Oilrig id] [reciver Oilrig id] [amount BigShips] [amount SmallShips] = Sends Crew to Destination");
-        System.out.println("evacuate [oilrig ID] = evacuate oilrig and safe crew to another oilrig");
+        System.out.println("evacuate [oilrig ID]                                        = evacuate oilrig and safe crew to another oilrig");
         System.out.println("exit				 = exit programm");
         System.out.println("\n\n");
     }
