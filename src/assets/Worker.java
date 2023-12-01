@@ -22,8 +22,4 @@ public class Worker {
         this.age = age;
         this.name = name;
     }
-
-    public Worker(int id) {
-        this.id = id;
-    }
 }

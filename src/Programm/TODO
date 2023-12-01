@@ -1,0 +1,18 @@
+-Die Movecrewmethode fertigstellen
+-Die JSON Datei mit Namen an die Worker verteilen und ein Random Alter vergeben
+-Den Workern ein Random Alter zwischen 20-60 geben
+-Die Evakuierungmethode hinzufügen
+-Testen
+
+Funktioniert
+moveemptybigship
+
+Sollte Funktionieren
+moveemptysmallship
+
+Hinzugefügt
+Methoden Klasse mit allen Statischen Methoden
+MoveCrew (Vorbereitet)
+Evacuate (Vorbereitet)
+
+Änderungen: Code umorientiert aber das meiste erhalten. Meisten Probleme behoben!
