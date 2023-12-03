@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import static Programm.Methods.startupHeader;
 
 public class Main {
-    //@author Matthias
+
     public static void main(String[] args) {
         ArrayList<Oilrig> oilrigs = new ArrayList<>();
         Oilrig platform1 = new Oilrig(1, 760, 5, 4);

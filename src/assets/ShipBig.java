@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class ShipBig {
 
-    ArrayList<Worker> crew = new ArrayList<Worker> ();
-    private int id; // ID nicht fortlaufend?
-    protected int maxCapacity = 100;
+    ArrayList<Worker> crewBig = new ArrayList<Worker> ();
+    private final int id;
+    protected final int maxCapacity = 100;
 
     public ShipBig(int id){
         this.id=id;
@@ -42,10 +42,9 @@ public class ShipBig {
         crewBig.remove(id);
         return temp;
     }
-
     public ArrayList<Worker> departureAll() {
-        ArrayList<Worker> temp = crew;
-        crew.clear();
+        ArrayList<Worker> temp = new ArrayList<Worker>(crewBig);
+        crewBig.clear();
         return temp;
     }
 
