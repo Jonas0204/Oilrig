@@ -1,25 +1,12 @@
 package assets;
 
 public class Worker {
-    private int id;
-    private int age;
-    private String name;
-
+    private final int id;
     public int getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public Worker(int id, String name, int age) {
+    public Worker(int id) {
         this.id = id;
-        this.age = age;
-        this.name = name;
     }
 }

@@ -2,9 +2,7 @@ package assets;
 
 import java.util.ArrayList;
 
-public class ShipBig{
-
-    // Louis: Wo ist Ship Class? Brauche für Methode. GetInfo ist sonst doppelt z.B.
+public class ShipBig {
 
     ArrayList<Worker> crew = new ArrayList<Worker> ();
     private int id; // ID nicht fortlaufend?
@@ -21,17 +19,17 @@ public class ShipBig{
 
     //Add Worker to Crew
     public void receiveWorker(Worker worker) {
-        if (crew.size() < maxCapacity) {
-            crew.add(worker);
+        if (crewBig.size() < maxCapacity) {
+            crewBig.add(worker);
         }else {
             System.out.println("Ship is full");
         }
     }
 
-    public void receiveWorker(ArrayList<Worker> worker) {
-        if (crew.size() < maxCapacity) {
+    public void receiveWorkerlist(ArrayList<Worker> worker) {
+        if (crewBig.size() < maxCapacity) {
             for (int i = 0; i < worker.size(); i++) {
-                crew.add(worker.get(i));
+                crewBig.add(worker.get(i));
             }
         }else {
             System.out.println("Ship is full");
@@ -40,8 +38,8 @@ public class ShipBig{
 
     //Departure Worker from ship and remove him from crew
     public Worker departureWorker(int id) {
-        Worker temp = crew.get(id);
-        crew.remove(id);
+        Worker temp = crewBig.get(id);
+        crewBig.remove(id);
         return temp;
     }
 
@@ -52,34 +50,32 @@ public class ShipBig{
     }
 
     public boolean isEmpty(){
-        if (crew.size() == 0) {
+        if (crewBig.size() == 0) {
             return true;
         }
         return false;
     }
 
-    //@author Louis
-    //exakt gleicher Code für kleines Schiff. Kann man das zusammenfassen?
-    public String GetShipInformation() {
-        int freeCapacity = maxCapacity - crew.size();
-        String result = "";
-        String workersOnBoard = "|";
-
-        //Integer.toString kann NullPointerException werfen
-        for(int i = 0; i < crew.size(); i++) {
-            try{
-                workersOnBoard += Integer.toString(crew.get(i).getId()) + "|";
-            }catch(NullPointerException npe){
-                System.out.println(npe.getMessage());
-            }
+    public int compareToShipBig(ShipBig otherShipBig){
+        if (this.id < otherShipBig.id){
+            return -1;
+        } else if (this.id > otherShipBig.id){
+            return 1;
+        } else{
+            return 0;
         }
+    }
+
+    public String GetShipInformation() {
+        int freeCapacity = maxCapacity - crewBig.size();
+        String result = "";
+
         //Output
         result += "Ship ID: " + id + "\n";
         result += "------------------------------\n";
         result += "max.capacity    : " + maxCapacity + "\n";
-        result += "used capacity   : " + crew.size() + "\n";
+        result += "used capacity   : " + crewBig.size() + "\n";
         result += "free capacity   : " + freeCapacity + "\n";
-        result += "workers on board: " + workersOnBoard + "\n";
 
         return result;
     }

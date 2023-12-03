@@ -1,10 +1,7 @@
 package Programm;
 
-
 import assets.Oilrig;
-
 import java.util.ArrayList;
-
 import static Programm.Methods.startupHeader;
 
 public class Main {
@@ -20,10 +17,15 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-        //Show fancy Headline
-        //Methods.startupHeader();
-        //Start Inputhandler in while(true)
         startupHeader();
-        InputOutput.InputHandler(oilrigs);
+        Methods.InputHandler(oilrigs);
     }
 }
+//TO DO:
+//receiveWorker() Methode doppelt aber anders und einmal ungenutzt!!!
+//Benennungsregeln und Sprache überprüfen!!!
+//Try-Catch einfügen (z.b.: input: 'move ruwiz wje')!!!
+//Listen sortieren bei Ausgabe!!!
+//alles unused löschen!!!
+//evakuierungsplan und methode schreiben!!!
+//167 und 147 in InputOutput assert für NullPointerException - keine Ahnung ob das richtig ist, hat nur IntelliJ vorgeschlagen!!!
