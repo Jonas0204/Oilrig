@@ -10,7 +10,6 @@ public class ShipBig extends Ship{
     protected final int maxCapacity = 100;
 
     public ShipBig(int id){
-        super(id);
         this.id = getCounterShips();
     }
 
