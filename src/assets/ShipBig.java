@@ -30,7 +30,7 @@ public class ShipBig extends Ship{
     }
 
     //@author Louis
-    public String getShipInformation() {
+    public String getShipInformation() { //Output Infomation Schiff (auch siehe ShipSmall)
         int freeCapacity = maxCapacity - crewBig.size();
         String result = "";
 

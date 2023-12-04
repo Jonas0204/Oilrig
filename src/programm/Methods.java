@@ -17,9 +17,9 @@ public class Methods {
         while (true) {
 
             input = scanner.nextLine();
-            String[] arguments = input.split(" ");  //Louis: führt zu einem Fehler: nach korrektem Input kann beliebiger Text eingefügt werden
+            String[] arguments = input.split(" ");
             switch (arguments[0]) {
-                case "help":
+                case "help": //help
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -33,7 +33,7 @@ public class Methods {
                     }
                     moveWorkers(arguments[1], arguments[2], arguments[3], arguments[4], false);
                     break;
-                case "evacuate"://evacuate [Oilrig id]
+                case "evacuate": //evacuate [Oilrig id]
                     int id = 0;
                     try {
                         id = Integer.parseInt(arguments[1]);
@@ -57,7 +57,7 @@ public class Methods {
                     } else System.out.println("an error occurred: Wrong ID! Please use an ID between 1 and 4.");
                     break;
                 //@author Jonas, Louis
-                case "overview":
+                case "overview": //overview
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -71,14 +71,12 @@ public class Methods {
                     }
                     break;
                 //@autor Jonas, Louis
-                case "oilrig": // generiert zu viele Worker
+                case "oilrig": //oilrig [oilrig ID]
                     if (arguments.length != 2) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
-
                     try {
-                        //Louis: try catch für Integer.parseInt einfügen
                         if(  Integer.parseInt(arguments[1]) >= 5 ||   Integer.parseInt(arguments[1]) <= 0){
                             System.out.println("an error occurred: oilrig with ID " +   Integer.parseInt(arguments[1]) + " not found");
                         }
@@ -95,7 +93,7 @@ public class Methods {
                         System.out.println("an error occurred: Oilrig with that ID returns 'null' " + npe.getMessage());
                     }
                     break;
-                case "exit":
+                case "exit": //exit
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -103,18 +101,10 @@ public class Methods {
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("This Command does not exist. Try 'help' for information");
+                    System.out.println("This Command does not exist. Try 'help' for information about commands");
                     break;
             }
-
-
-
-
-
-
-
             try {
-
             } catch (Exception e) {
                 System.err.println(e);
             }
@@ -162,10 +152,6 @@ public class Methods {
     public static boolean evacuation(int evacuationId){
         Oilrig eOr = getPlatByID(evacuationId);
         boolean successful = eOr.checkEvacuationSpace();
-
-
-
-
         return true;
     }
 
@@ -181,11 +167,12 @@ public class Methods {
             amount =   Integer.parseInt(amountparam);
             shipID =   Integer.parseInt(shipIdParam);
         }catch (Exception ex){
-            System.out.println("an error occurred: ID's or amounts invalid");
+            System.out.println("an error occurred: ID's and amounts must be whole numbers");
+            return; //geändert 04.12.2023 19.52
         }
         boolean idExists = Methods.existsID(senderID, receiverID);
         if (!idExists) {
-            System.out.println("an error occurred: invalid ID");
+            System.out.println("an error occurred: ID invalid for oilrig");
             return;
         }
 
@@ -198,7 +185,7 @@ public class Methods {
         ShipBig bigShip = senderOr.getBigShipById(shipID);
         String ShipType = "";
         if (smallShip == null && bigShip == null) {
-            System.out.println("an error occurred: Ship returns 'null'");
+            System.out.println("an error occurred: could not find ship with id " + shipID);
             return;
         }
         else if (smallShip == null) {
@@ -292,7 +279,7 @@ public class Methods {
     //@author Louis, Jonas
     public static void printStartupHeader() {
         try {
-            System.out.print("\n\n");
+            System.out.print("\n\n"); //Header
             System.out.println(" ____  ____  _      ____   ____   ____ ");
             System.out.println("/    \\l    j| T    |    \\ l    j /    T");
             System.out.println("|    | |  T | |    |  D  ) |  T Y   __j");
@@ -301,7 +288,7 @@ public class Methods {
             System.out.println("|    |j    l|     T|  .  Y j  l |     |");
             System.out.println("\\____/|____jl_____jl__j\\_j|____jl___,_/");
 
-            System.out.print("\n\nLoading   ");
+            System.out.print("\n\nLoading   "); //Ladebalken
             Thread.sleep(800);
             System.out.print("..........................");
             Thread.sleep(500);
@@ -314,14 +301,14 @@ public class Methods {
             System.out.print("\n\n");
             System.out.print("type in 'help' for information");
             System.out.print("\n\n");
-        } catch (InterruptedException ie) {             //Thread.sleep kann InterruptedException werfen
+        } catch (InterruptedException ie) {     //Thread.sleep kann InterruptedException werfen
             System.out.println("an error occured: " + ie.getMessage());
         }
     }
 
     //@author Louis
-    public static void printHelp() {
-        System.out.println("--------------------------------------------------------- HELP ---------------------------------------------------------");
+    public static void printHelp() {    //Output für Help Befehl
+        System.out.println("-------------------------------------------------------- HELP --------------------------------------------------------");
         System.out.println("help 				                                                        = (This window)");
         System.out.println("overview  	 		                                                        = open overview");
         System.out.println("oilrig [oilrig ID] 	                                                        = open oilrig");
@@ -345,14 +332,6 @@ public class Methods {
     }
     public static void addCounterWorker(){
         counterWorker++;
-    }
-
-    public static void evacuate(Oilrig or){
-        or.evacuate = true;
-
-        or.checkEvacuationSpace();
-
-        or.evacuate = false;
     }
 
 }

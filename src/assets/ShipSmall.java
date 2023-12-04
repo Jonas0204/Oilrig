@@ -29,7 +29,7 @@ public class ShipSmall extends Ship{
     }
 
     //@author Louis
-    public String getShipInformation() {
+    public String getShipInformation() { //Output Infomation Schiff (auch siehe ShipBig)
         int freeCapacity = maxCapacity - crewSmall.size();
         String result = "";
 

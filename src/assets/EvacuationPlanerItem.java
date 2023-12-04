@@ -1,12 +1,6 @@
 package assets;
 
 public class EvacuationPlanerItem {
-    /** Mögliche visuelle Darstellung vom Evakuierungsplan
-     *
-     * Evakuierungsplan:
-     * Ship 1:  crew 50/50, => Oilrig 2
-     * Ship 7:  crew 88/100, => Oilrig 3
-     */
 
     public final int shipId;
     public final int usedCrew;
@@ -25,7 +19,4 @@ public class EvacuationPlanerItem {
         item.destinationOr= this.destinationOr;
         return item;
     }
-
-
-
 }

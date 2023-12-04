@@ -18,11 +18,8 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-
         printStartupHeader();
         Methods.handleInput(oilrigs);
-
-
     }
 }
 //TO DO:
@@ -32,3 +29,4 @@ public class Main {
 //welche nachricht wann prüfen!!!
 //Listen sortieren bei Ausgabe!!!
 //evakuierungsplan und methode schreiben!!!
+//try-catch in Methods 109 - was das!!!

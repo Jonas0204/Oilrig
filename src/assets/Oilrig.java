@@ -87,7 +87,7 @@ public class Oilrig{
         return null;
     }
 
-    public Ship getShipById(int id){
+    public Ship getShipById(int id){    //vereint getSmallShipById(int id) und getBigShipById(int id)
         for (Ship ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
         }
@@ -183,7 +183,7 @@ public class Oilrig{
 
     //UserInterface
     //@author Louis
-    public String getInformationOverview() {
+    public String getInformationOverview() { //Output Information aller Ölplattformen (hier nur eine, alle über Schleife gelöst siehe handleInput()
 
         String result = "";
         // int sumOfShips = getBigShipAmount() + getSmallShipAmount();   // Fehlerhaft, 3+4 ist nicht 6
@@ -203,9 +203,8 @@ public class Oilrig{
         String bigShipsOnOilrigString = "|";
         String smallShipsOnOilrigString = "|";
 
-        //Integer.toString kann NullPointerException werfen
         for(int i = 0; i < bigShipsOnOilrig.size(); i++) {
-            try{
+            try{    //Integer.toString kann NullPointerException werfen
                 bigShipsOnOilrigString += Integer.toString(bigShipsOnOilrig.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
             }catch (NullPointerException npe){
                System.out.println("an error occured: " + npe.getMessage());
@@ -214,13 +213,13 @@ public class Oilrig{
 
         for(int i = 0; i < smallShipsOnOilrig.size(); i++) {
             try{
-                smallShipsOnOilrigString += Integer.toString(smallShipsOnOilrig.get(i).getId()) + "|";
+                smallShipsOnOilrigString += Integer.toString(smallShipsOnOilrig.get(i).getId()) + "|";  //siehe oben
             }catch(NullPointerException npe){
                 System.out.println("an error occured: " + npe.getMessage());
             }
         }
 
-        //Output
+        //Output Information einer bestimmten Ölplattform
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
         result += "big ships             : " + bigShipsOnOilrigString + "\n";
@@ -330,15 +329,14 @@ public class Oilrig{
         return null;
     }
 
-
     public String getEvacuationPlanerInfo(){
-
+        //Output des Evakuierungsplans
         String result = "------------------------ Evacuation Plan ------------------------ \n";
         for (EvacuationPlanerItem epItem : ep) {
 
             int maxCapacity = 0;
 
-            Ship ship = getShipById(epItem.shipId);
+            Ship ship = getShipById(epItem.shipId);     //setzt maxCapacity in Abhängigkeit ob epItem.shipId ein großes oder kleines Schiff ist
             if(ship instanceof ShipBig){
                 maxCapacity = 100;
             } else if (ship instanceof ShipSmall) {
@@ -351,5 +349,4 @@ public class Oilrig{
         }
         return result;
     }
-
 }
