@@ -29,6 +29,7 @@ public class ShipBig extends Ship{
         return temp;
     }
 
+    //@author Louis
     public String GetShipInformation() {
         int freeCapacity = maxCapacity - crewBig.size();
         String result = "";
