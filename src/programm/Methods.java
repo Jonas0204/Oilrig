@@ -1,6 +1,7 @@
-package Programm;
+package programm;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 import assets.*;
 
@@ -8,71 +9,14 @@ public class Methods {
 
     private static ArrayList<Oilrig> oilrigs = new ArrayList<Oilrig>();
 
-    public static void InputHandler(ArrayList<Oilrig> oilrigsParam) {
+    public static void handleInput(ArrayList<Oilrig> oilrigsParam) {
         oilrigs = oilrigsParam;
 
         Scanner scanner = new Scanner(System.in);
         String input = "";
         while (true) {
             try {
-                input = scanner.nextLine();
-                String[] arguments = input.split(" ");  //Louis: führt zu einem Fehler: nach korrektem Input kann beliebiger Text eingefügt werden
-                switch (arguments[0]) {
-                    case "help":
-                        Methods.PrintHelp();
-                        break;
-                    case "move": //move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
-                        moveWorkers(arguments[1], arguments[2], arguments[3], arguments[4]);
-                        break;
-                    case "evacuate":
-                        //!! Wird die Schwerste Aufgabe werden !!
-                        //evacuate [Oilrig id]
-                        int ip = Integer.parseInt(arguments[1]);
-                        if (ip == 1 || ip == 2 || ip == 3 || ip == 4) { //Oilrig 1, 2, 3, oder 4 Infos werden ausgegeben
-                            Oilrig or = getPlatByID(ip);
-                            if (or == null) {                            //immer lieber überprüfen
-                                System.out.println("an error occurred: Oilrig not found!");
-                            }
-                            //assets.Oilrig.Evacuate(or);
-                        } else System.out.println("an error occurred: Wrong ID! Please use an ID between 1 and 4.");
-                        break;
-                    //@author Jonas, Louis
-                    case "overview":
-                        try {
-                            for (Oilrig i : oilrigs) {
-                                System.out.println(i.GetInformationOverview());
-                            }
-                        } catch (Exception e) {
-                            System.out.println("an error occurred " + e.getMessage());
-                        }
-                        break;
-                    //@autor Jonas, Louis
-                    case "oilrig": // generiert zu viele Worker
-                        try {
-                            //Louis: try catch für Integer.parseInt einfügen
-                            if(Integer.parseInt(arguments[1]) >= 5 || Integer.parseInt(arguments[1]) <= 0){
-                                System.out.println("an error occurred: oilrig with ID " + Integer.parseInt(arguments[1]) + " not found");
-                            }
-                            else {
-                                for (Oilrig i : oilrigs) {
-                                    if (Integer.parseInt(arguments[1]) == i.getId()) {
-                                        System.out.println(i.GetInformationOilrig());
-                                    }
-                                }
-                            }
-                        } catch (NumberFormatException nfe) {
-                            System.out.println("an error occurred: ID must be a number " + nfe.getMessage());
-                        } catch (NullPointerException npe) {
-                            System.out.println("an error occurred: Oilrig with that ID returns 'null' " + npe.getMessage());
-                        }
-                        break;
-                    case "exit":
-                        System.exit(0);
-                        break;
-                    default:
-                        System.out.println("This Command does not exist. Try 'help' for information");
-                        break;
-                }
+
             } catch (Exception e) {
                 System.err.println(e);
             }
@@ -81,7 +25,7 @@ public class Methods {
 
     /** @autor Jonas
      *
-     * @return Git true zurück wenn beide ID's vorhanden sind, andernfalls wird false zurückgegeben
+     * @return Gibt true zurück wenn beide ID's vorhanden sind, andernfalls wird false zurückgegeben
      */
     public static boolean existsID(int senderID, int receiverID){
         boolean senderIsTrue = false;
@@ -117,17 +61,27 @@ public class Methods {
         return null;
     }
 
+    public static boolean evacuation(int evacuationId){
+        Oilrig eOr = getPlatByID(evacuationId);
+        boolean successful = eOr.checkEvacuationSpace();
+
+
+
+
+        return true;
+    }
+
     //Strings für Argumente in Input/Output
-    public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam) {
+    public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
         int senderID = 0;
         int receiverID = 0;
         int amount = 0;
         int shipID = 0;
         try {
-            senderID = Integer.parseInt(senderIdParam);
-            receiverID = Integer.parseInt(receiverIdParam);
-            amount = Integer.parseInt(amountparam);
-            shipID = Integer.parseInt(shipIdParam);
+            senderID =   Integer.parseInt(senderIdParam);
+            receiverID =   Integer.parseInt(receiverIdParam);
+            amount =   Integer.parseInt(amountparam);
+            shipID =   Integer.parseInt(shipIdParam);
         }catch (Exception ex){
             System.out.println("an error occurred: ID's or amounts invalid");
         }
@@ -156,9 +110,9 @@ public class Methods {
         }
 
         // Bedingung I) Auf jeder Plattform müssen sich immer mindestens 10% initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert.
-        int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrew);
+        int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
         if (minWorkers >  senderOr.getWorkerAmount()){
-            System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrew) + "workers");
+            System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
         }
         // Bedingung II) Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren.
         assert receiverOr != null;
@@ -167,11 +121,15 @@ public class Methods {
             System.out.println("an error occurred: receiving oilrig cannot hold that amount of workers at a time");
         }
         // Bedingung III) Jede Plattform kann in jeder Kategorie maximal vier Versorgungsschiffe mehr zugeordnet haben als in der initialen Konfiguration.
-        if (ShipType.equals("smallship") && !receiverOr.checkOilrigCanReceiveSmallShip()){
-            System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+        if (ShipType.equals("smallship")) {
+            if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveSmallShip()) {
+                System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+            }
         }
-        if (ShipType.equals("bigship") && !receiverOr.checkOilrigCanReceiveBigShip()){
-            System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+        if (ShipType.equals("bigship")) {
+            if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveBigShip()) {
+                System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+            }
         }
         // Bedingung IV) Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung.
         if (!senderOr.checkTotalShipCountBiggerOne()) {
@@ -182,7 +140,7 @@ public class Methods {
             case "smallship":
                 senderOr.transferWorkerOilrigToShip(amount, smallShip);
                 senderOr.undockShip(smallShip);
-                System.out.println("moving " + smallShip.GetShipInformation());
+                System.out.println("moving " + smallShip.getShipInformation());
                 // => Schiff beladen und abgedocked
 
                 // docking
@@ -192,7 +150,7 @@ public class Methods {
             case "bigship":
                 senderOr.transferWorkerOilrigToShip(amount, bigShip);
                 senderOr.undockShip(bigShip);
-                System.out.println("moving " + bigShip.GetShipInformation());
+                System.out.println("moving " + bigShip.getShipInformation());
                 // => Schiff beladen und abgedocked
 
                 // docking
@@ -209,7 +167,7 @@ public class Methods {
     private static int counterWorker = 1;
 
     //@author Louis, Jonas
-    public static void startupHeader() {
+    public static void printStartupHeader() {
         try {
             System.out.print("\n\n");
             System.out.println(" ____  ____  _      ____   ____   ____ ");
@@ -239,7 +197,7 @@ public class Methods {
     }
 
     //@author Louis
-    public static void PrintHelp() {
+    public static void printHelp() {
         System.out.println("--------------------------------------------------------- HELP ---------------------------------------------------------");
         System.out.println("help 				                                                        = (This window)");
         System.out.println("overview  	 		                                                        = open overview");
@@ -252,7 +210,6 @@ public class Methods {
 
     /**
      * @autor Jonas
-     * @return
      */
     public static int getCounterShips() {
         return counterShips;
@@ -266,5 +223,14 @@ public class Methods {
     public static void addCounterWorker(){
         counterWorker++;
     }
+
+    public static void evacuate(Oilrig or){
+        or.evacuate = true;
+
+        or.checkEvacuationSpace();
+
+        or.evacuate = false;
+    }
+
 }
 

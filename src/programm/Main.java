@@ -1,8 +1,8 @@
-package Programm;
+package programm;
 
 import assets.Oilrig;
 import java.util.ArrayList;
-import static Programm.Methods.startupHeader;
+import static programm.Methods.printStartupHeader;
 
 public class Main {
 
@@ -17,15 +17,17 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-        startupHeader();
-        Methods.InputHandler(oilrigs);
+
+        printStartupHeader();
+        Methods.handleInput(oilrigs);
+
+
     }
 }
 //TO DO:
-//receiveWorker() Methode doppelt aber anders und einmal ungenutzt!!!
 //Benennungsregeln und Sprache überprüfen!!!
-//Try-Catch einfügen (z.b.: input: 'move ruwiz wje')!!!
+//unused Stuff löschen!!!
+//getShipById vereinfacht maybe manche anderen Prozesse mit getBigShipById und getSmallShipbyId --- Rekursion!!!
+//welche nachricht wann prüfen!!!
 //Listen sortieren bei Ausgabe!!!
-//alles unused löschen!!!
 //evakuierungsplan und methode schreiben!!!
-//167 und 147 in InputOutput assert für NullPointerException - keine Ahnung ob das richtig ist, hat nur IntelliJ vorgeschlagen!!!

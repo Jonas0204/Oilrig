@@ -2,7 +2,7 @@ package assets;
 
 import java.util.ArrayList;
 
-import static Programm.Methods.getCounterShips;
+import static programm.Methods.getCounterShips;
 
 public class ShipSmall extends Ship{
 
@@ -29,7 +29,7 @@ public class ShipSmall extends Ship{
     }
 
     //@author Louis
-    public String GetShipInformation() {
+    public String getShipInformation() {
         int freeCapacity = maxCapacity - crewSmall.size();
         String result = "";
 

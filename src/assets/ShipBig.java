@@ -1,8 +1,9 @@
 package assets;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
-import static Programm.Methods.getCounterShips;
+import static programm.Methods.getCounterShips;
 
 public class ShipBig extends Ship{
 
@@ -29,7 +30,7 @@ public class ShipBig extends Ship{
     }
 
     //@author Louis
-    public String GetShipInformation() {
+    public String getShipInformation() {
         int freeCapacity = maxCapacity - crewBig.size();
         String result = "";
 
