@@ -1,10 +1,8 @@
 package assets;
 
 import Programm.Methods;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+
 
 public class Oilrig{
 
@@ -87,29 +85,6 @@ public class Oilrig{
         }
         return null;
     }
-    public ShipBig getEmptyBigShip() {
-        ShipBig temp;
-        for (ShipBig ship : bigShipsOnPlatform) {
-            if (ship.isEmpty()) {
-                temp = ship;
-                bigShipsOnPlatform.remove(ship);
-                return temp;
-            }
-        }
-        System.out.println("Oilrig id: " + id + " cant get empty ship!");
-        return null;
-    }
-
-    public ShipSmall getEmptySmallShip() {
-        for (ShipSmall ship : smallShipsOnPlatform) {
-            if (ship.isEmpty()) {
-                return ship;
-            }
-        }
-        System.out.println("Oilrig id: " + id + " cant get empty ship!");
-        return null;
-    }
-
 
     //check-Methoden
     public boolean checkTotalShipCountBiggerOne(){
@@ -216,9 +191,6 @@ public class Oilrig{
         String result = "";
         String bigShipsOnPlatformString = "|";
         String smallShipsOnPlatformString = "|";
-
-        //Collections.sort(bigShipsOnPlatform);
-        //Collections.sort(smallShipsOnPlatform);
         
         //Integer.toString kann NullPointerException werfen
         for(int i = 0; i < bigShipsOnPlatform.size(); i++) {

@@ -2,19 +2,16 @@ package assets;
 
 import java.util.ArrayList;
 
-public class ShipBig {
+import static Programm.Methods.getCounterShips;
+
+public class ShipBig extends Ship{
 
     ArrayList<Worker> crewBig = new ArrayList<Worker> ();
-    private final int id;
     protected final int maxCapacity = 100;
 
     public ShipBig(int id){
-        this.id=id;
-    }
-
-    //Get Methods
-    public int getId() {
-        return id;
+        super(id);
+        this.id = getCounterShips();
     }
 
     //Add Worker to Crew
@@ -26,43 +23,10 @@ public class ShipBig {
         }
     }
 
-    public void receiveWorkerlist(ArrayList<Worker> worker) {
-        if (crewBig.size() < maxCapacity) {
-            for (int i = 0; i < worker.size(); i++) {
-                crewBig.add(worker.get(i));
-            }
-        }else {
-            System.out.println("Ship is full");
-        }
-    }
-
-    //Departure Worker from ship and remove him from crew
-    public Worker departureWorker(int id) {
-        Worker temp = crewBig.get(id);
-        crewBig.remove(id);
-        return temp;
-    }
     public ArrayList<Worker> departureAll() {
         ArrayList<Worker> temp = new ArrayList<Worker>(crewBig);
         crewBig.clear();
         return temp;
-    }
-
-    public boolean isEmpty(){
-        if (crewBig.size() == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public int compareToShipBig(ShipBig otherShipBig){
-        if (this.id < otherShipBig.id){
-            return -1;
-        } else if (this.id > otherShipBig.id){
-            return 1;
-        } else{
-            return 0;
-        }
     }
 
     public String GetShipInformation() {
