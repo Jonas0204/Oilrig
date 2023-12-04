@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<Oilrig> oilrigs = new ArrayList<>();
-        Oilrig platform1 = new Oilrig(1, 760, 5, 4);
+        Oilrig platform1 = new Oilrig(1, 260, 5, 4);
         Oilrig platform2 = new Oilrig(2, 520, 4, 4);
         Oilrig platform3 = new Oilrig(3, 360, 3, 4);
         Oilrig platform4 = new Oilrig(4, 120, 2, 2);
