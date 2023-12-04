@@ -1,0 +1,254 @@
+/* public static Ship getShipByID(int ID) {
+        try {
+            for (Oilrig opf : a_opf) {
+                if (ID == opf.getId())
+                    return opf;
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return null;
+    }*/
+
+	/*
+	public void OilrigMenuID(int ID) {
+		Oilplatform current_opf = getPlatByID(ID);
+		System.out.println("Oilrig ID   : " + current_opf.getId());
+		System.out.println("docked ships: " + current_opf.getNumberofBigShips());
+		System.out.println("small ships : " + current_opf.getNumberofSmallShips());
+		System.out.println("big ships   : " + current_opf.getNumberofBigShips());
+		System.out.println("workers     : " + current_opf.getNumberofWorkers());
+		System.out.println("condition");
+	}
+	*/
+
+    // -----------------------------------------------------Aufgeräumt--------------------------------------------------------------
+
+    /*
+     * public void MoveShipMenu() {
+     *
+     * }
+     *
+     * public void EvacuateMenu() {
+     *
+     * }
+     */
+
+
+public void exitProgramm() {
+        Scanner scannerExit = new Scanner(System.in);
+        System.out.println("are you sure you want to exit this application? confirm with 'y'");
+
+        try {
+            String input = scannerExit.nextLine();
+            if (input == "y") {
+                System.exit(0);
+            }
+        } catch (Exception e) {
+        }
+        scannerExit.close();
+
+    }
+
+//WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
+public static Oilrig getPlatformByID(int ID) {
+        try {
+            for (Oilrig opf : a_opf) {
+                if (ID == opf.getId())
+                    return opf;
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return null;
+    }
+
+case "overview":
+                        /*
+                        for (int i = 1; i < 5; i++) {
+                            Oilrig or = getPlatByID(i);
+                            if (or == null) {                            //immer lieber überprüfen
+                                System.out.println("Oilrig not found!");
+                            }
+                            System.out.println(or.GetInformationOverview());
+                        }
+                        */
+                        break;
+                    //@autor Jonas
+                    case "oilrig":
+                        /*
+                        int id = Integer.parseInt(arguments[1]);
+                        if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1, 2, 3, oder 4 Infos werden ausgegeben
+                            Oilrig or = getPlatByID(id);
+                            if (or == null) {                            //immer lieber überprüfen
+                                System.out.println("Oilrig not found!");
+                            }
+                            System.out.println(or.GetInformationOilrig());
+                        } else System.out.println("Wrong ID! Please use an ID between 1 and 4.");
+                        */
+                        break;
+                    case "ship":// + id:
+                        break;
+                    case "move":// + id:
+                        break;
+
+public int getNumberofWorkers() {
+        return workersOnPlatform.size();
+    }
+
+    public int getNumberofSmallShips() {
+        return smallShipsOnPlatform.size();
+    }
+
+    public int getNumberofBigShips() {
+        return bigShipsOnPlatform.size();
+    }
+
+    public int getSumOfCrew() {
+        return sumOfCrew;
+    }
+
+    public boolean isEvacuateActive() {
+        return evacuate;
+    }
+
+    public void evacuate() {
+        this.evacuate = true;
+    }
+
+/*
+    private boolean TotalShipCountBiggerOne(){
+        int i = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
+        if (i < 1) {
+            return true;
+        }
+        else return false;
+    }
+
+    private boolean BigShipCountBelowMax(){
+        int maxAllowedShips = initialBigShips * 2;
+        int dockedShips = bigShipsOnPlatform.size();
+        if (dockedShips < maxAllowedShips) {
+            return true;
+        }
+        else return false;
+    }
+
+
+    public void moveEmptyBigShip(int numberOfWorkers,  /*startPlatform, Oilrig endPlatform) {
+        ShipBig ship = getEmptyBigShip();
+        if (ship == null) {
+            System.out.println("Kein leeres Schiff vorhanden");
+            return;
+        }
+        //Bedingung IV) Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung.
+        if (!TotalShipCountBiggerOne()) {
+            System.out.println("Die Anzahl der Schiffe darf nicht unter 1 fallen"); //Möglicherweise nach Evakuierung unterscheiden
+        }
+        if (!BigShipCountBelowMax()) {
+            System.out.println("Die Zielplattform kann keine großen Schiffe mehr entgegen nehmen!");
+        }
+        addShip(ship);
+        //not done
+    }
+
+    // Print all ships on Oilplatform
+
+
+    //@author Louis
+    public void Evacuate(Oilrig or) {
+        int endangeredWorkers = or.workersOnPlatform.size();
+        int shipsOnSite = or.smallShipsOnPlatform.size() + or.bigShipsOnPlatform.size();
+        int availableCapacity = 0;
+        int neededCapacityFromOutside;
+
+        for(int i = 0; i < smallShipsOnPlatform.size(); i++){
+            availableCapacity += or.smallShipsOnPlatform.get(i).maxCapacity - or.smallShipsOnPlatform.get(i).crew.size();
+        }
+        for(int i = 0; i < bigShipsOnPlatform.size(); i++){
+            availableCapacity += or.bigShipsOnPlatform.get(i).maxCapacity - or.bigShipsOnPlatform.get(i).crew.size();
+        }
+
+        neededCapacityFromOutside = endangeredWorkers - availableCapacity;
+
+        if(neededCapacityFromOutside <= 0){
+            System.out.println("Schiffe von Platform genügen zum evakuieren");
+        }
+        else{
+            System.out.println("Schiffe von anderen Plattformen werden benötigt");
+        }
+
+
+
+    }
+
+
+    /*
+     *
+     * main (String[] args){
+     * 		Oilplatform ONE = new Oilplattform(22, 100, 3, 5);
+     * 		Oilplatform TWO = new Oilplattform(22, 100, 3, 5);
+     * 		System.out.println(ONE.GetInformation());
+     * }
+     *
+     */
+
+
+-----------------------------------------------------------------------------------------------------
+case "moveemptybigship":
+                        //moveemptybigship [sender Oilrig id] [reciver Oilrig id]
+                        try {
+                            for (Oilrig i : oilrigs) {
+                                if (Integer.parseInt(arguments[1]) == i.getId()) {
+                                    sender = i;
+                                    for (Oilrig j : oilrigs) {
+                                        if (Integer.parseInt(arguments[2]) == j.getId()) {
+                                            receiver = j;
+                                            Methods.moveEmptyBigShip(i, j);
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println("ERROR");
+                        }
+                        break;
+                    case "moveemptysmallship":
+                        //moveemptysmallship [sender Oilrig id] [reciver Oilrig id]
+                        try {
+                            for (Oilrig i : oilrigs) {
+                                if (Integer.parseInt(arguments[1]) == i.getId()) {
+                                    sender = i;
+                                    for (Oilrig j : oilrigs) {
+                                        if (Integer.parseInt(arguments[2]) == j.getId()) {
+                                            receiver = j;
+                                            Methods.moveEmptySmallShip(i, j);
+                                        }
+                                    }
+                                } else {
+                                    System.out.println("Oilrig not found!!");
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println("ERROR");
+                        }
+                        break;
+
+
+for (Oilrig i : oilrigs) {
+                                if (Integer.parseInt(arguments[2]) == i.getId()) {
+                                    sender = i;
+                                    for (Oilrig j : oilrigs) {
+                                        if (Integer.parseInt(arguments[3]) == j.getId()) {
+                                            receiver = j;
+                                            amountbigships = Integer.parseInt(arguments[4]);
+                                            amountsmallships = Integer.parseInt(arguments[5]);
+                                            if (amountbigships < sender.getBigShipAmount() && amountbigships < sender.getSmallShipAmount()) {
+                                                Methods.moveCrew(amount, sender, receiver, amountbigships, amountsmallships);
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    System.out.println("Oilrig not found!!");
+                                }
+                            }

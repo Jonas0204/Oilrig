@@ -1,22 +1,23 @@
 package assets;
 
-import Programm.Methods;
 import java.util.ArrayList;
 
+import Programm.InputOutput;
+import Programm.InputOutput.*;
+import Programm.Methods;
 
-public class Oilrig{
+public class Oilrig {
 
     private final int id;
-    private final ArrayList<Worker> workersOnPlatform = new ArrayList<Worker>();
-    private final ArrayList<ShipSmall> smallShipsOnPlatform = new ArrayList<ShipSmall>();
-    private final ArrayList<ShipBig> bigShipsOnPlatform = new ArrayList<ShipBig>();
-    public final int initialCrew;
+    private ArrayList<Worker> workersOnPlatform = new ArrayList<Worker>();
+    private ArrayList<ShipSmall> smallShipsOnPlatform = new ArrayList<ShipSmall>();
+    private ArrayList<ShipBig> bigShipsOnPlatform = new ArrayList<ShipBig>();
+    private final int initialCrew;
     private final int initialBigShips;
     private final int initialSmallShips;
     private boolean evacuate = false;
 
     // Constructor
-    // @autor Jonas & Matthias
     public Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips) {
         this.id = id;
         this.initialCrew = initialCrew;
@@ -24,29 +25,18 @@ public class Oilrig{
         this.initialSmallShips = initialSmallShips;
 
         //Add Workers to Oilrig
-        // @see Methods.getCounterShips @autor Jonas
-        // Debug System.out.println(String.valueOf(Methods.getCounterWorker()) + " < " + String.valueOf(initialCrew + Methods.getCounterWorker()));
-
-        int initMax = initialCrew + Methods.getCounterWorker();
-
-        for (int i = Methods.getCounterWorker(); i < initMax; i++) {
-            this.workersOnPlatform.add(new Worker(i));
-            Methods.addCounterWorker();
+        for (int i = 0; i < initialCrew; i++) {
+            this.workersOnPlatform.add(new Worker(i, "Helmut", 30));
         }
 
-        initMax = initialBigShips + Methods.getCounterShips();
         //Add BigShips to Oilrig
-        // @see Methods.getCounterShips
-        for (int i = Methods.getCounterShips(); i < initMax; i++) {
-            this.bigShipsOnPlatform.add(new ShipBig(i));
-            Methods.addCounterShips();
+        for (int i = 0; i < initialBigShips; i++) {
+            this.bigShipsOnPlatform.add(new ShipBig(i*10));
         }
 
-        initMax = initialSmallShips + Methods.getCounterShips();
         //Add SmallShips to Oilrig
-        for (int i = Methods.getCounterShips(); i < initMax; i++) {
-            this.smallShipsOnPlatform.add(new ShipSmall(i));
-            Methods.addCounterShips();
+        for (int i = 0; i < initialSmallShips; i++) {
+            this.smallShipsOnPlatform.add(new ShipSmall(i*1000));
         }
     }
 
@@ -55,166 +45,156 @@ public class Oilrig{
         return id;
     }
 
-    public int getBigShipAmount(){
-        return bigShipsOnPlatform.size();
+    public int getInitialBigShips() {
+        return initialBigShips;
     }
 
-    public int getSmallShipAmount(){
-        return bigShipsOnPlatform.size();
-    }
-    public int getWorkerAmount(){
-        return workersOnPlatform.size();
+    public int getInitialSmallShips() {
+        return initialSmallShips;
     }
 
-    //@autor Jonas
+    public ShipBig getShipBigByID(int id){
+        ShipBig temp;
+        for (ShipBig i : bigShipsOnPlatform) {
+            if(i.getId() == id){
+                temp = i;
+                bigShipsOnPlatform.remove(temp);
+                return temp;
+            }
+        }
+        System.out.println("ShipBig not found!!");
+        return null;
+    }
+
+    public ShipSmall getShipSmallByID(int id){
+        ShipSmall temp;
+        for (ShipSmall i : smallShipsOnPlatform) {
+            if(i.getId() == id){
+                temp = i;
+                bigShipsOnPlatform.remove(temp);
+                return temp;
+            }
+        }
+        System.out.println("ShipSmall not found!!");
+        return null;
+    }
+
     public void addBigShip(ShipBig ship) {
         bigShipsOnPlatform.add(ship);
     }
+
     public void addSmallShip(ShipSmall ship){
         smallShipsOnPlatform.add(ship);
     }
-    public ShipSmall getSmallShipById(int id){
-        for (ShipSmall ship : smallShipsOnPlatform){
-            if (ship.getId() == id) return ship;
-        }
-        return null;
-    }
-    public ShipBig getBigShipById(int id){
+
+    public ShipBig getEmptyBigShip() {
+        ShipBig temp;
         for (ShipBig ship : bigShipsOnPlatform) {
-            if (ship.getId() == id) return ship;
+            if (ship.isEmpty()) {
+                temp = ship;
+                bigShipsOnPlatform.remove(ship);
+                return temp;
+            }
         }
+        System.out.println("Oilrig id: " + id + " cant get empty ship!");
         return null;
     }
 
-    //check-Methoden
-    public boolean checkTotalShipCountBiggerOne(){
-        int i = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
-        return i >= 1;
-    }
-
-    private boolean checkBigShipCountBelowMax(){
-        int maxAllowedShips = initialBigShips * 2;
-        int dockedShips = bigShipsOnPlatform.size();
-        return dockedShips < maxAllowedShips;
-    }
-
-    private boolean checkSmallShipCountBelowMax(){
-        int maxAllowedShips = initialSmallShips * 2;
-        int dockedShips = smallShipsOnPlatform.size();
-        return dockedShips < maxAllowedShips;
-    }
-
-    //@author Louis
-    //return: kann Platform receiver ein kleines Schiff aufnehmen
-    public boolean checkOilrigCanReceiveSmallShip(){
-        return this.getSmallShipAmount() + 1 <= this.initialSmallShips + 4;
-    }
-
-    //@author Louis
-    //return: kann Platform receiver ein grosses Schiff aufnehmen
-    public boolean checkOilrigCanReceiveBigShip(){
-        return this.getBigShipAmount() + 1 <= this.initialBigShips + 4;
-    }
-
-    public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
-        for (int i = 1; i <= amount; i++){
-            Worker tempWorker = workersOnPlatform.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
-            workersOnPlatform.remove(0);
-            ship.receiveWorker(tempWorker);
-        }
-    }
-    public void transferWorkerOilrigToShip(int amount, ShipBig ship) {
-        for (int i = 1; i <= amount; i++){
-            Worker tempWorker = workersOnPlatform.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
-            workersOnPlatform.remove(0);
-            ship.receiveWorker(tempWorker);
-        }
-    }
-    public void transferAllWorkerShipToOilrig(ShipSmall ship){
-        ArrayList<Worker> wTransfer = ship.departureAll();
-        workersOnPlatform.addAll(wTransfer);
-    }
-    public void transferAllWorkerShipToOilrig(ShipBig ship){
-        ArrayList<Worker> wTransfer = ship.departureAll();
-        workersOnPlatform.addAll(wTransfer);
-    }
-
-    public void undockShip(ShipSmall ship){
-        int id = ship.getId();
-        for (int i = 0; i < smallShipsOnPlatform.size(); i++) {
-            if (smallShipsOnPlatform.get(i).getId() == id) {
-                try{
-                    smallShipsOnPlatform.remove(i);
-                }catch (IndexOutOfBoundsException oobe){
-                    System.out.println("an error occurred: " + oobe.getMessage());
-                }
+    public ShipSmall getEmptySmallShip() {
+        for (ShipSmall ship : smallShipsOnPlatform) {
+            if (ship.isEmpty()) {
+                return ship;
             }
         }
-    }
-    public void undockShip(ShipBig ship){
-        int id = ship.getId();
-        for (int i = 0; i < bigShipsOnPlatform.size(); i++) {
-            if (bigShipsOnPlatform.get(i).getId() == id) {
-                try{
-                    bigShipsOnPlatform.remove(i);
-                }catch (IndexOutOfBoundsException oobe){
-                    System.out.println("an error occurred: " + oobe.getMessage());
-                }
-            }
-        }
-    }
-    public void dockShip(ShipSmall ship){
-        smallShipsOnPlatform.add(ship);
-    }
-    public void dockShip(ShipBig ship){
-        bigShipsOnPlatform.add(ship);
+        System.out.println("Oilrig id: " + id + " cant get empty ship!");
+        return null;
     }
 
-    //UserInterface
-    //@author Louis
+    public void sendBigShip(Oilrig destination, int crew, boolean evacuate){
+        if(crew <= ShipBig.maxCapacity){
+            if(!evacuate){
+                if((workersOnPlatform.size() - crew) < initialCrew && bigShipsOnPlatform.size() > 1){
+                    if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
+                        if((destination.initialBigShips + 4) >= (destination.bigShipsOnPlatform.size() + 1))   {
+                            destination.addBigShip(bigShipsOnPlatform.get(1));
+                        }else{
+                            System.out.println("Cant send, sending will exceed the max capacity of Bigships");
+                        }
+                    }else{
+                        System.out.println("Cant send, sending will exceed capacity of destination");
+                    }
+                }else{
+                    System.out.println("Cant send, sending will fall below initial capacity of workers or the number of big ships on this plattform will fall below 1");
+                }
+            }else{
+                //EVACUATE
+            }
+        }else{
+            System.out.println("The crew to be sent exceeds the capacity of the ship");
+        }
+    }
+
+    public void sendSmallShip(Oilrig destination, int id, int crew, boolean evacuate){
+        if(crew <= ShipSmall.maxCapacity){
+            if(!evacuate){
+                if((workersOnPlatform.size() - crew) < initialCrew && smallShipsOnPlatform.size() > 1){
+                    if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
+                        if((destination.initialSmallShips + 4) >= (destination.smallShipsOnPlatform.size() + 1))   {
+                            destination.addSmallShip(smallShipsOnPlatform.get(1));
+                        }else{
+                            System.out.println("Cant send, sending will exceed the max capacity of Smallships");
+                        }
+                    }else{
+                        System.out.println("Cant send, sending will exceed capacity of destination");
+                    }
+                }else{
+                    System.out.println("Cant send, sending will fall below initial capacity of workers or the number of small ships on this plattform will fall below 1");
+                }
+            }else{
+                //EVACUATE
+            }
+        }else{
+            System.out.println("The crew to be sent exceeds the capacity of the ship");
+        }
+    }
+
     public String GetInformationOverview() {
 
         String result = "";
-        // int sumOfShips = getBigShipAmount() + getSmallShipAmount();   // Fehlerhaft, 3+4 ist nicht 6
-        //int sumOfShips = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
+        int sumOfShips = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
+
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
-        result += "amount of ships docked: " + ( bigShipsOnPlatform.size() + smallShipsOnPlatform.size() ) + "\n";
+        result += "amount of ships docked: " + sumOfShips + "\n";
         result += "          big ships   : " + bigShipsOnPlatform.size() + "\n";
         result += "          small ships : " + smallShipsOnPlatform.size() + "\n";
         result += "amount of workers     : " + workersOnPlatform.size() + "\n";
         return result;
     }
-
     public String GetInformationOilrig() {
 
         String result = "";
         String bigShipsOnPlatformString = "|";
         String smallShipsOnPlatformString = "|";
-        
-        //Integer.toString kann NullPointerException werfen
+        String workersOnPlatformString = "|";
+
         for(int i = 0; i < bigShipsOnPlatform.size(); i++) {
-            try{
-                bigShipsOnPlatformString += Integer.toString(bigShipsOnPlatform.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
-            }catch (NullPointerException npe){
-               System.out.println("an error occured: " + npe.getMessage());
-            }
+            bigShipsOnPlatformString += Integer.toString(bigShipsOnPlatform.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
         }
 
         for(int i = 0; i < smallShipsOnPlatform.size(); i++) {
-            try{
-                smallShipsOnPlatformString += Integer.toString(smallShipsOnPlatform.get(i).getId()) + "|";
-            }catch(NullPointerException npe){
-                System.out.println("an error occured: " + npe.getMessage());
-            }
+            smallShipsOnPlatformString += Integer.toString(smallShipsOnPlatform.get(i).getId()) + "|";
         }
 
-        //Output
+        for(int i = 0; i < workersOnPlatform.size(); i++) {
+            workersOnPlatformString += Integer.toString(workersOnPlatform.get(i).getId()) + "|";
+        }
+
         result += "Oilrig ID: " + id + "\n";
-        result += "------------------------------\n";
-        result += "big ships             : " + bigShipsOnPlatformString + "\n";
-        result += "small ships           : " + smallShipsOnPlatformString + "\n";
-        result += "amount of workers     : " + workersOnPlatform.size() + "\n";
+        result += "---------------------------------------------------------------------------------------------------------\n";
+        result += "big ships   : " + bigShipsOnPlatformString + "\n";
+        result += "small ships : " + smallShipsOnPlatformString + "\n";
+        result += "workers     : " + workersOnPlatformString + "\n";
 
         return result;
     }
