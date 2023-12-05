@@ -29,6 +29,6 @@ public class Main {
 //unused Stuff löschen!!!
 //getShipById vereinfacht maybe manche anderen Prozesse mit getBigShipById und getSmallShipbyId --- Rekursion!!!
 //welche nachricht wann prüfen!!!
-//Listen sortieren bei Ausgabe!!!
 //evakuierungsplan und methode schreiben!!!
 //try-catch in Methods 109
+// Schiffe müssen wissen, an welcher Plattform sie momentan sind

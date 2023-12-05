@@ -214,7 +214,7 @@ public class Oilrig{
 
         for(int i = 0; i < smallShipsOnOilrig.size(); i++) {
             try{
-                smallShipsOnOilrigString += Integer.toString(smallShipsOnOilrig.get(i).getId()) + "|";  //siehe oben
+                smallShipsOnOilrigString += Integer.toString(tempArray2.get(i).getId()) + "|";  //siehe oben
             }catch(NullPointerException npe){
                 System.out.println("an error occured: " + npe.getMessage());
             }
