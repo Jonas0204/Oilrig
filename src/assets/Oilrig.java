@@ -2,7 +2,7 @@ package assets;
 
 import programm.Methods;
 import java.util.ArrayList;
-
+import java.util.Collections;
 
 public class Oilrig{
 
@@ -221,7 +221,12 @@ public class Oilrig{
         String bigShipsOnOilrigString = "|";
         String smallShipsOnOilrigString = "|";
 
-        for(int i = 0; i < bigShipsOnOilrig.size(); i++) {
+        // duplizierte Liste wird nach IDs sortiert bigShip
+        ArrayList<ShipBig> tempArray1 = new ArrayList<>();
+        tempArray1.addAll(bigShipsOnOilrig);
+        Collections.sort(tempArray1);
+
+        for(int i = 0; i < tempArray1.size(); i++) {
             try{    //Integer.toString kann NullPointerException werfen
                 bigShipsOnOilrigString += Integer.toString(tempArray1.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
             }catch (NullPointerException npe){
