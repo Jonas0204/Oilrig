@@ -4,12 +4,13 @@ import assets.EvacuationPlanerItem;
 import assets.Oilrig;
 import java.util.ArrayList;
 import static programm.Methods.printStartupHeader;
+import static programm.Methods.handleInput;
 
 public class Main {
 
     public static void main(String[] args) {
         ArrayList<Oilrig> oilrigs = new ArrayList<>();
-        Oilrig platform1 = new Oilrig(1, 260, 5, 4);
+        Oilrig platform1 = new Oilrig(1, 760, 5, 4);
         Oilrig platform2 = new Oilrig(2, 520, 4, 4);
         Oilrig platform3 = new Oilrig(3, 360, 3, 4);
         Oilrig platform4 = new Oilrig(4, 120, 2, 2);
@@ -19,9 +20,10 @@ public class Main {
         oilrigs.add(platform4);
 
         printStartupHeader();
-        Methods.handleInput(oilrigs);
+        handleInput(oilrigs);
     }
 }
+
 //TO DO:
 //Benennungsregeln und Sprache überprüfen!!!
 //unused Stuff löschen!!!
@@ -29,4 +31,4 @@ public class Main {
 //welche nachricht wann prüfen!!!
 //Listen sortieren bei Ausgabe!!!
 //evakuierungsplan und methode schreiben!!!
-//try-catch in Methods 109 - was das!!!
+//try-catch in Methods 109

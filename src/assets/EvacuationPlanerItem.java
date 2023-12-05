@@ -3,7 +3,7 @@ package assets;
 public class EvacuationPlanerItem {
 
     public final int shipId;
-    public final int usedCrew;
+    public int usedCrew;
     public final String type;
     public int destinationOr;
 

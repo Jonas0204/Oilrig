@@ -251,15 +251,17 @@ public class Oilrig{
             int temp = evenWorkerPerShip * totalEqualShips;                 // Hochrechnung der ungenauen Zahl auf den benötigten Gesamtwert für Arbeiter
             int diffFormDouble = spaceNeeded - temp;                        // Differenz zwischen eigentlich benötigtem Platz und der Hochrechnung der ungenauen Zahl (temp) --- überschüssige Arbeiter
 
-            //ArrayList<Integer> idsSmallShip = new ArrayList<>();
-            //ArrayList<Integer> idsBigShip = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
 
             for (ShipSmall ship : smallShipsOnOilrig) {
-                ep.add(new EvacuationPlanerItem(ship.getId(), evenWorkerPerShip, "smallship"));
+                //System.out.println(ship.getId());
+                epSmallShips.add(new EvacuationPlanerItem(ship.getId(), evenWorkerPerShip, "smallship"));
                 //idsSmallShip.add(ship.getId());
             }
             for (ShipBig ship : bigShipsOnOilrig) {
-                ep.add(new EvacuationPlanerItem(ship.getId(), 2 * evenWorkerPerShip, "bigship"));
+                //System.out.println(ship.getId());
+                epBigShips.add(new EvacuationPlanerItem(ship.getId(), 2 * evenWorkerPerShip, "bigship"));
                 //idsBigShip.add(ship.getId());
             }
 
@@ -268,37 +270,114 @@ public class Oilrig{
             int bigShipConter = 0;
             int smallShipCounter = 0;
 
-            for (int iShip = 0; iShip < ep.size(); iShip++) {
-                for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
-                    System.out.println("Schleife von Or:" + otherOrs.get(iOr).getId());
-                    int freeSpace = otherOrs.get(iOr).getFreeCapacity();
-                    System.out.println("Freespace: " + freeSpace + " - " + (2 * evenWorkerPerShip));
+            //ArrayList<EvacuationPlanerItem> tempEP = new ArrayList<>();
 
-                    EvacuationPlanerItem itemBig = getEP_AtTypeIndex(bigShipConter, "bigship");
-                    EvacuationPlanerItem itemSmall = getEP_AtTypeIndex(smallShipCounter, "smallship");
-                    if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && itemBig != null)){
+            for (int i = 0; i < epBigShips.size(); i++){
+                for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                    // Wenn voll zum Nächsten
+                    if (otherOrs.get(iOr).workersOnOilrig.size() < evenWorkerPerShip) break;
+
+                    int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                    EvacuationPlanerItem tempItem = epBigShips.get(i);
+                    //System.out.println(tempItem.shipId);
+
+                    if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && tempItem != null)){
                         bigShipConter++;
                         otherOrs.get(iOr).addEmptyWorkers(2 * evenWorkerPerShip);
-                        itemBig.destinationOr = otherOrs.get(iOr).getId();
-                        System.out.println("Dest: " + itemBig.destinationOr);
+                        tempItem.destinationOr = otherOrs.get(iOr).getId();
+                        ep.add(tempItem);
+                        System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                        break;
                     }
-                    else if ((freeSpace - evenWorkerPerShip) >= 0 && itemSmall != null) {
+                }
+            }
+            for (int i = 0; i < epSmallShips.size(); i++){
+                for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                    // Wenn voll zum Nächsten
+                    if (otherOrs.get(iOr).workersOnOilrig.size() < evenWorkerPerShip) break;
+
+                    int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                    EvacuationPlanerItem tempItem = epSmallShips.get(i);
+
+                    if ((freeSpace - evenWorkerPerShip) >= 0 && tempItem != null) {
+                        System.out.println(tempItem.shipId);
                         smallShipCounter++;
                         otherOrs.get(iOr).addEmptyWorkers(evenWorkerPerShip);
-                        itemSmall.destinationOr = otherOrs.get(iOr).getId();
-                        System.out.println("Dest: " + itemSmall.destinationOr);
+                        tempItem.destinationOr = otherOrs.get(iOr).getId();
+                        ep.add(tempItem);
+                        System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                        break;
                     }
-                    else break;
                 }
             }
             System.out.println(getEvacuationPlanerInfo());
         }
         else {
-            System.out.println("Debug: falscher weg");
+            System.out.println("Debug: Hilfe rufen! Alaaaaarm");
             //Weiter Schiffe anfordern
+            ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(id);
+            ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
+
+            while (difference < 0){
+                if (difference <= -100){
+                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "bigship");
+                    if (tempForNotNull != null) {
+                        epBigShips.add(tempForNotNull);
+                        difference -= 100;
+                    }
+                    else {
+                        System.out.println("an error occurred: something went wrong while calling for help");
+                        return false;
+                    }
+                    // Abbruchbedingung für kein Schiff vorhanden
+                } else if (difference <= -50) {
+                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "smallship");
+                    if (tempForNotNull != null) {
+                        epSmallShips.add(tempForNotNull);
+                        difference -= 100;
+                    }
+                    else {
+                        System.out.println("an error occurred: something went wrong while calling for help");
+                        return false;
+                    }
+                    // @Jonas Maybe/Maybenot Abbruchbedingung für kein Schiff vorhanden
+                }
+            }
+
+            for (ShipSmall ship : smallShipsOnOilrig) {
+                epSmallShips.add(new EvacuationPlanerItem(ship.getId(), 0, "smallship"));
+            }
+            for (ShipBig ship : bigShipsOnOilrig) {
+                epBigShips.add(new EvacuationPlanerItem(ship.getId(), 0, "bigship"));
+            }
+            int avaSmallShips = epSmallShips.size();
+            int avaBigShips = epBigShips.size();
+
+            // Planerstellung auslagern
+
         }
 
         return false;
+    }
+
+    private EvacuationPlanerItem callForBigShipEP(ArrayList<Oilrig> otherOr, String type){
+        if (type == "bigship"){
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.bigShipsOnOilrig.isEmpty()) {
+                    ShipBig ship = oilrig.bigShipsOnOilrig.get(0);
+                    return new EvacuationPlanerItem(ship.getId(), 0, type);
+                }
+            }
+        } else {
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.smallShipsOnOilrig.isEmpty()) {
+                    ShipSmall ship = oilrig.smallShipsOnOilrig.get(0);
+                    return new EvacuationPlanerItem(ship.getId(), 0, type);
+                }
+            }
+        }
+        return null;
     }
 
     private int getFreeCapacity(){
