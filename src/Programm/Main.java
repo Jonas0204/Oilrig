@@ -18,9 +18,11 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-        //Show fancy Headline
         //Methods.startupHeader();
-        //Start Inputhandler in while(true)
-        InputOutput.InputHandler(oilrigs);
+        //InputOutput.InputHandler(oilrigs);
+        int[] result = Methods.getdistribution(150, 1, 1);
+        System.out.println("Big ships needed " + result[0] + "\n" + "Small ships needed " + result[1]);
+
+
     }
 }

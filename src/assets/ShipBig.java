@@ -56,7 +56,6 @@ public class ShipBig{
         return false;
     }
 
-    //@author Louis
     public String GetShipInformation() {
         int freeCapacity = maxCapacity - crew.size();
         String result = "";

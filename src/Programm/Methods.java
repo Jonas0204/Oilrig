@@ -39,12 +39,12 @@ public class Methods {
     //@author Louis
     public static void PrintHelp() {
         System.out.println("------------------------------------------ HELP PAGE --------------------------------------------");
-        System.out.println("help 				                                        = (This window)");
-        System.out.println("overview  	 		                                        = open overview");
-        System.out.println("oilriginfo [oilrig ID] 	                                    = open oilrig");
-        System.out.println("movecrew [amount] [sender Oilrig id] [reciver Oilrig id]    = Sends Crew to Destination in Big and Small Ships");
-        System.out.println("evacuate [oilrig ID]                                        = evacuate oilrig and safe crew to another oilrig");
-        System.out.println("exit				                                        = exit programm");
+        System.out.println("help 				                                                                                        = (This window)");
+        System.out.println("overview  	 		                                                                                        = get complete overview");
+        System.out.println("oilriginfo [oilrig ID] 	                                                                                    = get oilrig info");
+        System.out.println("movecrew [amount] [sender Oilrig id] [reciver Oilrig id] [amount of big ships] [amount of small ships]      = Sends Crew to Destination in Big and Small Ships");
+        System.out.println("evacuate [oilrig ID]                                                                                        = evacuate oilrig and safe crew to another oilrig");
+        System.out.println("exit				                                                                                        = exit programm");
         System.out.println("\n\n");
     }
 
@@ -88,15 +88,6 @@ public class Methods {
                         move 100  21 22 0   1 Nicht möglich
                         move 120  21 22 100 200 Nicht möglich
                         Min an Crew und Schiffen beachten wenn
-    */
-
-    public static void move(int amount, Oilrig sender, Oilrig receiver, int bigShip, int smallShip){
-        if(amount != 0){
-
-        }else{
-
-        }
-    }
 
     //   Crew   Ist Schiff  max Cap aS  Differenz   Lösung
     //1: 760 -> 5*100 + 4*50 = 700 -> posdiff > 50 = Großes Leeres Schiff
@@ -104,27 +95,50 @@ public class Methods {
     //3: 360 -> 5*100 + 3*50 = 650 -> posdiff 0 = 4*100
     //4: 420 -> 6*100 + 2*50 = 700 -> posdiff 0 = 4*100 + 1*50
 
+    */
+
+    public static void move(int amount, Oilrig sender, Oilrig receiver, int bigShip, int smallShip){
+        if(amount != 0){
+
+        }else{
+            for (int i = 0; i < bigShip; i++) {
+                sender.sendBigShip(receiver, 0, false);
+            }
+            for (int j = 0; j < smallShip; j++) {
+                sender.sendSmallShip(receiver, 0, false);
+            }
+            System.out.println("Sending Successful");
+            System.out.println(sender.GetInformationOverview() + "\n" + receiver.GetInformationOverview());
+        }
+    }
+
     //Returnt Array dessen erster Index die Anzahl an Small und der zweite die Anzahl an BigShips ist
-    /*
-    public static getdistribution(int crew, int amountbigship, int amountsmallship){
-        int[] ships = new int[2];
+    public static int[] getdistribution(int crew, int amountbigship, int amountsmallship){
+        int[] shipsneeded = {0,0};
         int maxcrewcap = amountbigship*100 + amountsmallship*100;
         int bigshipneeded = 0;
         int smallshipneeded = 0;
-
-        if(crew < maxcrewcap){
-            if((crew % 100) == 0){
-                bigshipneeded = crew / 100;
-                System.out.println("Can be handled by Big ship only with " + bigshipneeded + " big ships");
+        if(crew > 0){
+            if(crew <= maxcrewcap){
+                while(crew >= 0){
+                    if(crew > 50){
+                        bigshipneeded++;
+                        crew = crew - 100;
+                    }else if(crew <= 50){
+                        smallshipneeded++;
+                    }
+                }
             }else{
-                bigshipneeded = crew / 100;
-                smallshipneeded = (crew % 100) / 50;
-                System.out.println("Cant be handled by Big ship has to use" + bigshipneeded + " as big and " + smallshipneeded + "as small");
+                int difference = crew - maxcrewcap * -1;
+                System.out.println("Max capship is greater than crew by " + difference);
             }
+            shipsneeded[0] = bigshipneeded;
+            shipsneeded[1] = smallshipneeded;
+            return shipsneeded;
         }else{
-            int difference = crew - maxcrewcap * -1;
-            System.out.println("Max capship is greater than crew by " + difference);
+            return shipsneeded;
         }
-    }*/
+
+    }
 
 }

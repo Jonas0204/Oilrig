@@ -43,7 +43,7 @@ public class InputOutput {
                             receiver = Methods.getPlatformByID(Integer.parseInt(arguments[3]), oilrigs);
                             amountbigships = Integer.parseInt(arguments[4]);
                             amountsmallships = Integer.parseInt(arguments[5]);
-                            Methods.move(amountbigships, sender, receiver, amountbigships, amountsmallships);
+                            Methods.move(amountofcrew, sender, receiver, amountbigships, amountsmallships);
                         } catch (Exception e) {
                             System.out.println("ERROR");
                         }
@@ -60,13 +60,10 @@ public class InputOutput {
                             System.out.println("ERROR");
                         }
                         break;
-                    case "oilrig":
+                    case "oilriginfo":
                         try {
-                            for (Oilrig i : oilrigs) {
-                                if (Integer.parseInt(arguments[1]) == i.getId()) {
-                                    System.out.println(i.GetInformationOverview());
-                                }
-                            }
+                            sender = Methods.getPlatformByID(Integer.parseInt(arguments[1]), oilrigs);
+                            System.out.println(sender.GetInformationOverview());
                         } catch (Exception e) {
                             System.out.println("ERROR");
                         }

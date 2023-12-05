@@ -1,5 +1,6 @@
 package assets;
 
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 
 import Programm.InputOutput;
@@ -71,7 +72,7 @@ public class Oilrig {
         for (ShipSmall i : smallShipsOnPlatform) {
             if(i.getId() == id){
                 temp = i;
-                bigShipsOnPlatform.remove(temp);
+                smallShipsOnPlatform.remove(temp);
                 return temp;
             }
         }
@@ -87,36 +88,14 @@ public class Oilrig {
         smallShipsOnPlatform.add(ship);
     }
 
-    public ShipBig getEmptyBigShip() {
-        ShipBig temp;
-        for (ShipBig ship : bigShipsOnPlatform) {
-            if (ship.isEmpty()) {
-                temp = ship;
-                bigShipsOnPlatform.remove(ship);
-                return temp;
-            }
-        }
-        System.out.println("Oilrig id: " + id + " cant get empty ship!");
-        return null;
-    }
-
-    public ShipSmall getEmptySmallShip() {
-        for (ShipSmall ship : smallShipsOnPlatform) {
-            if (ship.isEmpty()) {
-                return ship;
-            }
-        }
-        System.out.println("Oilrig id: " + id + " cant get empty ship!");
-        return null;
-    }
-
     public void sendBigShip(Oilrig destination, int crew, boolean evacuate){
         if(crew <= ShipBig.maxCapacity){
             if(!evacuate){
-                if((workersOnPlatform.size() - crew) < initialCrew && bigShipsOnPlatform.size() > 1){
+                if((workersOnPlatform.size() - crew) > initialCrew*0.1 && bigShipsOnPlatform.size() > 1){
                     if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
                         if((destination.initialBigShips + 4) >= (destination.bigShipsOnPlatform.size() + 1))   {
                             destination.addBigShip(bigShipsOnPlatform.get(1));
+                            bigShipsOnPlatform.remove(1);
                         }else{
                             System.out.println("Cant send, sending will exceed the max capacity of Bigships");
                         }
@@ -134,13 +113,15 @@ public class Oilrig {
         }
     }
 
-    public void sendSmallShip(Oilrig destination, int id, int crew, boolean evacuate){
+    public void sendSmallShip(Oilrig destination, int crew, boolean evacuate){
+
         if(crew <= ShipSmall.maxCapacity){
             if(!evacuate){
-                if((workersOnPlatform.size() - crew) < initialCrew && smallShipsOnPlatform.size() > 1){
+                if((workersOnPlatform.size() - crew) > initialCrew*0.1 && smallShipsOnPlatform.size() > 1){
                     if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
                         if((destination.initialSmallShips + 4) >= (destination.smallShipsOnPlatform.size() + 1))   {
                             destination.addSmallShip(smallShipsOnPlatform.get(1));
+                            smallShipsOnPlatform.remove(1);
                         }else{
                             System.out.println("Cant send, sending will exceed the max capacity of Smallships");
                         }
