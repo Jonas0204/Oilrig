@@ -9,11 +9,14 @@ public class ShipSmall extends Ship{
     ArrayList<Worker> crewSmall = new ArrayList<Worker> ();
     protected final int maxCapacity = 50;
 
+    //@author Louis, Jonas
+    // Constructor
     public ShipSmall(int id) {
         this.id = getCounterShips();
     }
 
-    //Add Worker to Crew
+    //@author Matthias
+    // fügt Arbeiter der Crew hinzu
     public void receiveWorker(Worker worker) {
         if (crewSmall.size() < maxCapacity) {
             crewSmall.add(worker);
@@ -22,6 +25,7 @@ public class ShipSmall extends Ship{
         }
     }
 
+    //@author Matthias
     public ArrayList<Worker> departureAll() {
         ArrayList<Worker> temp = new ArrayList<Worker>(crewSmall);
         crewSmall.clear();
@@ -29,11 +33,12 @@ public class ShipSmall extends Ship{
     }
 
     //@author Louis
-    public String getShipInformation() { //Output Infomation Schiff (auch siehe ShipBig)
+    // Output Infomation Schiff (auch siehe ShipBig)
+    public String getShipInformation() {
         int freeCapacity = maxCapacity - crewSmall.size();
         String result = "";
 
-        //Output
+        // Output
         result += "Ship ID: " + id + "\n";
         result += "------------------------------\n";
         result += "max.capacity    : " + maxCapacity + "\n";

@@ -51,15 +51,14 @@ public class Oilrig{
         }
     }
 
+    //@author Matthias
     // Get and Set methods
     public int getId() {
         return id;
     }
-
     public int getBigShipAmount(){
         return bigShipsOnOilrig.size();
     }
-
     public int getSmallShipAmount(){
         return bigShipsOnOilrig.size();
     }
@@ -74,6 +73,8 @@ public class Oilrig{
     public void addSmallShip(ShipSmall ship){
         smallShipsOnOilrig.add(ship);
     }
+
+    //@author Jonas
     public ShipSmall getSmallShipById(int id){
         for (ShipSmall ship : smallShipsOnOilrig){
             if (ship.getId() == id) return ship;
@@ -86,8 +87,9 @@ public class Oilrig{
         }
         return null;
     }
-
-    public Ship getShipById(int id){    //vereint getSmallShipById(int id) und getBigShipById(int id)
+    //vereint getSmallShipById(int id) und getBigShipById(int id)
+    //@author Louis
+    public Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
         }
@@ -97,36 +99,33 @@ public class Oilrig{
         return null;
     }
 
+    //@author Jonas
     //check-Methoden
     public boolean checkTotalShipCountBiggerOne(){
         int i = bigShipsOnOilrig.size() + smallShipsOnOilrig.size();
         return i >= 1;
     }
-
     private boolean checkBigShipCountBelowMax(){
         int maxAllowedShips = initialBigShips * 2;
         int dockedShips = bigShipsOnOilrig.size();
         return dockedShips < maxAllowedShips;
     }
-
     private boolean checkSmallShipCountBelowMax(){
         int maxAllowedShips = initialSmallShips * 2;
         int dockedShips = smallShipsOnOilrig.size();
         return dockedShips < maxAllowedShips;
     }
-
-    //@author Louis
     //return: kann Platform receiver ein kleines Schiff aufnehmen
     public boolean checkOilrigCanReceiveSmallShip(){
         return this.getSmallShipAmount() + 1 <= this.initialSmallShips + 4;
     }
-
-    //@author Louis
     //return: kann Platform receiver ein grosses Schiff aufnehmen
     public boolean checkOilrigCanReceiveBigShip(){
         return this.getBigShipAmount() + 1 <= this.initialBigShips + 4;
     }
 
+    //@author Jonas
+    //Hilfsmethoden zum bewegen eines Schiffs
     public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
@@ -149,7 +148,6 @@ public class Oilrig{
         ArrayList<Worker> wTransfer = ship.departureAll();
         workersOnOilrig.addAll(wTransfer);
     }
-
     public void undockShip(ShipSmall ship){
         int id = ship.getId();
         for (int i = 0; i < smallShipsOnOilrig.size(); i++) {
@@ -181,22 +179,25 @@ public class Oilrig{
         bigShipsOnOilrig.add(ship);
     }
 
-    //UserInterface
+    // UserInterface
     //@author Louis
-    public String getInformationOverview() { //Output Information aller Ölplattformen (hier nur eine, alle über Schleife gelöst siehe handleInput()
+    // Output Information aller Ölplattformen (hier nur eine, alle über Schleife gelöst siehe handleInput()
+    public String getInformationOverview() {
 
         String result = "";
-        // int sumOfShips = getBigShipAmount() + getSmallShipAmount();   // Fehlerhaft, 3+4 ist nicht 6
-        //int sumOfShips = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
+
+        // Output
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
-        result += "amount of ships docked: " + ( bigShipsOnOilrig.size() + smallShipsOnOilrig.size() ) + "\n";
-        result += "          big ships   : " + bigShipsOnOilrig.size() + "\n";
+        result += "amount of ships docked: " + ( bigShipsOnOilrig.size() + smallShipsOnOilrig.size() ) + "\n";  // int sumOfShips = getBigShipAmount() + getSmallShipAmount();   // Fehlerhaft, 3+4 ist nicht 6
+        result += "          big ships   : " + bigShipsOnOilrig.size() + "\n";                                  //int sumOfShips = bigShipsOnPlatform.size() + smallShipsOnPlatform.size();
         result += "          small ships : " + smallShipsOnOilrig.size() + "\n";
         result += "amount of workers     : " + workersOnOilrig.size() + "\n";
         return result;
     }
 
+    //@author Louis
+    // Output Information einer bestimmten Ölplattfor
     public String getInformationOilrig() {
 
         String result = "";
@@ -219,7 +220,7 @@ public class Oilrig{
             }
         }
 
-        //Output Information einer bestimmten Ölplattform
+        // Output
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
         result += "big ships             : " + bigShipsOnOilrigString + "\n";
@@ -229,6 +230,8 @@ public class Oilrig{
         return result;
     }
 
+    //@author Jonas
+    // Evakuierungsmethoden
     public boolean checkEvacuationSpace(){
         int spaceAvailable = (smallShipsOnOilrig.size() * 50) + (bigShipsOnOilrig.size() * 100);
         int spaceNeeded = getWorkerAmount();
@@ -408,8 +411,10 @@ public class Oilrig{
         return null;
     }
 
+    //@author Louis
+    // Output des Evakuierungsplans
     public String getEvacuationPlanerInfo(){
-        //Output des Evakuierungsplans
+
         String result = "------------------------ Evacuation Plan ------------------------ \n";
         for (EvacuationPlanerItem epItem : ep) {
 
@@ -423,7 +428,7 @@ public class Oilrig{
             } else{
                 System.out.println("an error occurred: no ship found");
             }
-
+            // Output
             result += "Ship ID " + epItem.shipId + "     Crew " + epItem.usedCrew + "/" + maxCapacity + "       →→→       " + "destinated Oilrig ID " + epItem.destinationOr + "\n"; //Warning: => StringBuilder benutzen?
         }
         return result;

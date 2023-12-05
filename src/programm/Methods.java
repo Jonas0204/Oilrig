@@ -7,18 +7,19 @@ import assets.*;
 
 public class Methods {
 
-    private static ArrayList<Oilrig> oilrigs = new ArrayList<Oilrig>();
+   private static ArrayList<Oilrig> oilrigs = new ArrayList<Oilrig>();
 
+    // verarbeitet die Befehle (Konsoleninput) des Users und führt dementsprechende Methoden aus und sendet Output an User zurück
     public static void handleInput(ArrayList<Oilrig> oilrigsParam) {
         oilrigs = oilrigsParam;
 
         Scanner scanner = new Scanner(System.in);
         String input = "";
-        while (true) {
-
+        while (true) { // while-Schleife um ständig Befehle an das Programm geben zu können
             input = scanner.nextLine();
             String[] arguments = input.split(" ");
             switch (arguments[0]) {
+                //@author Louis
                 case "help": //help
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
@@ -26,6 +27,7 @@ public class Methods {
                     }
                     Methods.printHelp();
                     break;
+                //@author Jonas
                 case "move": //move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
                     if (arguments.length != 5) {
                         System.out.println("invalid amount of arguments provided");
@@ -33,6 +35,7 @@ public class Methods {
                     }
                     moveWorkers(arguments[1], arguments[2], arguments[3], arguments[4], false);
                     break;
+                //@author Jonas
                 case "evacuate": //evacuate [Oilrig id]
                     int id = 0;
                     try {
@@ -93,6 +96,7 @@ public class Methods {
                         System.out.println("an error occurred: Oilrig with that ID returns 'null' " + npe.getMessage());
                     }
                     break;
+                //@author Louis
                 case "exit": //exit
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
@@ -136,6 +140,7 @@ public class Methods {
         return senderIsTrue && receiverIsTrue;
     }
 
+    //@author Jonas
     //WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
     public static Oilrig getPlatByID(int ID) {
         try {
@@ -149,12 +154,14 @@ public class Methods {
         return null;
     }
 
+    //@author Jonas
     public static boolean evacuation(int evacuationId){
         Oilrig eOr = getPlatByID(evacuationId);
         boolean successful = eOr.checkEvacuationSpace();
         return true;
     }
 
+    //@author Jonas
     //Strings für Argumente in Input/Output
     public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
         int senderID = 0;
@@ -180,6 +187,7 @@ public class Methods {
         Oilrig receiverOr = Methods.getPlatByID(receiverID);
 
         // Feststellen welche Art von Schiff wir verschieben
+        // evtl. über getShipID() zusammenfassen
         assert senderOr != null;
         ShipSmall smallShip = senderOr.getSmallShipById(shipID);
         ShipBig bigShip = senderOr.getBigShipById(shipID);
@@ -202,7 +210,7 @@ public class Methods {
             return;
         }
 
-
+        // Bedingungen prüfen
         // Bedingung I) Auf jeder Plattform müssen sich immer mindestens 10% initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert.
         int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
         if (minWorkers >  senderOr.getWorkerAmount()){
@@ -240,9 +248,9 @@ public class Methods {
                 senderOr.transferWorkerOilrigToShip(amount, smallShip);
                 senderOr.undockShip(smallShip);
                 System.out.println("moving " + smallShip.getShipInformation());
-                // => Schiff beladen und abgedocked
+                // => Schiff beladen und abgedockt von Startplattform
 
-                // docking
+                // andocken an Zielplattform
                 receiverOr.dockShip(smallShip);
                 receiverOr.transferAllWorkerShipToOilrig(smallShip);
                 break;
@@ -250,9 +258,9 @@ public class Methods {
                 senderOr.transferWorkerOilrigToShip(amount, bigShip);
                 senderOr.undockShip(bigShip);
                 System.out.println("moving " + bigShip.getShipInformation());
-                // => Schiff beladen und abgedocked
+                // => Schiff beladen und abgedockt von Startplattform
 
-                // docking
+                // andocken an Zielplattform
                 receiverOr.dockShip(bigShip);
                 //System.out.println("test: " + bigShip.GetShipInformation());
                 receiverOr.transferAllWorkerShipToOilrig(bigShip);
@@ -262,6 +270,7 @@ public class Methods {
         }
     }
 
+    //@author Jonas
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
         returnOrList.addAll(oilrigs);
@@ -273,10 +282,8 @@ public class Methods {
         return returnOrList;
     }
 
-    private static int counterShips = 1;
-    private static int counterWorker = 1;
-
-    //@author Louis, Jonas
+    //@author Louis, Ayman
+    //Output Header und Ladebalken
     public static void printStartupHeader() {
         try {
             System.out.print("\n\n"); //Header
@@ -307,7 +314,8 @@ public class Methods {
     }
 
     //@author Louis
-    public static void printHelp() {    //Output für Help Befehl
+    //Output für Help Befehl
+    public static void printHelp() {
         System.out.println("-------------------------------------------------------- HELP --------------------------------------------------------");
         System.out.println("help 				                                                        = (This window)");
         System.out.println("overview  	 		                                                        = open overview");
@@ -321,6 +329,9 @@ public class Methods {
     /**
      * @autor Jonas
      */
+    private static int counterShips = 1;
+    private static int counterWorker = 1;
+
     public static int getCounterShips() {
         return counterShips;
     }
