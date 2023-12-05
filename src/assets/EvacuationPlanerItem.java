@@ -9,17 +9,18 @@ public class EvacuationPlanerItem {
 
     //@author Jonas
     //Constructor
-    public EvacuationPlanerItem(int shipId, int usedCrew, String type){
+    public EvacuationPlanerItem(int shipId, String type){
         this.shipId = shipId;
-        this.usedCrew = usedCrew;
+        this.usedCrew = 0;
         this.type = type;
         this.destinationOr = 0;
     }
 
     //@author Jonas
     public EvacuationPlanerItem clone(){
-        EvacuationPlanerItem item = new EvacuationPlanerItem(this.shipId, this.usedCrew, this.type);
-        item.destinationOr= this.destinationOr;
+        EvacuationPlanerItem item = new EvacuationPlanerItem(this.shipId, this.type);
+        item.destinationOr = this.destinationOr;
+        item.usedCrew = this.usedCrew;
         return item;
     }
 }

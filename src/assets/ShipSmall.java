@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import static programm.Methods.getCounterShips;
 
-public class ShipSmall extends Ship{
+public class ShipSmall extends Ship implements Comparable<ShipSmall>{
 
     ArrayList<Worker> crewSmall = new ArrayList<Worker> ();
     protected final int maxCapacity = 50;
@@ -46,5 +46,12 @@ public class ShipSmall extends Ship{
         result += "free capacity   : " + freeCapacity + "\n";
 
         return result;
+    }
+
+    //@author Nino, Jonas
+    // Sortierung für getInformationOilrig()
+    @Override
+    public int compareTo(ShipSmall o) {
+        return Integer.compare(this.getId(), o.getId());
     }
 }

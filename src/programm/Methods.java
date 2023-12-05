@@ -5,9 +5,13 @@ import java.util.Objects;
 import java.util.Scanner;
 import assets.*;
 
+import javax.print.attribute.standard.MediaSize;
+
 public class Methods {
 
    private static ArrayList<Oilrig> oilrigs = new ArrayList<Oilrig>();
+
+
 
     // verarbeitet die Befehle (Konsoleninput) des Users und führt dementsprechende Methoden aus und sendet Output an User zurück
     public static void handleInput(ArrayList<Oilrig> oilrigsParam) {
@@ -156,8 +160,8 @@ public class Methods {
 
     //@author Jonas
     public static boolean evacuation(int evacuationId){
-        Oilrig eOr = getPlatByID(evacuationId);
-        boolean successful = eOr.checkEvacuationSpace();
+        Oilrig eOr = new Oilrig(getPlatByID(evacuationId));
+        boolean successful = checkEvacuationSpace(eOr);
         return true;
     }
 
@@ -273,12 +277,23 @@ public class Methods {
     //@author Jonas
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
-        returnOrList.addAll(oilrigs);
+        for (int i = 0; i < oilrigs.size(); i++) {
+            Oilrig temp = new Oilrig(oilrigs.get(i));
+            returnOrList.add(temp);
+        }
+        //if (returnOrList == oilrigs) System.out.println("Selber Array");
+        //if (returnOrList.get(0).getId() == oilrigs.get(0).getId()) System.out.println("wtf");
         for (int i = 0; i < oilrigs.size(); i++) {
             if (oilrigs.get(i).getId() == senderID) {
                 returnOrList.remove(i);
             }
         }
+        if (returnOrList.get(0).workersOnOilrig == getPlatByID(1).workersOnOilrig) System.out.println("Same");
+        if (returnOrList.get(0).workersOnOilrig.equals(getPlatByID(1).workersOnOilrig)) System.out.println("Same2");
+        returnOrList.get(0).workersOnOilrig.add(new Worker(-1000));
+        if (returnOrList.get(0).workersOnOilrig == getPlatByID(1).workersOnOilrig) System.out.println("Same3");
+        if (returnOrList.get(0).workersOnOilrig.equals(getPlatByID(1).workersOnOilrig)) System.out.println("Same4");
+
         return returnOrList;
     }
 
@@ -343,6 +358,292 @@ public class Methods {
     }
     public static void addCounterWorker(){
         counterWorker++;
+    }
+
+
+    //@author Jonas
+    // Evakuierungsmethoden
+    public static boolean checkEvacuationSpace(Oilrig senderOr){
+        ArrayList<EvacuationPlanerItem> ep = new ArrayList<>();
+
+        int spaceAvailable = (senderOr.getSmallShipAmount() * 50) + (senderOr.getBigShipAmount() * 100);
+        int spaceNeeded = senderOr.getWorkerAmount();
+        int difference = spaceAvailable - spaceNeeded;
+        if (difference >= 0){
+            //Keine weiter Schiffe benötigt
+            /** Mögliche visuelle Darstellung vom Evakuierungsplan
+             *
+             * Evakuierungsplan:
+             * Ship 1:  crew 50/50, => Oilrig 2
+             * Ship 7:  crew 88/100, => Oilrig 3
+             */
+
+            ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
+
+            calculatePlan(spaceNeeded, epSmallShips, epBigShips, senderOr, ep);
+
+            /*
+            ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(id);
+
+            ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
+
+            for (ShipSmall ship : smallShipsOnOilrig) {
+                //System.out.println(ship.getId());
+                epSmallShips.add(new EvacuationPlanerItem(ship.getId(), "smallship"));
+                //idsSmallShip.add(ship.getId());
+            }
+            for (ShipBig ship : bigShipsOnOilrig) {
+                //System.out.println(ship.getId());
+                epBigShips.add(new EvacuationPlanerItem(ship.getId(),  "bigship"));
+                //idsBigShip.add(ship.getId());
+            }
+
+            int avaSmallShips = getSmallShipAmount();
+            int avaBigShips = getBigShipAmount();
+
+            // Rechnung zur gleichmäßigen Verteilung der Arbeiter auf die Schiffe
+            int totalEqualShips = (2 * avaBigShips) + avaSmallShips;        // ShipBig entspricht nach Kapazität zwei kleinen Schiffen
+            double workerPerShip = (double)(spaceNeeded / totalEqualShips); // runterbrechen: wieviele Arbeiter pro Schiff (Dezimalzahl)
+            int evenWorkerPerShip = (int) Math.floor(workerPerShip);        // Dezimalzahl abrunden (Zahl wird ungenau)
+            int temp = evenWorkerPerShip * totalEqualShips;                 // Hochrechnung der ungenauen Zahl auf den benötigten Gesamtwert für Arbeiter
+            int diffFormDouble = spaceNeeded - temp;                        // Differenz zwischen eigentlich benötigtem Platz und der Hochrechnung der ungenauen Zahl (temp) --- überschüssige Arbeiter
+
+
+            // Planerstellung evtl. auslagern
+
+            for (int i = 0; i < epBigShips.size(); i++){
+                for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                    // Wenn voll zum Nächsten
+                    if (otherOrs.get(iOr).workersOnOilrig.size() < evenWorkerPerShip) break;
+
+                    int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                    EvacuationPlanerItem tempItem = epBigShips.get(i);
+                    //System.out.println(tempItem.shipId);
+
+                    if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && tempItem != null)){
+
+                        otherOrs.get(iOr).addEmptyWorkers(2 * evenWorkerPerShip);
+                        tempItem.destinationOr = otherOrs.get(iOr).getId();
+                        tempItem.usedCrew = 2 * evenWorkerPerShip;
+                        ep.add(tempItem);
+                        System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                        break;
+                    }
+                }
+            }
+            for (int i = 0; i < epSmallShips.size(); i++){
+                for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                    // Wenn voll zum Nächsten
+                    if (otherOrs.get(iOr).workersOnOilrig.size() < evenWorkerPerShip) break;
+
+                    int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                    EvacuationPlanerItem tempItem = epSmallShips.get(i);
+
+                    if ((freeSpace - evenWorkerPerShip) >= 0 && tempItem != null) {
+                        System.out.println(tempItem.shipId);
+                        otherOrs.get(iOr).addEmptyWorkers(evenWorkerPerShip);
+                        tempItem.destinationOr = otherOrs.get(iOr).getId();
+                        tempItem.usedCrew = evenWorkerPerShip;
+                        ep.add(tempItem);
+                        System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                        break;
+                    }
+                }
+            }
+            System.out.println(getEvacuationPlanerInfo());
+
+             */
+        }
+        else {
+            System.out.println("Debug: Hilfe rufen! Alaaaaarm");
+            //Weiter Schiffe anfordern
+            ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(senderOr.getId());
+            ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
+            ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
+
+            while (difference < 0){
+                System.out.println("Diff: " + difference);
+                if (difference <= -100){
+                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "bigship");
+                    if (tempForNotNull != null) {
+                        epBigShips.add(tempForNotNull);
+                        System.out.println("Helping ship => ID " + tempForNotNull.shipId);
+                        difference -= 100;
+                    }
+                    else {
+                        System.out.println("an error occurred: something went wrong while calling for help");
+                        return false;
+                    }
+                    // Abbruchbedingung für kein Schiff vorhanden
+                } else if (difference <= -50) {
+                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "smallship");
+                    if (tempForNotNull != null) {
+                        epSmallShips.add(tempForNotNull);
+                        System.out.println("Helping ship => ID " + tempForNotNull.shipId);
+                        difference -= 100;
+                    }
+                    else {
+                        System.out.println("an error occurred: something went wrong while calling for help");
+                        return false;
+                    }
+                    // @Jonas Maybe/Maybenot Abbruchbedingung für kein Schiff vorhanden
+                }
+            }
+            calculatePlan(spaceNeeded, epSmallShips, epBigShips, senderOr, ep);
+        }
+        return true;
+    }
+
+    private static EvacuationPlanerItem callForBigShipEP(ArrayList<Oilrig> otherOr, String type){
+        if (type == "bigship"){
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.bigShipsOnOilrig.isEmpty()) {
+                    ShipBig ship = oilrig.bigShipsOnOilrig.get(0);
+                    return new EvacuationPlanerItem(ship.getId(), type);
+                }
+            }
+        } else {
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.smallShipsOnOilrig.isEmpty()) {
+                    ShipSmall ship = oilrig.smallShipsOnOilrig.get(0);
+                    return new EvacuationPlanerItem(ship.getId(), type);
+                }
+            }
+        }
+        return null;
+    }
+
+
+
+    public static void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, Oilrig senderOr, ArrayList<EvacuationPlanerItem> ep) {
+        ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(senderOr.getId());
+        for (ShipSmall ship : senderOr.smallShipsOnOilrig) {
+            epSmallShips.add(new EvacuationPlanerItem(ship.getId(), "smallship"));
+        }
+        for (ShipBig ship : senderOr.bigShipsOnOilrig) {
+            epBigShips.add(new EvacuationPlanerItem(ship.getId(),  "bigship"));
+        }
+
+        int avaSmallShips = senderOr.getSmallShipAmount();
+        int avaBigShips = senderOr.getBigShipAmount();
+
+        // Rechnung zur gleichmäßigen Verteilung der Arbeiter auf die Schiffe
+        int totalEqualShips = (2 * avaBigShips) + avaSmallShips;        // ShipBig entspricht nach Kapazität zwei kleinen Schiffen
+        double workerPerShip = (double)(spaceNeeded / totalEqualShips); // runterbrechen: wieviele Arbeiter pro Schiff (Dezimalzahl)
+        int evenWorkerPerShip = (int) Math.floor(workerPerShip);        // Dezimalzahl abrunden (Zahl wird ungenau)
+        int temp = evenWorkerPerShip * totalEqualShips;                 // Hochrechnung der ungenauen Zahl auf den benötigten Gesamtwert für Arbeiter
+        int diffFormDouble = spaceNeeded - temp;                        // Differenz zwischen eigentlich benötigtem Platz und der Hochrechnung der ungenauen Zahl (temp) --- überschüssige Arbeiter
+
+        Oilrig platform4 = new Oilrig(4, 120, 2, 2);
+
+        for (int i = 0; i < epBigShips.size(); i++){
+            for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                // Wenn voll zum Nächsten
+                if (otherOrs.get(iOr).getWorkersOnOilrig().size() < evenWorkerPerShip) break;
+
+                //if (otherOrs.get(iOr) == getPlatByID(1)) System.out.println("Selbes Objekt");
+
+                int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                EvacuationPlanerItem tempItem = epBigShips.get(i);
+                //System.out.println(tempItem.shipId);
+
+                if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && tempItem != null)){
+                    ArrayList<Worker> tempxx = new ArrayList<>();
+                    System.out.println(getPlatByID(1).getWorkerAmount());
+                    tempxx.addAll(addEmptyWorkers(2 * evenWorkerPerShip));
+                    System.out.println(getPlatByID(1).getWorkerAmount());
+                    Oilrig tor = otherOrs.get(iOr);
+
+                    System.out.println("x:" + getPlatByID(1).getWorkerAmount());
+                    platform4.workersOnOilrig.addAll(tempxx);
+                    //otherOrs.get(iOr).getWorkersOnOilrig().addAll(addEmptyWorkers(2 * evenWorkerPerShip));
+                    System.out.println("x2:" + getPlatByID(1).getWorkerAmount());
+                    System.out.println("o:" + otherOrs.get(iOr).workersOnOilrig.size());
+                    if (otherOrs.get(0).workersOnOilrig == getPlatByID(1).workersOnOilrig) System.out.println("Same");
+                    tempItem.destinationOr = otherOrs.get(iOr).getId();
+                    tempItem.usedCrew = 2 * evenWorkerPerShip;
+                    ep.add(tempItem);
+                    //System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < epSmallShips.size(); i++){
+            for (int iOr = 0; iOr < otherOrs.size(); iOr++) {
+                // Wenn voll zum Nächsten
+                if (otherOrs.get(iOr).getWorkerAmount() < evenWorkerPerShip) break;
+
+                int freeSpace = otherOrs.get(iOr).getFreeCapacity();
+                EvacuationPlanerItem tempItem = epSmallShips.get(i);
+
+                if ((freeSpace - evenWorkerPerShip) >= 0 && tempItem != null) {
+                    otherOrs.get(iOr).getWorkersOnOilrig().addAll(addEmptyWorkers(evenWorkerPerShip));
+
+                    tempItem.destinationOr = otherOrs.get(iOr).getId();
+                    tempItem.usedCrew = evenWorkerPerShip;
+                    ep.add(tempItem);
+                    //System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
+                    break;
+                }
+            }
+        }
+        System.out.println(getEvacuationPlanerInfo(senderOr, ep));
+    }
+
+    public static ArrayList<Worker> addEmptyWorkers(int i){
+        ArrayList<Worker> temp = new ArrayList<>();
+        for (int j = 1; j < i; j++) {
+            temp.add(new Worker(j * (-1)));
+        }
+        System.out.println("2:" + Methods.getPlatByID(1).getWorkerAmount());
+        return temp;
+    }
+
+
+    // Große Schiffe und kleine Schiffe werden hier theoretisch als Seperate Liste betrachtet
+    // Beispiel: Die Evakuierungsplanliste hat 12 Elemente, 5 kleine Schiff, 7 große Schiffe
+    // So gibt diese Methode ein kleines/großes Schiff zurück gemessen an seinen theoretischem Index [0-4] oder [0-6]
+    public EvacuationPlanerItem getEP_AtTypeIndex(int i, String type, ArrayList<EvacuationPlanerItem> ep) {
+        int counter = 0;
+        for (int j = 0; j < ep.size(); j++) {
+            if (ep.get(j).type.equals(type) && counter == i){
+                EvacuationPlanerItem temp = ep.get(j).clone();
+                ep.remove(j);
+                return temp;
+            }
+            else if (ep.get(j).type.equals(type)) counter++;
+        }
+        return null;
+    }
+
+    //@author Louis
+    // Output des Evakuierungsplans
+    public static String getEvacuationPlanerInfo(Oilrig senderOr, ArrayList<EvacuationPlanerItem> ep){
+
+        String result = "------------------------ Evacuation Plan ------------------------ \n";
+        // unfertig
+        result += "evacuating " + "Workers from Oilrig [" + "]\n";
+        for (EvacuationPlanerItem epItem : ep) {
+
+            int maxCapacity = 0;
+
+            //setzt maxCapacity in Abhängigkeit ob epItem.shipId ein großes oder kleines Schiff ist
+            Ship ship = senderOr.getShipById(epItem.shipId);
+            if(ship instanceof ShipBig){
+                maxCapacity = 100;
+            } else if (ship instanceof ShipSmall) {
+                maxCapacity = 50;
+            } else{
+                System.out.println("an error occurred: no ship found");
+            }
+
+            // Unfertig
+            // Output
+            result += "Ship: [" + epItem.shipId + "] from Oilrig [" + senderOr.getShipById(epItem.shipId) + "]" + "\tCrew: [" + epItem.usedCrew + "/" + maxCapacity + "]" + "\t\t→→→    \t\t" + "destinated Oilrig: [" + epItem.destinationOr + "]" + "\n"; //Warning: => StringBuilder benutzen?
+        }
+        return result;
     }
 
 }
