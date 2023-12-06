@@ -115,22 +115,25 @@ public class Methods {
     //Returnt Array dessen erster Index die Anzahl an Small und der zweite die Anzahl an BigShips ist
     public static int[] getdistribution(int crew, int amountbigship, int amountsmallship){
         int[] shipsneeded = {0,0};
-        int maxcrewcap = amountbigship*100 + amountsmallship*100;
+        int maxcrewcap = amountbigship*100 + amountsmallship*50;
         int bigshipneeded = 0;
         int smallshipneeded = 0;
         if(crew > 0){
-            if(crew <= maxcrewcap){
-                while(crew >= 0){
-                    if(crew > 50){
-                        bigshipneeded++;
-                        crew = crew - 100;
-                    }else if(crew <= 50){
+            while(crew >= 1){
+                    if(bigshipneeded < amountbigship) {
+                        if (crew > 50) {
+                            bigshipneeded++;
+                            crew = crew - 100;
+                        } else if (crew <= 50) {
+                            smallshipneeded++;
+                            crew = crew - 50;
+                        }
+                    }else if(smallshipneeded < amountsmallship){
                         smallshipneeded++;
+                        crew = crew - 50;
+                    }else{
+                        System.out.println("Can handle al Crew");
                     }
-                }
-            }else{
-                int difference = crew - maxcrewcap * -1;
-                System.out.println("Max capship is greater than crew by " + difference);
             }
             shipsneeded[0] = bigshipneeded;
             shipsneeded[1] = smallshipneeded;

@@ -20,8 +20,13 @@ public class Main {
 
         //Methods.startupHeader();
         //InputOutput.InputHandler(oilrigs);
-        int[] result = Methods.getdistribution(150, 1, 1);
-        System.out.println("Big ships needed " + result[0] + "\n" + "Small ships needed " + result[1]);
+
+
+        for(int i = 140; i <= 350; i+=10){
+            System.out.println("i is currently: " + i);
+            int[] result = Methods.getdistribution(i, 1, 2);
+            System.out.println("Big ships needed " + result[0] + "\n" + "Small ships needed " + result[1]);
+        }
 
 
     }
