@@ -1,6 +1,7 @@
 package Programm;
 
 import assets.Oilrig;
+
 import java.util.ArrayList;
 
 //Only Static Methods are implemented here
@@ -18,15 +19,15 @@ public class Methods {
             System.out.println("\\____/|____jl_____jl__j\\_j|____jl___,_/");
 
             System.out.print("\n\n--Loading Simulation--");
-            Thread.sleep(800);
+            Thread.sleep(200);
             System.out.print("..........................");
-            Thread.sleep(500);
+            Thread.sleep(200);
             System.out.print("..........");
-            Thread.sleep(1000);
+            Thread.sleep(300);
             System.out.print(".................");
-            Thread.sleep(600);
+            Thread.sleep(200);
             System.out.print("finshed");
-            Thread.sleep(800);
+            Thread.sleep(100);
             System.out.print("\n\n");
             System.out.print("type in 'help' for information");
             System.out.print("\n\n");
@@ -42,15 +43,15 @@ public class Methods {
         System.out.println("help 				                                                                                        = (This window)");
         System.out.println("overview  	 		                                                                                        = get complete overview");
         System.out.println("oilriginfo [oilrig ID] 	                                                                                    = get oilrig info");
-        System.out.println("movecrew [amount] [sender Oilrig id] [reciver Oilrig id] [amount of big ships] [amount of small ships]      = Sends Crew to Destination in Big and Small Ships");
+        System.out.println("move [amount] [sender Oilrig id] [reciver Oilrig id] [amount of big ships] [amount of small ships]      = Sends Crew to Destination in Big and Small Ships");
         System.out.println("evacuate [oilrig ID]                                                                                        = evacuate oilrig and safe crew to another oilrig");
         System.out.println("exit				                                                                                        = exit programm");
         System.out.println("\n\n");
     }
 
-    public static Oilrig getPlatformByID(int id, ArrayList<Oilrig> list){
+    public static Oilrig getPlatformByID(int id, ArrayList<Oilrig> list) {
         for (Oilrig i : list) {
-            if(i.getId() == id){
+            if (i.getId() == id) {
                 return i;
             }
         }
@@ -58,49 +59,30 @@ public class Methods {
         return null;
     }
 
-    /*
-    public static void moveEmptyBigShip(Oilrig sender, Oilrig receiver){
-        //Schaue nach Emptyship auf Sender und sende an receiver
-        receiver.addBigShip(sender.getEmptyBigShip());
-    }
+    public static void move(int amount, Oilrig sender, Oilrig receiver, int bigShip, int smallShip) {
+        int sum = amount;
+        if (sum != 0) {
+            int[] shipsneeded = getdistribution(sum, bigShip, smallShip);
+            for (int i = 0; i < shipsneeded[0]; i++) {
+                if(sum >=100){
+                    sender.sendBigShip(receiver, 100, false);
+                    sum -= 100;
+                }else{
+                    sender.sendBigShip(receiver, sum, false);
+                }
+            }
+            for (int j = 0; j < shipsneeded[1]; j++) {
+                if(sum >=50){
+                    sender.sendSmallShip(receiver, 50, false);
+                    sum -= 50;
+                }else{
+                    sender.sendSmallShip(receiver, sum, false);
+                }
+            }
+            System.out.println("Sending Successful");
+            System.out.println(sender.GetInformationOverview() + "\n" + receiver.GetInformationOverview());
 
-    public static void moveEmptySmallShip(Oilrig sender, Oilrig receiver){
-        //Schaue nach Emptyship auf Sender und sende an receiver
-        receiver.addSmallShip(sender.getEmptySmallShip());
-    }
-
-    public static void moveBigShip(Oilrig sender, Oilrig receiver){
-        //Sende BigShip von sender an receiver
-        receiver.addSmallShip(null);
-    }
-
-    public static void moveSmallShip(Oilrig sender, Oilrig receiver){
-        //Sende SmallShip von sender an receiver
-        receiver.addSmallShip(null);
-    }
-    */
-
-    /*                           Big Small
-                        move 0    21 22 1   0
-                        move 0    21 22 0   1
-                        move 100  21 22 1   0
-                        move 100  21 22 1   1 Überflüssig
-                        move 100  21 22 0   1 Nicht möglich
-                        move 120  21 22 100 200 Nicht möglich
-                        Min an Crew und Schiffen beachten wenn
-
-    //   Crew   Ist Schiff  max Cap aS  Differenz   Lösung
-    //1: 760 -> 5*100 + 4*50 = 700 -> posdiff > 50 = Großes Leeres Schiff
-    //2: 520 -> 2*100 + 2*50 = 300 -> posdiff 220 > 50 & 100 = 2*100 + 1*50
-    //3: 360 -> 5*100 + 3*50 = 650 -> posdiff 0 = 4*100
-    //4: 420 -> 6*100 + 2*50 = 700 -> posdiff 0 = 4*100 + 1*50
-
-    */
-
-    public static void move(int amount, Oilrig sender, Oilrig receiver, int bigShip, int smallShip){
-        if(amount != 0){
-
-        }else{
+        } else {
             for (int i = 0; i < bigShip; i++) {
                 sender.sendBigShip(receiver, 0, false);
             }
@@ -113,32 +95,33 @@ public class Methods {
     }
 
     //Returnt Array dessen erster Index die Anzahl an Small und der zweite die Anzahl an BigShips ist
-    public static int[] getdistribution(int crew, int amountbigship, int amountsmallship){
-        int[] shipsneeded = {0,0};
-        int maxcrewcap = amountbigship*100 + amountsmallship*50;
+    public static int[] getdistribution(int crew, int amountbigship, int amountsmallship) {
+        int[] shipsneeded = {0, 0};
+        int maxcrewcap = amountbigship * 100 + amountsmallship * 50;
         int bigshipneeded = 0;
         int smallshipneeded = 0;
-        if(crew > 0){
+        if (crew > 0) {
             while(crew >= 1){
+                if (maxcrewcap >= crew){
                     if(bigshipneeded < amountbigship) {
-                        if (crew > 50) {
-                            bigshipneeded++;
-                            crew = crew - 100;
-                        } else if (crew <= 50) {
-                            smallshipneeded++;
-                            crew = crew - 50;
-                        }
-                    }else if(smallshipneeded < amountsmallship){
+                        bigshipneeded++;
+                        crew = crew - 100;
+                    }else if(smallshipneeded < amountsmallship) {
                         smallshipneeded++;
                         crew = crew - 50;
-                    }else{
-                        System.out.println("Can handle al Crew");
                     }
+                }else{
+                   int difference = (maxcrewcap - crew) * -1; // 1000 - 1200 = - 200
+                   int[] extraordinarily = getdistribution(difference , 1000, 1000);
+                   System.out.println("Max capacity of ships on board is reached!!");
+                   System.out.println("Need to add " + extraordinarily[0] + " Big ships and " + extraordinarily[1] + " Small ships to compensate difference");
+                   return new int[]{amountbigship + extraordinarily[0], amountsmallship + extraordinarily[1]};
+                }
             }
             shipsneeded[0] = bigshipneeded;
             shipsneeded[1] = smallshipneeded;
             return shipsneeded;
-        }else{
+        } else {
             return shipsneeded;
         }
 

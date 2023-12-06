@@ -81,10 +81,18 @@ public class Oilrig {
     }
 
     public void addBigShip(ShipBig ship) {
+        for(Worker i : ship.crew){
+            workersOnPlatform.add(i);
+        }
+        ship.crew.clear();
         bigShipsOnPlatform.add(ship);
     }
 
     public void addSmallShip(ShipSmall ship){
+        for(Worker i : ship.crew){
+            workersOnPlatform.add(i);
+        }
+        ship.crew.clear();
         smallShipsOnPlatform.add(ship);
     }
 
@@ -94,6 +102,11 @@ public class Oilrig {
                 if((workersOnPlatform.size() - crew) > initialCrew*0.1 && bigShipsOnPlatform.size() > 1){
                     if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
                         if((destination.initialBigShips + 4) >= (destination.bigShipsOnPlatform.size() + 1))   {
+                            System.out.println(GetSendingInformation(100, crew, id, destination.id, smallShipsOnPlatform.get(1).getId()));
+                            for (int i = 0; i < crew; i++) {
+                                bigShipsOnPlatform.get(1).receiveWorker(workersOnPlatform.get(i));
+                                workersOnPlatform.remove(i);
+                            }
                             destination.addBigShip(bigShipsOnPlatform.get(1));
                             bigShipsOnPlatform.remove(1);
                         }else{
@@ -120,6 +133,11 @@ public class Oilrig {
                 if((workersOnPlatform.size() - crew) > initialCrew*0.1 && smallShipsOnPlatform.size() > 1){
                     if((destination.workersOnPlatform.size() + crew) < destination.workersOnPlatform.size() * 2){
                         if((destination.initialSmallShips + 4) >= (destination.smallShipsOnPlatform.size() + 1))   {
+                            System.out.println(GetSendingInformation(50, crew, id, destination.id, smallShipsOnPlatform.get(1).getId()));
+                            for (int i = 0; i < crew; i++) {
+                                smallShipsOnPlatform.get(1).receiveWorker(workersOnPlatform.get(i));
+                                workersOnPlatform.remove(i);
+                            }
                             destination.addSmallShip(smallShipsOnPlatform.get(1));
                             smallShipsOnPlatform.remove(1);
                         }else{
@@ -157,7 +175,6 @@ public class Oilrig {
         String result = "";
         String bigShipsOnPlatformString = "|";
         String smallShipsOnPlatformString = "|";
-        String workersOnPlatformString = "|";
 
         for(int i = 0; i < bigShipsOnPlatform.size(); i++) {
             bigShipsOnPlatformString += Integer.toString(bigShipsOnPlatform.get(i).getId()) + "|"; //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
@@ -167,17 +184,28 @@ public class Oilrig {
             smallShipsOnPlatformString += Integer.toString(smallShipsOnPlatform.get(i).getId()) + "|";
         }
 
-        for(int i = 0; i < workersOnPlatform.size(); i++) {
-            workersOnPlatformString += Integer.toString(workersOnPlatform.get(i).getId()) + "|";
-        }
-
         result += "Oilrig ID: " + id + "\n";
         result += "---------------------------------------------------------------------------------------------------------\n";
         result += "big ships   : " + bigShipsOnPlatformString + "\n";
         result += "small ships : " + smallShipsOnPlatformString + "\n";
-        result += "workers     : " + workersOnPlatformString + "\n";
+        result += "workers     : " + "|" + workersOnPlatform.size() + "|" + "\n";
 
         return result;
     }
 
+    public String GetSendingInformation(int max, int send, int sender, int receiver, int shipid){
+        String result = "";
+
+        result += "--------------Sending Ship----------------\n";
+        result += "Oilrig: " + sender + " ➡➡ " + "Ship ID: " + shipid + " ➡➡ " + "Destination Oilrig: " + receiver + "\n";
+        result += "------------------------------------------\n";
+        if(max == 100){
+            result += "Type of Ship          : " + "Big Ship" + "\n";
+        }else{
+            result += "Type of Ship          : " + "Small Ship" + "\n";
+        }
+        result += "      Maximum Capacity: " + max + "\n";
+        result += "         Used Capacity: " + send + "\n";
+        return result;
+    }
 }

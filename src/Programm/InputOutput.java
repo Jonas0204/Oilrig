@@ -27,16 +27,6 @@ public class InputOutput {
                         Methods.PrintHelp();
                         break;
                     case "move":
-                        /*              Big Small
-                        move 0    21 22 1   0
-                        move 0    21 22 0   1
-                        move 100  21 22 1   0
-                        move 100  21 22 1   1 Überflüssig
-                        move 100  21 22 0   1 Nicht möglich
-                        move 120  21 22 100 200 Nicht möglich
-                        Min an Crew und Schiffen beachten wenn
-                         */
-                        // movecrew [amount] [sender Oilrig id] [reciver Oilrig id] [amount BigShips] [amount SmallShips]
                         try {
                             amountofcrew = Integer.parseInt(arguments[1]);
                             sender = Methods.getPlatformByID(Integer.parseInt(arguments[2]), oilrigs);
@@ -63,7 +53,7 @@ public class InputOutput {
                     case "oilriginfo":
                         try {
                             sender = Methods.getPlatformByID(Integer.parseInt(arguments[1]), oilrigs);
-                            System.out.println(sender.GetInformationOverview());
+                            System.out.println(sender.GetInformationOilrig());
                         } catch (Exception e) {
                             System.out.println("ERROR");
                         }

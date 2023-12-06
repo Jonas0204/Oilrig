@@ -18,15 +18,14 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-        //Methods.startupHeader();
+        Methods.startupHeader();
         //InputOutput.InputHandler(oilrigs);
 
-
-        for(int i = 140; i <= 350; i+=10){
-            System.out.println("i is currently: " + i);
-            int[] result = Methods.getdistribution(i, 1, 2);
-            System.out.println("Big ships needed " + result[0] + "\n" + "Small ships needed " + result[1]);
+        for (int i = 10; i < 400; i+=10) {
+            int[] temp = Methods.getdistribution(i, 2, 1 );
+            System.out.println("I: " + i + "   Big " + temp[0] + "  Small " + temp[1]);
         }
+
 
 
     }
