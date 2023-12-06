@@ -1,5 +1,7 @@
 package assets;
 
+import programm.Methods;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,4 +14,13 @@ public abstract class Ship{
         return id;
     }
 
+    public static int getShipOriginID(int id){
+        for (Oilrig temp : Methods.getAllOilrigs()) {
+            Ship tempShipById = temp.getShipById(id);
+            if (tempShipById != null && tempShipById.getId() == id){
+                return temp.getId();
+            }
+        }
+        return -1; // Steht für fehlgeschlagene Methode, sollte aber nicht vorkommen
+    }
 }

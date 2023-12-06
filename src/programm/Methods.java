@@ -162,7 +162,7 @@ public class Methods {
     public static boolean evacuation(int evacuationId){
         Oilrig eOr = new Oilrig(getPlatByID(evacuationId));
         boolean successful = eOr.checkEvacuationSpace();
-        return true;
+        return false; //Ist nicht korrekt
     }
 
     //@author Jonas
@@ -215,12 +215,13 @@ public class Methods {
         }
 
         // Bedingungen prüfen
-        // Bedingung I) Auf jeder Plattform müssen sich immer mindestens 10% initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert.
-        int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
-        if (minWorkers >  senderOr.getWorkerAmount()){
-            System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
+        // Bedingung II) "Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren."
+        assert receiverOr != null;
+        int maxWorkers = receiverOr.initialCrewOilrig * 2;
+        if (maxWorkers < (receiverOr.getWorkerAmount() + amount)) {
+            System.out.println("an error occurred: receiving oilrig cannot hold that amount of workers at a time");
         }
-        // Bedingung III) Jede Plattform kann in jeder Kategorie maximal vier Versorgungsschiffe mehr zugeordnet haben als in der initialen Konfiguration.
+        // Bedingung III) "Jede Plattform kann in jeder Kategorie maximal vier Versorgungsschiffe mehr zugeordnet haben als in der initialen Konfiguration."
         if (ShipType.equals("smallship")) {
             if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveSmallShip()) {
                 System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
@@ -232,15 +233,14 @@ public class Methods {
             }
         }
 
-        // Wenn eine Evakuierung vorliegt können die Bedingung II und IV außer Kraft gesetzt werden
-        if (mayday) {
-            // Bedingung II) Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren.
-            assert receiverOr != null;
-            int maxWorkers = receiverOr.initialCrewOilrig * 2;
-            if (maxWorkers < (receiverOr.getWorkerAmount() + amount)) {
-                System.out.println("an error occurred: receiving oilrig cannot hold that amount of workers at a time");
+        // Wenn eine Evakuierung vorliegt, können die Bedingung II und IV außer Kraft gesetzt werden
+        if (!mayday) {
+            // Bedingung I) "Auf jeder Plattform müssen sich immer mindestens 10% initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert."
+            int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
+            if (minWorkers >  senderOr.getWorkerAmount()){
+                System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
             }
-            // Bedingung IV) Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung.
+            // Bedingung IV) "Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung."
             if (!senderOr.checkTotalShipCountBiggerOne()) {
                 System.out.println("an error occurred: more ships required");
             }

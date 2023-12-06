@@ -3,6 +3,7 @@ package assets;
 import programm.Methods;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Oilrig{
 
@@ -413,7 +414,36 @@ public class Oilrig{
                 }
             }
         }
-        System.out.println(getEvacuationPlanerInfo( ep));
+        System.out.println(getEvacuationPlanerInfo(ep));
+
+        Scanner yesOrNo = new Scanner(System.in);
+        String input = "";
+        boolean repeat = true;
+        System.out.println("If you want to execute the suggested plan, please type 'y'. If you want to abort the plan, please type 'n'");
+        while (repeat) {
+            input = yesOrNo.nextLine();
+            String[] arguments = input.split(" ");
+
+            switch (arguments[0]) {
+                case "y", "Yes", "Y", "yes":
+                    executePlan(ep);
+                    repeat = false;
+                    break;
+                case "n", "N", "no", "No":
+                    repeat = false;
+                    break;
+                default:
+                    System.out.println("Please type 'y' if you want to execute the suggested plan, or 'n' to abort it");
+                    break;
+            }
+        }
+    }
+
+    private void executePlan(ArrayList<EvacuationPlanerItem> ep){
+        for (EvacuationPlanerItem epItem : ep) {
+            Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(epItem.usedCrew),
+                    String.valueOf(Ship.getShipOriginID(epItem.shipId)), String.valueOf(epItem.destinationOr), true);
+        }
     }
 
     public String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
@@ -442,13 +472,8 @@ public class Oilrig{
 
             // Unfertig
             // Output
-            String shipOriginID= "NaN";
-            for (Oilrig temp : allOilrigs) {
-                Ship tempShipById = temp.getShipById(epItem.shipId);
-                if (tempShipById != null && tempShipById.getId() == epItem.shipId){
-                    shipOriginID = String.valueOf(temp.getId());
-                }
-            }
+
+            String shipOriginID = String.valueOf(Ship.getShipOriginID(epItem.shipId));
 
             result += "Ship: [" + epItem.shipId + "] from Oilrig [" + shipOriginID + "]" + "\tCrew: [" + epItem.usedCrew + "/" + maxCapacity + "]" + "\t\t→→→    \t\t" + "destinated Oilrig: [" + epItem.destinationOr + "]" + "\n"; //Warning: => StringBuilder benutzen?
         }
