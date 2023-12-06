@@ -14,7 +14,7 @@ public class Oilrig{
     public final int initialCrewOilrig;
     private final int initialBigShips;
     private final int initialSmallShips;
-    public boolean evacuate = false;
+    public boolean evacuated = false;
 
     // Constructor
     // @autor Jonas & Matthias

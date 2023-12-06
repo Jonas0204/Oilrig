@@ -266,7 +266,6 @@ public class Methods {
 
                 // andocken an Zielplattform
                 receiverOr.dockShip(bigShip);
-                //System.out.println("test: " + bigShip.GetShipInformation());
                 receiverOr.transferAllWorkerShipToOilrig(bigShip);
                 break;
             default:
@@ -281,19 +280,11 @@ public class Methods {
             Oilrig temp = new Oilrig(oilrigs.get(i));
             returnOrList.add(temp);
         }
-        //if (returnOrList == oilrigs) System.out.println("Selber Array");
-        //if (returnOrList.get(0).getId() == oilrigs.get(0).getId()) System.out.println("wtf");
         for (int i = 0; i < oilrigs.size(); i++) {
             if (oilrigs.get(i).getId() == senderID) {
                 returnOrList.remove(i);
             }
         }
-        //if (returnOrList.get(0).workersOnOilrig == getPlatByID(1).workersOnOilrig) System.out.println("Same");
-        //if (returnOrList.get(0).workersOnOilrig.equals(getPlatByID(1).workersOnOilrig)) System.out.println("Same2");
-        //returnOrList.get(0).workersOnOilrig.add(new Worker(-1000));
-        //if (returnOrList.get(0).workersOnOilrig == getPlatByID(1).workersOnOilrig) System.out.println("Same3");
-        //if (returnOrList.get(0).workersOnOilrig.equals(getPlatByID(1).workersOnOilrig)) System.out.println("Same4");
-
         return returnOrList;
     }
 
