@@ -32,3 +32,11 @@ public class Main {
 //evakuierungsplan und methode schreiben!!!
 //try-catch in Methods 109
 // Schiffe müssen wissen, an welcher Plattform sie momentan sind
+//move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
+
+//Testfälle
+/*
+    1. help
+    2. overview
+    3.
+ */
