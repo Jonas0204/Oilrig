@@ -16,6 +16,7 @@ public abstract class Methods {
      * @see Methods#evacuation(int)
      * @see Oilrig#getInformationOverview()
      * @see Oilrig#getInformationOilrig()
+     * @autor Louis Schadewaldt, Jonas Hülse
      */
     protected static void handleInput(ArrayList<Oilrig> oilrigsParam) {
         oilrigs = oilrigsParam;
@@ -23,7 +24,7 @@ public abstract class Methods {
         Scanner scanner = new Scanner(System.in);
         String input;
 
-        // while-Schleife um ständig Befehle an das Programm geben zu können
+        // While-Schleife um ständig Befehle an das Programm geben zu können
         while (true) {
         try {
             input = scanner.nextLine();
@@ -329,13 +330,22 @@ public abstract class Methods {
         }
     }
 
-    // @author Jonas
+    /**
+     * Gibt eine Liste von anderen Ölplattformen zurück, außer der Ölplattform mit der angegebenen ID.
+     *
+     * @param senderID Die ID der Sender-Ölplattform, die nicht in dieser Liste sein soll
+     * @return Eine Liste von Ölplattformen, die nicht die angegebene Sender-ID hat
+     * @author Jonas Hülse
+     */
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
+
+        //  Kopiert die Ölplattformen in eine neue Liste, um Änderungen vorzunehmen
         for (Oilrig oilrig : oilrigs) {
             Oilrig temp = new Oilrig(oilrig);
             returnOrList.add(temp);
         }
+        //  Entfernt die Ölplattform mit der angegebenen ID aus der Liste
         for (int i = 0; i < oilrigs.size(); i++) {
             if (oilrigs.get(i).getId() == senderID) {
                 returnOrList.remove(i);
@@ -344,6 +354,10 @@ public abstract class Methods {
         return returnOrList;
     }
 
+    /**
+     * Gibt eine Liste aller vorhandenen Ölplattformen zurück.
+     * @return Eine Liste, die alle Ölplattformen enthält
+     */
     public static ArrayList<Oilrig> getAllOilrigs(){
         return oilrigs;
     }
@@ -394,16 +408,32 @@ public abstract class Methods {
     private static int counterShips = 1;
     private static int counterWorker = 1;
 
-    // @author Jonas
+    /**
+     * Gibt den aktuellen Wert des Zählers für Schiffe zurück.
+     * @return Der aktuelle Wert des Zählers für Schiffe
+     */
     public static int getCounterShips() {
         return counterShips;
     }
+
+    /**
+     * Gibt den aktuellen Wert des Zählers für Arbeiter zurück.
+     * @return Der aktuelle Wert des Zählers für Arbeiter
+     */
     public static int getCounterWorker(){
         return counterWorker;
     }
+
+    /**
+     * Erhöht den Zähler für Schiffe um eins.
+     */
     public static void addCounterShips(){
         counterShips++;
     }
+
+    /**
+     * Erhöht den Zähler für Arbeiter um eins.
+     */
     public static void addCounterWorker(){
         counterWorker++;
     }

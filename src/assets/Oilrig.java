@@ -11,7 +11,6 @@ import java.util.Scanner;
  *
  * @autor Matthias Bergs, Jonas Hülse, Louis Schadewaldt
  */
-
 public class Oilrig{
 
     private final int id;
