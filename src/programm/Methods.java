@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import assets.*;
 
-public class Methods {
+public abstract class Methods {
 
    private static ArrayList<Oilrig> oilrigs = new ArrayList<>();
 
@@ -330,7 +330,7 @@ public class Methods {
         System.out.println("oilrig [oilrig ID]                                                          = open oilrig");
         System.out.println("move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]    = transfer Ship with amount of workers");
         System.out.println("evacuate [oilrig ID]                                                        = evacuate oilrig");
-        System.out.println("exit                                                                        = exit programm");
+        System.out.println("exit                                                                        = exit program");
         System.out.println("\n\n");
     }
     private static int counterShips = 1;
