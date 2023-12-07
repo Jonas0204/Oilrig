@@ -179,7 +179,6 @@ public abstract class Methods {
             System.out.println("an error occurred: ID's and amounts must be whole numbers");
             return; //geändert 04.12.2023 19.52
         }
-        System.out.println("sender: " + senderID + ", dest:" + receiverID);
         boolean idExists = Methods.existsID(senderID, receiverID);
         if (!idExists) {
             System.out.println("an error occurred: ID invalid for oilrig");

@@ -333,30 +333,27 @@ public class Oilrig{
                     epBigShip.destinationOr = otherOr.getId();
                     epBigShip.usedCrew = localEvenWorkerPerShip;
                     ep.add(epBigShip);
-                    //System.out.println("ID: " + tempItem.shipId + ", type = " + tempItem.type + ", dest: " + tempItem.destinationOr);
                     break;
                 }
             }
         }
         for (EvacuationPlanerItem epSmallShip : epSmallShips) {
-            //System.out.println("ID: " + epSmallShip.shipId + ", type = " + epSmallShip.type + ", dest: " + epSmallShip.destinationOr);
             int localEvenWorkerPerShip;
+
             if (diffFormDouble > 0) {
                 localEvenWorkerPerShip = evenWorkerPerShip + 1;
                 diffFormDouble--;
             } else localEvenWorkerPerShip = evenWorkerPerShip;
 
             for (Oilrig otherOr : otherOrs) {
-                // Wenn voll zum Nächsten
                 int freeSpace = otherOr.getFreeCapacity();
+                // Wenn voll zum Nächsten
                 if (freeSpace <= localEvenWorkerPerShip) {
-                    //System.out.println("The most unusual error.1");
                     continue;
                 }
                 if (!otherOr.checkOilrigCanReceiveSmallShip()) {
                     continue;
                 }
-
 
                 if ((freeSpace - evenWorkerPerShip) >= 0 && epSmallShip != null) {
                     otherOr.getWorkersOnOilrig().addAll(addEmptyWorkers(localEvenWorkerPerShip));
@@ -364,7 +361,6 @@ public class Oilrig{
                     epSmallShip.destinationOr = otherOr.getId();
                     epSmallShip.usedCrew = localEvenWorkerPerShip;
                     ep.add(epSmallShip);
-                    //System.out.println("ID: " + epSmallShip.shipId + ", type = " + epSmallShip.type + ", dest: " + epSmallShip.destinationOr);
                     break;
                 }
             }
@@ -403,6 +399,7 @@ public class Oilrig{
             Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(epItem.usedCrew),
                     String.valueOf(Ship.getShipOriginID(epItem.shipId)), String.valueOf(epItem.destinationOr), true);
         }
+        System.out.println("Evacuation successful...");
     }
 
     public String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
@@ -439,7 +436,7 @@ public class Oilrig{
 
     public static ArrayList<Worker> addEmptyWorkers(int i){
         ArrayList<Worker> temp = new ArrayList<>();
-        for (int j = 1; j < i; j++) {
+        for (int j = 1; j <= i; j++) {
             temp.add(new Worker(j * (-1)));
         }
         return temp;
