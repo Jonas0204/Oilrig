@@ -6,13 +6,18 @@ import static programm.Methods.getCounterShips;
 
 public class ShipSmall extends Ship implements Comparable<ShipSmall>{
 
-    ArrayList<Worker> crewSmall = new ArrayList<Worker> ();
+    ArrayList<Worker> crewSmall = new ArrayList<>();
     protected final int maxCapacity = 50;
 
     //@author Louis, Jonas
     // Constructor
-    public ShipSmall(int id) {
+    public ShipSmall() {
         this.id = getCounterShips();
+    }
+
+    // Die negative ID stellt klar, dass das nur ein theoretischer Platzhalter ist
+    public ShipSmall(int id){
+        this.id = -id;
     }
 
     //@author Matthias
@@ -27,7 +32,7 @@ public class ShipSmall extends Ship implements Comparable<ShipSmall>{
 
     //@author Matthias
     public ArrayList<Worker> departureAll() {
-        ArrayList<Worker> temp = new ArrayList<Worker>(crewSmall);
+        ArrayList<Worker> temp = new ArrayList<>(crewSmall);
         crewSmall.clear();
         return temp;
     }

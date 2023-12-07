@@ -5,11 +5,9 @@ import java.util.Objects;
 import java.util.Scanner;
 import assets.*;
 
-import javax.print.attribute.standard.MediaSize;
-
 public class Methods {
 
-   private static ArrayList<Oilrig> oilrigs = new ArrayList<Oilrig>();
+   private static ArrayList<Oilrig> oilrigs = new ArrayList<>();
 
 
 
@@ -18,8 +16,9 @@ public class Methods {
         oilrigs = oilrigsParam;
 
         Scanner scanner = new Scanner(System.in);
-        String input = "";
+        String input;
         while (true) { // while-Schleife um ständig Befehle an das Programm geben zu können
+        try {
             input = scanner.nextLine();
             String[] arguments = input.split(" ");
             switch (arguments[0]) {
@@ -53,14 +52,12 @@ public class Methods {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
-                    if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1, 2, 3, oder 4 Infos werden ausgegeben
+                    if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1, 2, 3, oder 4: Informationen werden ausgegeben
                         Oilrig or = getPlatByID(id);
                         if (or == null) {                            //immer lieber überprüfen
                             System.out.println("an error occurred: Oilrig not found!");
                         }
-                        boolean successful = evacuation(id);
-                        if (successful) System.out.println("evacuation successful");
-                        else System.out.println("evacuation failed");
+                        evacuation(id);
                     } else System.out.println("an error occurred: Wrong ID! Please use an ID between 1 and 4.");
                     break;
                 //@author Jonas, Louis
@@ -121,7 +118,7 @@ public class Methods {
 
     /** @autor Jonas
      *
-     * @return Gibt true zurück wenn beide ID's vorhanden sind, andernfalls wird false zurückgegeben
+     * @return Gibt true zurück, wenn beide IDs vorhanden sind, andernfalls wird false zurückgegeben
      */
     public static boolean existsID(int senderID, int receiverID){
         boolean senderIsTrue = false;
@@ -159,19 +156,18 @@ public class Methods {
     }
 
     //@author Jonas
-    public static boolean evacuation(int evacuationId){
-        Oilrig eOr = new Oilrig(getPlatByID(evacuationId));
+    public static void evacuation(int evacuationId){
+        Oilrig eOr = new Oilrig(Objects.requireNonNull(getPlatByID(evacuationId)));
         boolean successful = eOr.checkEvacuationSpace();
-        return false; //Ist nicht korrekt
     }
 
     //@author Jonas
     //Strings für Argumente in Input/Output
     public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
-        int senderID = 0;
-        int receiverID = 0;
-        int amount = 0;
-        int shipID = 0;
+        int senderID;
+        int receiverID;
+        int amount;
+        int shipID;
         try {
             senderID =   Integer.parseInt(senderIdParam);
             receiverID =   Integer.parseInt(receiverIdParam);
@@ -235,7 +231,7 @@ public class Methods {
 
         // Wenn eine Evakuierung vorliegt, können die Bedingung II und IV außer Kraft gesetzt werden
         if (!mayday) {
-            // Bedingung I) "Auf jeder Plattform müssen sich immer mindestens 10% initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert."
+            // Bedingung I) "Auf jeder Plattform müssen sich immer mindestens 10 % initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert."
             int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
             if (minWorkers >  senderOr.getWorkerAmount()){
                 System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
@@ -252,7 +248,7 @@ public class Methods {
                 senderOr.transferWorkerOilrigToShip(amount, smallShip);
                 senderOr.undockShip(smallShip);
                 System.out.println("moving " + smallShip.getShipInformation());
-                // => Schiff beladen und abgedockt von Startplattform
+                // → Schiff beladen und abgedockt von Startplattform
 
                 // andocken an Zielplattform
                 receiverOr.dockShip(smallShip);
@@ -262,7 +258,7 @@ public class Methods {
                 senderOr.transferWorkerOilrigToShip(amount, bigShip);
                 senderOr.undockShip(bigShip);
                 System.out.println("moving " + bigShip.getShipInformation());
-                // => Schiff beladen und abgedockt von Startplattform
+                // → Schiff beladen und abgedockt von Startplattform
 
                 // andocken an Zielplattform
                 receiverOr.dockShip(bigShip);
@@ -276,8 +272,8 @@ public class Methods {
     //@author Jonas
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
-        for (int i = 0; i < oilrigs.size(); i++) {
-            Oilrig temp = new Oilrig(oilrigs.get(i));
+        for (Oilrig oilrig : oilrigs) {
+            Oilrig temp = new Oilrig(oilrig);
             returnOrList.add(temp);
         }
         for (int i = 0; i < oilrigs.size(); i++) {
@@ -335,10 +331,6 @@ public class Methods {
         System.out.println("exit				                                                        = exit programm");
         System.out.println("\n\n");
     }
-
-    /**
-     * @autor Jonas
-     */
     private static int counterShips = 1;
     private static int counterWorker = 1;
 
@@ -354,29 +346,4 @@ public class Methods {
     public static void addCounterWorker(){
         counterWorker++;
     }
-
-
-    //@author Jonas
-    // Evakuierungsmethoden
-
-    // Große Schiffe und kleine Schiffe werden hier theoretisch als Seperate Liste betrachtet
-    // Beispiel: Die Evakuierungsplanliste hat 12 Elemente, 5 kleine Schiff, 7 große Schiffe
-    // So gibt diese Methode ein kleines/großes Schiff zurück gemessen an seinen theoretischem Index [0-4] oder [0-6]
-    public EvacuationPlanerItem getEP_AtTypeIndex(int i, String type, ArrayList<EvacuationPlanerItem> ep) {
-        int counter = 0;
-        for (int j = 0; j < ep.size(); j++) {
-            if (ep.get(j).type.equals(type) && counter == i){
-                EvacuationPlanerItem temp = ep.get(j).clone();
-                ep.remove(j);
-                return temp;
-            }
-            else if (ep.get(j).type.equals(type)) counter++;
-        }
-        return null;
-    }
-
-    //@author Louis
-    // Output des Evakuierungsplans
-
-
 }

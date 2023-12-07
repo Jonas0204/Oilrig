@@ -1,10 +1,6 @@
 package assets;
 
 import programm.Methods;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public abstract class Ship{
 
     protected int id;

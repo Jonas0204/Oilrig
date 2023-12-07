@@ -1,19 +1,22 @@
 package assets;
 
-import javax.swing.*;
 import java.util.ArrayList;
-
 import static programm.Methods.getCounterShips;
 
 public class ShipBig extends Ship implements Comparable<ShipBig>{
 
-    ArrayList<Worker> crewBig = new ArrayList<Worker> ();
+    ArrayList<Worker> crewBig = new ArrayList<>();
     protected final int maxCapacity = 100;
 
     //@author Jonas, Louis
     // Constructor
-    public ShipBig(int id){
+    public ShipBig(){
         this.id = getCounterShips();
+    }
+
+    // Die negative ID stellt klar, dass das nur ein theoretischer Platzhalter ist
+    public ShipBig(int id){
+        this.id = -id;
     }
 
     //@author Matthias
@@ -28,7 +31,7 @@ public class ShipBig extends Ship implements Comparable<ShipBig>{
 
     //@author Matthias
     public ArrayList<Worker> departureAll() {
-        ArrayList<Worker> temp = new ArrayList<Worker>(crewBig);
+        ArrayList<Worker> temp = new ArrayList<>(crewBig);
         crewBig.clear();
         return temp;
     }

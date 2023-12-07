@@ -15,12 +15,4 @@ public class EvacuationPlanerItem {
         this.type = type;
         this.destinationOr = 0;
     }
-
-    //@author Jonas
-    public EvacuationPlanerItem clone(){
-        EvacuationPlanerItem item = new EvacuationPlanerItem(this.shipId, this.type);
-        item.destinationOr = this.destinationOr;
-        item.usedCrew = this.usedCrew;
-        return item;
-    }
 }

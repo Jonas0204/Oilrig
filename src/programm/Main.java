@@ -1,6 +1,5 @@
 package programm;
 
-import assets.EvacuationPlanerItem;
 import assets.Oilrig;
 import java.util.ArrayList;
 import static programm.Methods.printStartupHeader;
@@ -25,18 +24,8 @@ public class Main {
 }
 
 //TO DO:
-//Benennungsregeln und Sprache überprüfen!!!
-//unused Stuff löschen!!!
-//getShipById vereinfacht maybe manche anderen Prozesse mit getBigShipById und getSmallShipbyId --- Rekursion!!!
-//welche nachricht wann prüfen!!!
-//evakuierungsplan und methode schreiben!!!
-//try-catch in Methods 109
-// Schiffe müssen wissen, an welcher Plattform sie momentan sind
-//move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
-
-//Testfälle
-/*
-    1. help
-    2. overview
-    3.
- */
+// auskommentieren
+// unused Stuff löschen!!!
+// welche Nachricht wann prüfen!!!
+// try-catch in Methods 109 (testen)
+// Testfälle
