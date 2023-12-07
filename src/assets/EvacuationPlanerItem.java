@@ -6,6 +6,8 @@ public class EvacuationPlanerItem {
     public int usedCrew;
     public final String type;
     public int destinationOr;
+    public boolean toCall = false;
+    public int[] toCallID_S = {0,0};
 
     //@author Jonas
     //Constructor

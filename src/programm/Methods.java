@@ -179,6 +179,7 @@ public abstract class Methods {
             System.out.println("an error occurred: ID's and amounts must be whole numbers");
             return; //geändert 04.12.2023 19.52
         }
+        System.out.println("sender: " + senderID + ", dest:" + receiverID);
         boolean idExists = Methods.existsID(senderID, receiverID);
         if (!idExists) {
             System.out.println("an error occurred: ID invalid for oilrig");
@@ -216,7 +217,7 @@ public abstract class Methods {
         // Bedingung II) "Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren."
         assert receiverOr != null;
         int maxWorkers = receiverOr.initialCrewOilrig * 2;
-        if (maxWorkers < (receiverOr.getWorkerAmount() + amount)) {
+        if (maxWorkers <= (receiverOr.getWorkerAmount() + amount)) {
             System.out.println("an error occurred: receiving oilrig cannot hold that amount of workers at a time");
         }
         // Bedingung III) "Jede Plattform kann in jeder Kategorie maximal vier Versorgungsschiffe mehr zugeordnet haben als in der initialen Konfiguration."

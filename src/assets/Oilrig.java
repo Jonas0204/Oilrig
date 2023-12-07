@@ -271,6 +271,7 @@ public class Oilrig{
                 } else {
                     EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "smallship");
                     if (tempForNotNull != null) {
+                        tempForNotNull.toCallID_S[1] = this.id;
                         epSmallShips.add(tempForNotNull);
                         System.out.println("Helping ship => ID " + tempForNotNull.shipId);
                         difference += 50;
@@ -285,25 +286,6 @@ public class Oilrig{
             calculatePlan(spaceNeeded, epSmallShips, epBigShips, ep);
         }
         return true;
-    }
-
-    private static EvacuationPlanerItem callForBigShipEP(ArrayList<Oilrig> otherOr, String type){
-        if (Objects.equals(type, "bigship")){
-            for (Oilrig oilrig : otherOr) {
-                if (!oilrig.bigShipsOnOilrig.isEmpty()) {
-                    ShipBig ship = oilrig.bigShipsOnOilrig.get(0);
-                    return new EvacuationPlanerItem(ship.getId(), type);
-                }
-            }
-        } else {
-            for (Oilrig oilrig : otherOr) {
-                if (!oilrig.smallShipsOnOilrig.isEmpty()) {
-                    ShipSmall ship = oilrig.smallShipsOnOilrig.get(0);
-                    return new EvacuationPlanerItem(ship.getId(), type);
-                }
-            }
-        }
-        return null;
     }
 
     public void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
@@ -336,15 +318,14 @@ public class Oilrig{
             } else localEvenWorkerPerShip = (2 * evenWorkerPerShip);
 
             for (Oilrig otherOr : otherOrs) {
+                int freeSpace = otherOr.getFreeCapacity();
                 // Wenn voll zum Nächsten
-                if (otherOr.getFreeCapacity() < (localEvenWorkerPerShip)) {
-                    //System.out.println("The most unusual error.2");
+                if (freeSpace <= localEvenWorkerPerShip) {
                     continue;
                 }
                 if (!otherOr.checkOilrigCanReceiveBigShip()) {
                     continue;
                 }
-                int freeSpace = otherOr.getFreeCapacity();
 
                 if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && epBigShip != null)) {
                     otherOr.getWorkersOnOilrig().addAll(addEmptyWorkers(localEvenWorkerPerShip));
@@ -367,14 +348,15 @@ public class Oilrig{
 
             for (Oilrig otherOr : otherOrs) {
                 // Wenn voll zum Nächsten
-                if (otherOr.getFreeCapacity() < localEvenWorkerPerShip) {
+                int freeSpace = otherOr.getFreeCapacity();
+                if (freeSpace <= localEvenWorkerPerShip) {
                     //System.out.println("The most unusual error.1");
                     continue;
                 }
                 if (!otherOr.checkOilrigCanReceiveSmallShip()) {
                     continue;
                 }
-                int freeSpace = otherOr.getFreeCapacity();
+
 
                 if ((freeSpace - evenWorkerPerShip) >= 0 && epSmallShip != null) {
                     otherOr.getWorkersOnOilrig().addAll(addEmptyWorkers(localEvenWorkerPerShip));
@@ -414,6 +396,10 @@ public class Oilrig{
 
     private void executePlan(ArrayList<EvacuationPlanerItem> ep){
         for (EvacuationPlanerItem epItem : ep) {
+            if (epItem.toCall){
+                Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(0), String.valueOf(epItem.toCallID_S[0]),
+                        String.valueOf(epItem.toCallID_S[1]),  true);
+            }
             Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(epItem.usedCrew),
                     String.valueOf(Ship.getShipOriginID(epItem.shipId)), String.valueOf(epItem.destinationOr), true);
         }
@@ -463,5 +449,30 @@ public class Oilrig{
         int maxCapacity = 2 * initialCrewOilrig;
         int usedCapacity = workersOnOilrig.size();
         return maxCapacity - usedCapacity;
+    }
+
+    private static EvacuationPlanerItem callForBigShipEP(ArrayList<Oilrig> otherOr, String type){
+        if (Objects.equals(type, "bigship")){
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.bigShipsOnOilrig.isEmpty()) {
+                    ShipBig ship = oilrig.bigShipsOnOilrig.get(0);
+                    EvacuationPlanerItem temp = new EvacuationPlanerItem(ship.getId(), type);
+                    temp.toCallID_S[0] = oilrig.getId();
+                    temp.toCall = true;
+                    return temp;
+                }
+            }
+        } else {
+            for (Oilrig oilrig : otherOr) {
+                if (!oilrig.smallShipsOnOilrig.isEmpty()) {
+                    ShipSmall ship = oilrig.smallShipsOnOilrig.get(0);
+                    EvacuationPlanerItem temp = new EvacuationPlanerItem(ship.getId(), type);
+                    temp.toCallID_S[0] = oilrig.getId();
+                    temp.toCall = true;
+                    return temp;
+                }
+            }
+        }
+        return null;
     }
 }
