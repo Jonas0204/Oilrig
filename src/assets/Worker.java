@@ -5,7 +5,7 @@ public class Worker {
 
     // Constructor
     //@author Jonas
-    public Worker(int id) {
+    protected Worker(int id) {
         this.id = id;
     }
 

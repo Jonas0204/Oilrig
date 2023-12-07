@@ -6,7 +6,7 @@ import static programm.Methods.getCounterShips;
 
 public class ShipSmall extends Ship implements Comparable<ShipSmall>{
 
-    ArrayList<Worker> crewSmall = new ArrayList<>();
+    private ArrayList<Worker> crewSmall = new ArrayList<>();
     protected final int maxCapacity = 50;
 
     //@author Louis, Jonas

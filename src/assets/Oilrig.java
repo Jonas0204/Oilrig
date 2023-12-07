@@ -67,17 +67,8 @@ public class Oilrig{
     public int getId() {
         return id;
     }
-    public int getBigShipAmount(){
-        return this.bigShipsOnOilrig.size();
-    }
-    public int getSmallShipAmount(){
-        return this.smallShipsOnOilrig.size();
-    }
     public int getWorkerAmount(){
         return this.workersOnOilrig.size();
-    }
-    public ArrayList<Worker> getWorkersOnOilrig(){
-        return this.workersOnOilrig;
     }
 
     //@author Jonas
@@ -114,7 +105,7 @@ public class Oilrig{
 
     //return: kann Platform receiver ein kleines Schiff aufnehmen
     public boolean checkOilrigCanReceiveSmallShip(){
-        return this.getSmallShipAmount() + 1 <= this.initialSmallShips + 4;
+        return this.smallShipsOnOilrig.size() + 1 <= this.initialSmallShips + 4;
     }
     //return: kann Platform receiver ein grosses Schiff aufnehmen
     public boolean checkOilrigCanReceiveBigShip(){
@@ -235,7 +226,7 @@ public class Oilrig{
         return result;
     }
 
-    public boolean checkEvacuationSpace(){
+     public void checkEvacuationSpace(){
         ArrayList<EvacuationPlanerItem> ep = new ArrayList<>();
 
         int spaceAvailable = (getSmallShipAmount() * 50) + (getBigShipAmount() * 100);
@@ -265,7 +256,7 @@ public class Oilrig{
                     }
                     else {
                         System.out.println("an error occurred: something went wrong while calling for help");
-                        return false;
+                        return;
                     }
                     // Abbruchbedingung für kein Schiff vorhanden
                 } else {
@@ -278,17 +269,16 @@ public class Oilrig{
                     }
                     else {
                         System.out.println("an error occurred: something went wrong while calling for help");
-                        return false;
+                        return;
                     }
                     // @Jonas Maybe/Maybenot Abbruchbedingung für kein Schiff vorhanden
                 }
             }
             calculatePlan(spaceNeeded, epSmallShips, epBigShips, ep);
         }
-        return true;
     }
 
-    public void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
+    private void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
         ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(getId());
 
         for (ShipSmall ship : smallShipsOnOilrig) {
@@ -328,7 +318,7 @@ public class Oilrig{
                 }
 
                 if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && epBigShip != null)) {
-                    otherOr.getWorkersOnOilrig().addAll(addEmptyWorkers(localEvenWorkerPerShip));
+                    otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
                     otherOr.bigShipsOnOilrig.add(new ShipBig(1));
                     epBigShip.destinationOr = otherOr.getId();
                     epBigShip.usedCrew = localEvenWorkerPerShip;
@@ -356,7 +346,7 @@ public class Oilrig{
                 }
 
                 if ((freeSpace - evenWorkerPerShip) >= 0 && epSmallShip != null) {
-                    otherOr.getWorkersOnOilrig().addAll(addEmptyWorkers(localEvenWorkerPerShip));
+                    otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
                     otherOr.smallShipsOnOilrig.add(new ShipSmall(1));
                     epSmallShip.destinationOr = otherOr.getId();
                     epSmallShip.usedCrew = localEvenWorkerPerShip;
@@ -402,7 +392,8 @@ public class Oilrig{
         System.out.println("Evacuation successful...");
     }
 
-    public String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
+    // @autor Louis, Jonas
+     private String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
         ArrayList<Oilrig> allOilrigs = Methods.getAllOilrigs();
 
         StringBuilder result = new StringBuilder("---------------------------------- Evacuation Plan ---------------------------------- \n");
@@ -434,7 +425,7 @@ public class Oilrig{
         return result.toString();
     }
 
-    public static ArrayList<Worker> addEmptyWorkers(int i){
+    private static ArrayList<Worker> addEmptyWorkers(int i){
         ArrayList<Worker> temp = new ArrayList<>();
         for (int j = 1; j <= i; j++) {
             temp.add(new Worker(j * (-1)));
@@ -442,7 +433,7 @@ public class Oilrig{
         return temp;
     }
 
-    public int getFreeCapacity(){
+    private int getFreeCapacity(){
         int maxCapacity = 2 * initialCrewOilrig;
         int usedCapacity = workersOnOilrig.size();
         return maxCapacity - usedCapacity;

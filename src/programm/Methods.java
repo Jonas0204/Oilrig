@@ -7,12 +7,17 @@ import assets.*;
 
 public abstract class Methods {
 
-   private static ArrayList<Oilrig> oilrigs = new ArrayList<>();
+    private static ArrayList<Oilrig> oilrigs = new ArrayList<>();
 
-
-
-    // verarbeitet die Befehle (Konsoleninput) des Users und führt dementsprechende Methoden aus und sendet Output an User zurück
-    public static void handleInput(ArrayList<Oilrig> oilrigsParam) {
+    /**
+     * Behandelt die Benutzereingabe zur Ausführung von Befehlen.
+     * @param oilrigsParam ArrayList von Oilrig-Objekten, die die verfügbaren Ölplattformen darstellen
+     * @see Methods#moveWorkers(String, String, String, String, boolean)
+     * @see Methods#evacuation(int)
+     * @see Oilrig#getInformationOverview()
+     * @see Oilrig#getInformationOilrig()
+     */
+    protected static void handleInput(ArrayList<Oilrig> oilrigsParam) {
         oilrigs = oilrigsParam;
 
         Scanner scanner = new Scanner(System.in);
@@ -118,11 +123,9 @@ public abstract class Methods {
         }
     }
 
-    /** @autor Jonas
-     *
-     * @return Gibt true zurück, wenn beide IDs vorhanden sind, andernfalls wird false zurückgegeben
-     */
-    public static boolean existsID(int senderID, int receiverID){
+    // @author Jonas
+    // gibt true zurück, wenn beide IDs vorhanden sind, andernfalls wird false zurückgegeben
+    private static boolean existsID(int senderID, int receiverID){
         boolean senderIsTrue = false;
         boolean receiverIsTrue = false;
 
@@ -143,9 +146,9 @@ public abstract class Methods {
         return senderIsTrue && receiverIsTrue;
     }
 
-    //@author Jonas
-    //WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
-    public static Oilrig getPlatByID(int ID) {
+    // @author Jonas
+    // WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
+    private static Oilrig getPlatByID(int ID) {
         try {
             for (Oilrig opf : oilrigs) {
                 if (ID == opf.getId())
@@ -158,18 +161,37 @@ public abstract class Methods {
     }
 
     //@author Jonas
-    public static void evacuation(int evacuationId){
+    private static void evacuation(int evacuationId){
         Oilrig eOr = new Oilrig(Objects.requireNonNull(getPlatByID(evacuationId)));
-        boolean successful = eOr.checkEvacuationSpace();
+        eOr.checkEvacuationSpace();
     }
 
-    //@author Jonas
-    //Strings für Argumente in Input/Output
+    /**
+     * Verschiebt Arbeiter von einer Ölplattform auf ein Schiff und von dort zu einer anderen Ölplattform,
+     * unter Berücksichtigung verschiedener Bedingungen und Schiffstypen.
+     * @param shipIdParam Die ID des Schiffs, das die Arbeiter transportiert
+     * @param amountparam Die Anzahl der Arbeiter, die verschoben werden sollen
+     * @param senderIdParam Die ID der Ölplattform, von der die Arbeiter verschoben werden
+     * @param receiverIdParam Die ID der Ölplattform, auf die die Arbeiter verschoben werden
+     * @param mayday Ein Indikator, ob es sich um eine Evakuierung handelt oder nicht
+     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
+     * @see Oilrig#checkOilrigCanReceiveBigShip()
+     * @see Oilrig#checkOilrigCanReceiveSmallShip()
+     * @see Oilrig#checkTotalShipCountBiggerOne()
+     * @see Oilrig#dockShip(ShipBig)
+     * @see Oilrig#dockShip(ShipSmall)
+     * @see Oilrig#undockShip(ShipBig)
+     * @see Oilrig#undockShip(ShipSmall)
+     * @autor Jonas Hülse
+     */
     public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
         int senderID;
         int receiverID;
         int amount;
         int shipID;
+
+        //  Die eingegebenen IDs und Mengen werden in ganze Zahlen umgewandelt.
+        //  Wenn ein Fehler auftritt, wird eine entsprechende Meldung ausgegeben und die Methode verlassen.
         try {
             senderID =   Integer.parseInt(senderIdParam);
             receiverID =   Integer.parseInt(receiverIdParam);
@@ -179,21 +201,27 @@ public abstract class Methods {
             System.out.println("an error occurred: ID's and amounts must be whole numbers");
             return; //geändert 04.12.2023 19.52
         }
+
+        //  Überprüft, ob die IDs für Ölplattformen gültig sind, indem die Methode existsID aufgerufen wird.
+        //  Falls nicht, wird eine Fehlermeldung ausgegeben und die Methode verlassen.
         boolean idExists = Methods.existsID(senderID, receiverID);
         if (!idExists) {
             System.out.println("an error occurred: ID invalid for oilrig");
             return;
         }
 
+        // Erhalten der Ölplattform-Objekte mithilfe der Methode getPlatByID aus der Klasse Methods.
         Oilrig senderOr = Methods.getPlatByID(senderID);
         Oilrig receiverOr = Methods.getPlatByID(receiverID);
 
-        // Feststellen welche Art von Schiff wir verschieben
-        // evtl. über getShipID() zusammenfassen
+        //  Feststellen, welche Art von Schiff verschoben wird, indem die entsprechenden Schiff-Objekte abgerufen werden.
         assert senderOr != null;
         ShipSmall smallShip = senderOr.getSmallShipById(shipID);
         ShipBig bigShip = senderOr.getBigShipById(shipID);
         String ShipType = "";
+
+        //  Überprüfen, ob das Schiff mit der angegebenen ID existiert. Und stellt fest zu welchem Schiffstyp die ID gehört.
+        //  Falls nicht, wird eine Fehlermeldung ausgegeben und die Methode verlassen.
         if (smallShip == null && bigShip == null) {
             System.out.println("an error occurred: could not find ship with id " + shipID);
             return;
@@ -212,8 +240,8 @@ public abstract class Methods {
             return;
         }
 
-        // Bedingungen prüfen
-        // Bedingung II) "Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren."
+        //  Überprüfen der vorgegebenen Bedingungen für das Verschieben der Schiffe.
+        //  Bedingung II) "Auf keiner Plattform dürfen sich mehr als doppelt so viele Mitarbeitende befinden wie initial vorhanden waren."
         assert receiverOr != null;
         int maxWorkers = receiverOr.initialCrewOilrig * 2;
         if (maxWorkers <= (receiverOr.getWorkerAmount() + amount)) {
@@ -223,15 +251,17 @@ public abstract class Methods {
         if (ShipType.equals("smallship")) {
             if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveSmallShip()) {
                 System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+                return;
             }
         }
         if (ShipType.equals("bigship")) {
             if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveBigShip()) {
                 System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+                return;
             }
         }
 
-        // Wenn eine Evakuierung vorliegt, können die Bedingung II und IV außer Kraft gesetzt werden
+        // Wenn keine Evakuierung stattfindet, werden diese zusätzlichen Bedingungen überprüft.
         if (!mayday) {
             // Bedingung I) "Auf jeder Plattform müssen sich immer mindestens 10 % initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert."
             int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
@@ -244,15 +274,15 @@ public abstract class Methods {
             }
         }
 
-
+        // Abhängig vom Schiffstyp wird der entsprechende Ablauf für den Transport der Arbeiter ausgeführt.
         switch(ShipType){
             case "smallship":
                 senderOr.transferWorkerOilrigToShip(amount, smallShip);
                 senderOr.undockShip(smallShip);
                 System.out.println("moving " + smallShip.getShipInformation());
-                // → Schiff beladen und abgedockt von Startplattform
+                // → Schiff beladen und abdocken von der Startplattform
 
-                // andocken an Zielplattform
+                // Andocken an die Zielplattform
                 receiverOr.dockShip(smallShip);
                 receiverOr.transferAllWorkerShipToOilrig(smallShip);
                 break;
@@ -260,9 +290,9 @@ public abstract class Methods {
                 senderOr.transferWorkerOilrigToShip(amount, bigShip);
                 senderOr.undockShip(bigShip);
                 System.out.println("moving " + bigShip.getShipInformation());
-                // → Schiff beladen und abgedockt von Startplattform
+                // → Schiff beladen und abdocken von Startplattform
 
-                // andocken an Zielplattform
+                // Andocken an Zielplattform
                 receiverOr.dockShip(bigShip);
                 receiverOr.transferAllWorkerShipToOilrig(bigShip);
                 break;
@@ -290,9 +320,9 @@ public abstract class Methods {
         return oilrigs;
     }
 
-    //@author Louis, Ayman
-    //Output Header und Ladebalken
-    public static void printStartupHeader() {
+    // @author Louis, Ayman
+    // Output Header und Ladebalken
+    protected static void printStartupHeader() {
         try {
             System.out.print("\n\n"); //Header
             System.out.println(" ____  ____  _      ____   ____   ____ ");

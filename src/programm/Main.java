@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import static programm.Methods.printStartupHeader;
 import static programm.Methods.handleInput;
 
+/**
+ * Main Klasse ist die Anfangsklasse
+ */
 public class Main {
 
     public static void main(String[] args) {
