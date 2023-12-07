@@ -258,6 +258,7 @@ public class Oilrig{
                 if (difference < -50){
                     EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "bigship");
                     if (tempForNotNull != null) {
+                        tempForNotNull.toCallID_S[1] = this.id;
                         epBigShips.add(tempForNotNull);
                         System.out.println("Helping ship => ID " + tempForNotNull.shipId);
                         difference += 100;
