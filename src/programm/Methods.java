@@ -23,7 +23,7 @@ public class Methods {
             String[] arguments = input.split(" ");
             switch (arguments[0]) {
                 //@author Louis
-                case "help": //help
+                case "help", "HELP", "Help": //help
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -31,7 +31,7 @@ public class Methods {
                     Methods.printHelp();
                     break;
                 //@author Jonas
-                case "move": //move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
+                case "move", "MOVE", "Move": //move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
                     if (arguments.length != 5) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -39,7 +39,7 @@ public class Methods {
                     moveWorkers(arguments[1], arguments[2], arguments[3], arguments[4], false);
                     break;
                 //@author Jonas
-                case "evacuate": //evacuate [Oilrig id]
+                case "evacuate", "Evacuate", "EVACUATE": //evacuate [Oilrig id]
                     int id = 0;
                     try {
                         id = Integer.parseInt(arguments[1]);
@@ -61,7 +61,7 @@ public class Methods {
                     } else System.out.println("an error occurred: Wrong ID! Please use an ID between 1 and 4.");
                     break;
                 //@author Jonas, Louis
-                case "overview": //overview
+                case "overview", "OVERVIEW", "Overview": //overview
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -75,7 +75,7 @@ public class Methods {
                     }
                     break;
                 //@autor Jonas, Louis
-                case "oilrig": //oilrig [oilrig ID]
+                case "oilrig", "OILRIG", "Oilrig": //oilrig [oilrig ID]
                     if (arguments.length != 2) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -98,7 +98,7 @@ public class Methods {
                     }
                     break;
                 //@author Louis
-                case "exit": //exit
+                case "exit", "EXIT", "Exit": //exit
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
@@ -108,11 +108,13 @@ public class Methods {
                 default:
                     System.out.println("This Command does not exist. Try 'help' for information about commands");
                     break;
+                //@author Louis
+                case "": // Zeile nach unten mit Enter
+                    break;
             }
-            try {
-            } catch (Exception e) {
+        } catch (Exception e) {
                 System.err.println(e);
-            }
+        }
         }
     }
 
@@ -323,12 +325,12 @@ public class Methods {
     //Output für Help Befehl
     public static void printHelp() {
         System.out.println("-------------------------------------------------------- HELP --------------------------------------------------------");
-        System.out.println("help 				                                                        = (This window)");
-        System.out.println("overview  	 		                                                        = open overview");
-        System.out.println("oilrig [oilrig ID] 	                                                        = open oilrig");
+        System.out.println("help                                                                        = (This window)");
+        System.out.println("overview                                                                    = open overview");
+        System.out.println("oilrig [oilrig ID]                                                          = open oilrig");
         System.out.println("move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]    = transfer Ship with amount of workers");
         System.out.println("evacuate [oilrig ID]                                                        = evacuate oilrig");
-        System.out.println("exit				                                                        = exit programm");
+        System.out.println("exit                                                                        = exit programm");
         System.out.println("\n\n");
     }
     private static int counterShips = 1;

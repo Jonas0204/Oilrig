@@ -93,8 +93,8 @@ public class Oilrig{
         }
         return null;
     }
-    //vereint getSmallShipById(int id) und getBigShipById(int id)
     //@author Louis
+    //vereint getSmallShipById(int id) und getBigShipById(int id)
     public Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
