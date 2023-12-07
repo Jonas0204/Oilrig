@@ -10,6 +10,12 @@ import static programm.Methods.handleInput;
  */
 public class Main {
 
+    /**
+     * Main-Methode initialisiert die Ölplattformen nach vorgegebenen Parametern und ruft printStartupHeader() und handleInput() auf
+     * @see Oilrig#Oilrig(Oilrig)
+     * @see Methods#handleInput(ArrayList)
+     * @param args Argumente
+     */
     public static void main(String[] args) {
         ArrayList<Oilrig> oilrigs = new ArrayList<>();
         Oilrig platform1 = new Oilrig(1, 760, 5, 4);
@@ -28,7 +34,6 @@ public class Main {
 
 //TO DO:
 // auskommentieren
-// unused Stuff löschen!!!
-// welche Nachricht wann prüfen!!!
-// try-catch in Methods 109 (testen)
+// unused Stuff löschen!
+// welche Nachricht wann prüfen!
 // Testfälle

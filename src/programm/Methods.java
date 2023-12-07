@@ -22,56 +22,70 @@ public abstract class Methods {
 
         Scanner scanner = new Scanner(System.in);
         String input;
-        while (true) { // while-Schleife um ständig Befehle an das Programm geben zu können
+
+        // while-Schleife um ständig Befehle an das Programm geben zu können
+        while (true) {
         try {
             input = scanner.nextLine();
             String[] arguments = input.split(" ");
+
+            // switch-case für die verschiedenen Befehle, die der Nutzer benutzen kann
             switch (arguments[0]) {
-                //@author Louis
-                case "help", "HELP", "Help": //help
+
+                // @author Louis
+                // 'help' - Befehlsverarbeitung
+                case "help", "HELP", "Help":
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
                     Methods.printHelp();
                     break;
+
                 //@author Jonas
-                case "move", "MOVE", "Move": //move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]
+                // 'move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]' - Befehlsverarbeitung
+                case "move", "MOVE", "Move":
                     if (arguments.length != 5) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
                     moveWorkers(arguments[1], arguments[2], arguments[3], arguments[4], false);
                     break;
-                //@author Jonas
-                case "evacuate", "Evacuate", "EVACUATE": //evacuate [Oilrig id]
+
+                // @author Jonas
+                // 'evacuate [Oilrig id]' - Befehlsverarbeitung
+                case "evacuate", "Evacuate", "EVACUATE":
                     int id = 0;
                     try {
                         id = Integer.parseInt(arguments[1]);
                     }
-                    catch (Exception ex){
-                        System.out.println("ID argument is not a Number");
+                    catch (NumberFormatException nfe){
+                        System.out.println("an error occurred: " + nfe.getMessage());
                     }
 
                     if (arguments.length != 2) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
-                    if (id == 1 || id == 2 || id == 3 || id == 4) { //Oilrig 1, 2, 3, oder 4: Informationen werden ausgegeben
+                    // prüft, ob die angegebene ID vorhanden (1 bis 4) ist
+                    if (id == 1 || id == 2 || id == 3 || id == 4) {
                         Oilrig or = getPlatByID(id);
-                        if (or == null) {                            //immer lieber überprüfen
+                        if (or == null) {
                             System.out.println("an error occurred: Oilrig not found!");
                         }
                         evacuation(id);
                     } else System.out.println("an error occurred: Wrong ID! Please use an ID between 1 and 4.");
                     break;
-                //@author Jonas, Louis
-                case "overview", "OVERVIEW", "Overview": //overview
+
+                // @author Jonas, Louis
+                // 'overview' - Befehlsverarbeitung
+                case "overview", "OVERVIEW", "Overview":
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
                     try {
+                        // gibt Overview-Informationen aller Ölplattformen nacheinander aus
                         for (Oilrig i : oilrigs) {
                             System.out.println(i.getInformationOverview());
                         }
@@ -79,17 +93,21 @@ public abstract class Methods {
                         System.out.println("an error occurred " + e.getMessage());
                     }
                     break;
-                //@autor Jonas, Louis
-                case "oilrig", "OILRIG", "Oilrig": //oilrig [oilrig ID]
+
+                // @autor Jonas, Louis
+                // 'oilrig [oilrig ID]' - Befehlsverarbeitung
+                case "oilrig", "OILRIG", "Oilrig":
                     if (arguments.length != 2) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
                     try {
-                        if(  Integer.parseInt(arguments[1]) >= 5 ||   Integer.parseInt(arguments[1]) <= 0){
+                        // prüft, ob die angegebene ID vorhanden ist
+                        if( Integer.parseInt(arguments[1]) >= 5 ||   Integer.parseInt(arguments[1]) <= 0){
                             System.out.println("an error occurred: oilrig with ID " +   Integer.parseInt(arguments[1]) + " not found");
                         }
                         else {
+                            // gibt nur Informationen der Ölplattform mit angegebener ID aus
                             for (Oilrig i : oilrigs) {
                                 if (  Integer.parseInt(arguments[1]) == i.getId()) {
                                     System.out.println(i.getInformationOilrig());
@@ -102,19 +120,24 @@ public abstract class Methods {
                         System.out.println("an error occurred: Oilrig with that ID returns 'null' " + npe.getMessage());
                     }
                     break;
-                //@author Louis
-                case "exit", "EXIT", "Exit": //exit
+
+                // @author Louis
+                // 'exit' - Befehlsverarbeitung
+                case "exit", "EXIT", "Exit":
                     if (arguments.length != 1) {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
+                    // beendet das Programm
                     System.exit(0);
                     break;
                 default:
                     System.out.println("This Command does not exist. Try 'help' for information about commands");
                     break;
-                //@author Louis
-                case "": // Zeile nach unten mit Enter
+
+                // @author Louis
+                // scrollen mit 'Enter'
+                case "":
                     break;
             }
         } catch (Exception e) {
@@ -199,7 +222,7 @@ public abstract class Methods {
             shipID =   Integer.parseInt(shipIdParam);
         }catch (Exception ex){
             System.out.println("an error occurred: ID's and amounts must be whole numbers");
-            return; //geändert 04.12.2023 19.52
+            return;
         }
 
         //  Überprüft, ob die IDs für Ölplattformen gültig sind, indem die Methode existsID aufgerufen wird.
@@ -246,6 +269,7 @@ public abstract class Methods {
         int maxWorkers = receiverOr.initialCrewOilrig * 2;
         if (maxWorkers <= (receiverOr.getWorkerAmount() + amount)) {
             System.out.println("an error occurred: receiving oilrig cannot hold that amount of workers at a time");
+            return;
         }
         // Bedingung III) "Jede Plattform kann in jeder Kategorie maximal vier Versorgungsschiffe mehr zugeordnet haben als in der initialen Konfiguration."
         if (ShipType.equals("smallship")) {
@@ -267,10 +291,12 @@ public abstract class Methods {
             int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
             if (minWorkers >  senderOr.getWorkerAmount()){
                 System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
+                return;
             }
             // Bedingung IV) "Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung."
             if (!senderOr.checkTotalShipCountBiggerOne()) {
                 System.out.println("an error occurred: more ships required");
+                return;
             }
         }
 
@@ -298,10 +324,11 @@ public abstract class Methods {
                 break;
             default:
                 System.out.println("an error occurred: ship does not exist");
+                break;
         }
     }
 
-    //@author Jonas
+    // @author Jonas
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
         for (Oilrig oilrig : oilrigs) {
@@ -351,9 +378,9 @@ public abstract class Methods {
         }
     }
 
-    //@author Louis
-    //Output für Help Befehl
-    public static void printHelp() {
+    // @author Louis
+    // Output für Help Befehl
+    private static void printHelp() {
         System.out.println("-------------------------------------------------------- HELP --------------------------------------------------------");
         System.out.println("help                                                                        = (This window)");
         System.out.println("overview                                                                    = open overview");
@@ -366,6 +393,7 @@ public abstract class Methods {
     private static int counterShips = 1;
     private static int counterWorker = 1;
 
+    // @author Jonas
     public static int getCounterShips() {
         return counterShips;
     }

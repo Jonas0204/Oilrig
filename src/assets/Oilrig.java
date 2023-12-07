@@ -6,16 +6,21 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * Definiert die Ölplattformen
+ * @autor Matthias Bergs, Jonas Hülse, Louis Schadewaldt
+ */
+
 public class Oilrig{
 
     private final int id;
-    public ArrayList<Worker> workersOnOilrig = new ArrayList<>();
-    public ArrayList<ShipSmall> smallShipsOnOilrig = new ArrayList<>();
-    public ArrayList<ShipBig> bigShipsOnOilrig = new ArrayList<>();
+    private ArrayList<Worker> workersOnOilrig = new ArrayList<>();
+    private ArrayList<ShipSmall> smallShipsOnOilrig = new ArrayList<>();
+    private ArrayList<ShipBig> bigShipsOnOilrig = new ArrayList<>();
     public final int initialCrewOilrig;
-    private final int initialBigShips;
-    private final int initialSmallShips;
-    public boolean evacuated = false;
+    public final int initialBigShips;
+    public final int initialSmallShips;
+    private boolean evacuated = false;
 
     // Constructor
     // @autor Jonas & Matthias
@@ -78,15 +83,25 @@ public class Oilrig{
         }
         return null;
     }
+    /**
+     *
+     * @param id
+     * @return
+     */
     public ShipBig getBigShipById(int id){
         for (ShipBig ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
         }
         return null;
     }
-    //@author Louis
-    //vereint getSmallShipById(int id) und getBigShipById(int id)
-    public Ship getShipById(int id){
+    /**
+     * gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id)
+     * @author Louis Schadewaldt
+     * @see  Oilrig#getBigShipById(int), Oilrig#getSmallShipById(int)
+     * @param id ID des Schiffes, dass zurückgegeben wird
+     * @return Schiffobjekt der entsprechenden ID
+     */
+    protected Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
         }
@@ -102,18 +117,17 @@ public class Oilrig{
         int i = bigShipsOnOilrig.size() + smallShipsOnOilrig.size();
         return i >= 1;
     }
-
     //return: kann Platform receiver ein kleines Schiff aufnehmen
     public boolean checkOilrigCanReceiveSmallShip(){
         return this.smallShipsOnOilrig.size() + 1 <= this.initialSmallShips + 4;
     }
     //return: kann Platform receiver ein grosses Schiff aufnehmen
     public boolean checkOilrigCanReceiveBigShip(){
-        return this.getBigShipAmount() + 1 <= this.initialBigShips + 4;
+        return this.bigShipsOnOilrig.size() + 1 <= this.initialBigShips + 4;
     }
 
-    //@author Jonas
-    //Hilfsmethoden zum Bewegen eines Schiffs
+    // @author Jonas
+    // Hilfsmethoden zum Bewegen eines Schiffs
     public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
@@ -167,9 +181,12 @@ public class Oilrig{
         bigShipsOnOilrig.add(ship);
     }
 
-    // UserInterface
-    //@author Louis
-    // Output Information aller Ölplattformen (hier nur eine, alle über Schleife gelöst siehe handleInput()
+    /**
+     * schreibt Überblick-Informationen einer Ölplattform in einen String und gibt diesen zurück. Über den Aufruf in einer For-Each-Schleife in handleInput(ArrayList) wird der Überblick für alle Plattformen ausgegeben. Der String ist für das Userinterface formatiert.
+     * @autor Louis Schadewaldt
+     * @see Methods#handleInput(ArrayList)
+     * @return String mit allen Überblick-Informationen einer Plattform
+     */
     public String getInformationOverview() {
 
         String result = "";
@@ -184,7 +201,7 @@ public class Oilrig{
         return result;
     }
 
-    //@author Louis
+    // @autor Louis
     // Output Information einer bestimmten Ölplattfor
     public String getInformationOilrig() {
 
@@ -229,7 +246,7 @@ public class Oilrig{
      public void checkEvacuationSpace(){
         ArrayList<EvacuationPlanerItem> ep = new ArrayList<>();
 
-        int spaceAvailable = (getSmallShipAmount() * 50) + (getBigShipAmount() * 100);
+        int spaceAvailable = (this.smallShipsOnOilrig.size() * 50) + (this.bigShipsOnOilrig.size() * 100);
         int spaceNeeded = getWorkerAmount();
         int difference = spaceAvailable - spaceNeeded;
         if (difference >= 0){
@@ -420,7 +437,7 @@ public class Oilrig{
             // Output
             String shipOriginID = String.valueOf(Ship.getShipOriginID(epItem.shipId));
 
-            result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t→→→    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n"); //Warning: => StringBuilder benutzen?
+            result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t→→→    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n");
         }
         return result.toString();
     }
