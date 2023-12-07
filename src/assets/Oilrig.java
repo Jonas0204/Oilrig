@@ -7,7 +7,8 @@ import java.util.Objects;
 import java.util.Scanner;
 
 /**
- * Definiert die Ölplattformen
+ * Klasse Oilrig
+ *
  * @autor Matthias Bergs, Jonas Hülse, Louis Schadewaldt
  */
 
@@ -22,8 +23,10 @@ public class Oilrig{
     public final int initialSmallShips;
     private boolean evacuated = false;
 
-    // Constructor
-    // @autor Jonas & Matthias
+    /**
+     * Kopierkonstruktor, der eine Kopie einer Ölplattform erstellt.     *
+     * @param or Die zu kopierende Ölplattform
+     */
     public Oilrig(Oilrig or){
         this.id = or.id;
         this.initialCrewOilrig = or.initialCrewOilrig;
@@ -34,6 +37,19 @@ public class Oilrig{
         this.bigShipsOnOilrig = new ArrayList<>(or.bigShipsOnOilrig);
         this.evacuated = or.evacuated;
     }
+
+    /**
+     * Erstellt eine neue Ölplattform mit den angegebenen Parametern.
+     *
+     * @param id                Die ID der Ölplattform
+     * @param initialCrew       Die Anfangsbesatzung der Ölplattform
+     * @param initialBigShips   Die Anzahl der anfänglichen großen Schiffe auf der Ölplattform
+     * @param initialSmallShips Die Anzahl der anfänglichen kleinen Schiffe auf der Ölplattform
+     * @see Methods#addCounterShips()
+     * @see Methods#getCounterShips()
+     * @see Methods#addCounterWorker()
+     * @see Methods#getCounterWorker()
+     */
     public Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips) {
         this.id = id;
         this.initialCrewOilrig = initialCrew;
@@ -67,26 +83,47 @@ public class Oilrig{
         }
     }
 
-    //@author Matthias
-    // Get and Set methods
+
+    // -- Get-Methoden --
+
+    /**
+     * Getter-Methode für die ID einer Ölplattform
+     *
+     * @return gibt die ID der Ölplattform zurück
+     */
     public int getId() {
         return id;
     }
+
+    /**
+     * Getter-Methode für die Anzahl der an der Ölplattform stationierten Arbeiter
+     *
+     * @return gibt Anzahl der an der Ölplattform stationierten Arbeiter zurück
+     */
     public int getWorkerAmount(){
         return this.workersOnOilrig.size();
     }
 
-    //@author Jonas
+    /**
+     * Gibt ein kleines Schiff-Objekt anhand der ID zurück.
+     * @see  Oilrig#getShipById(int)
+     * @see Oilrig#getBigShipById(int)
+     * @param id ID des Schiffes, dass zurückgegeben wird
+     * @return Schiffobjekt der entsprechenden ID
+     */
     public ShipSmall getSmallShipById(int id){
         for (ShipSmall ship : smallShipsOnOilrig){
             if (ship.getId() == id) return ship;
         }
         return null;
     }
+
     /**
-     *
-     * @param id
-     * @return
+     * Gibt ein großes Schiff-Objekt anhand der ID zurück.
+     * @see  Oilrig#getShipById(int)
+     * @see Oilrig#getSmallShipById(int)
+     * @param id ID des Schiffes, dass zurückgegeben wird
+     * @return Schiffobjekt der entsprechenden ID
      */
     public ShipBig getBigShipById(int id){
         for (ShipBig ship : bigShipsOnOilrig) {
@@ -94,10 +131,11 @@ public class Oilrig{
         }
         return null;
     }
+
     /**
-     * gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id)
-     * @author Louis Schadewaldt
-     * @see  Oilrig#getBigShipById(int), Oilrig#getSmallShipById(int)
+     * Gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id)
+     * @see  Oilrig#getBigShipById(int)
+     * @see Oilrig#getSmallShipById(int)
      * @param id ID des Schiffes, dass zurückgegeben wird
      * @return Schiffobjekt der entsprechenden ID
      */
@@ -111,23 +149,55 @@ public class Oilrig{
         return null;
     }
 
-    //@author Jonas
-    //check-Methoden
+
+    // -- Check-Methoden Ölplattform und angedockte Schiffe --
+
+    /**
+     * Überprüft, ob mindestens ein Schiff an der Ölplattform angedockt ist und somit die Bedingung für
+     * die Mindestanzahl an Schiffen an einer Plattform erfüllt.
+     *
+     * @see Methods#moveWorkers(String, String, String, String, boolean)
+     * @return true, wenn mindestens ein Schiff an der Ölplattform angedockt ist
+     */
     public boolean checkTotalShipCountBiggerOne(){
         int i = bigShipsOnOilrig.size() + smallShipsOnOilrig.size();
         return i >= 1;
     }
-    //return: kann Platform receiver ein kleines Schiff aufnehmen
+
+    /**
+     * Überprüft, ob die Ölplattform noch ein kleines Schiff andocken lassen könnte, ohne dabei die maximale
+     * Anzahl an angedockten kleinen Schiffen an der Ölplattform (Initialwert + 4) zu überschreiten.
+     *
+     * @see Oilrig#checkOilrigCanReceiveBigShip()
+     * @return true, wenn die Anzahl der angedockten kleinen Schiffe plus eins kleiner oder gleich der initialen Anzahl
+     * an angedockten kleinen Schiffen der Ölplattform plus vier ist
+     */
     public boolean checkOilrigCanReceiveSmallShip(){
         return this.smallShipsOnOilrig.size() + 1 <= this.initialSmallShips + 4;
     }
-    //return: kann Platform receiver ein grosses Schiff aufnehmen
+
+    /**
+     * Überprüft, ob die Ölplattform noch ein großes Schiff andocken lassen könnte und dabei nicht die maximale
+     * Anzahl an angedockten großen Schiffen an der Ölplattform (Initialwert + 4) überschreitet.
+     *
+     * @see Oilrig#checkOilrigCanReceiveSmallShip()
+     * @return true, wenn die Anzahl der angedockten großen Schiffe plus eins kleiner oder gleich der initialen Anzahl
+     * an angedockten großen Schiffen der Ölplattform plus vier ist
+     */
     public boolean checkOilrigCanReceiveBigShip(){
         return this.bigShipsOnOilrig.size() + 1 <= this.initialBigShips + 4;
     }
 
-    // @author Jonas
-    // Hilfsmethoden zum Bewegen eines Schiffs
+
+    // -- Hilfsmethoden zum Bewegen eines Schiffs --
+
+    /**
+     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein kleines, angedocktes Schiff
+     *
+     * @param amount Anzahl der zu transferierenden Arbeiter
+     * @param ship kleines Schiff, auf dass die Arbeiter transferiert werden
+     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
+     */
     public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
@@ -135,6 +205,14 @@ public class Oilrig{
             ship.receiveWorker(tempWorker);
         }
     }
+
+    /**
+     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein großes, angedocktes Schiff
+     *
+     * @param amount Anzahl der zu transferierenden Arbeiter
+     * @param ship großes Schiff, auf dass die Arbeiter transferiert werden
+     * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
+     */
     public void transferWorkerOilrigToShip(int amount, ShipBig ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
@@ -142,14 +220,35 @@ public class Oilrig{
             ship.receiveWorker(tempWorker);
         }
     }
+
+    /**
+     * Transferiert alle Arbeiter auf einem kleinen Schiff auf eine Ölplattform
+     *
+     * @param ship kleines Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
+     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
+     */
     public void transferAllWorkerShipToOilrig(ShipSmall ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
         workersOnOilrig.addAll(wTransfer);
     }
+
+    /**
+     * Transferiert alle Arbeiter auf einem großen Schiff auf eine Ölplattform
+     *
+     * @param ship großes Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
+     * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
+     */
     public void transferAllWorkerShipToOilrig(ShipBig ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
         workersOnOilrig.addAll(wTransfer);
     }
+
+    /**
+     * Dockt ein kleines Schiff von einer Ölplattform ab.
+     *
+     * @param ship kleines Schiff, dass von einer Ölplattform abgedockt wird
+     * @see Oilrig#undockShip(ShipBig)
+     */
     public void undockShip(ShipSmall ship){
         int id = ship.getId();
         for (int i = 0; i < smallShipsOnOilrig.size(); i++) {
@@ -162,6 +261,13 @@ public class Oilrig{
             }
         }
     }
+
+    /**
+     * Dockt ein großes Schiff von einer Ölplattform ab.
+     *
+     * @param ship großes Schiff, dass von einer Ölplattform abgedockt wird
+     * @see Oilrig#undockShip(ShipSmall)
+     */
     public void undockShip(ShipBig ship){
         int id = ship.getId();
         for (int i = 0; i < bigShipsOnOilrig.size(); i++) {
@@ -174,16 +280,34 @@ public class Oilrig{
             }
         }
     }
+
+    /**
+     * Dockt ein kleines Schiff an einer Ölplattform an.
+     *
+     * @param ship kleines Schiff, dass an einer Ölplattform angedockt wird
+     * @see Oilrig#dockShip(ShipBig)
+     */
     public void dockShip(ShipSmall ship){
         smallShipsOnOilrig.add(ship);
     }
+
+    /**
+     * Dockt ein großes Schiff an einer Ölplattform an.
+     *
+     * @param ship großes Schiff, dass an einer Ölplattform angedockt wird
+     * @see Oilrig#dockShip(ShipSmall)
+     */
     public void dockShip(ShipBig ship){
         bigShipsOnOilrig.add(ship);
     }
 
     /**
-     * schreibt Überblick-Informationen einer Ölplattform in einen String und gibt diesen zurück. Über den Aufruf in einer For-Each-Schleife in handleInput(ArrayList) wird der Überblick für alle Plattformen ausgegeben. Der String ist für das Userinterface formatiert.
-     * @autor Louis Schadewaldt
+     * Schreibt die Überblick-Informationen einer Ölplattform in einen String und gibt diesen zurück. Über den Aufruf
+     * in einer For-Each-Schleife in handleInput(ArrayList) wird der Überblick für alle Plattformen ausgegeben. Der
+     * String ist für das Userinterface passend formatiert. Überblick-Informationen sind die Menge an angedockten
+     * Schiffen an der Ölplattform (auch mit Unterscheidung der Schiffsgröße) und Anzahl der stationierten Arbeiter
+     *
+     * @author Louis Schadewaldt
      * @see Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
      */
@@ -191,7 +315,7 @@ public class Oilrig{
 
         String result = "";
 
-        // Output
+        // Output String - Formatierung
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
         result += "amount of ships docked: " + ( bigShipsOnOilrig.size() + smallShipsOnOilrig.size() ) + "\n";  // int sumOfShips = getBigShipAmount() + getSmallShipAmount();   // Fehlerhaft, 3+4 ist nicht 6
@@ -201,39 +325,50 @@ public class Oilrig{
         return result;
     }
 
-    // @autor Louis
-    // Output Information einer bestimmten Ölplattfor
+    /**
+     * Schreibt die genauen Informationen einer spezifischen Ölplattform in einen String und gibt diesen zurück. Die
+     * spezifische Ölplattform wird über deren ID in der Methode handleInput(ArrayList) bestimmt. Der String ist für
+     * das Userinterface passend formatiert. Genaue Informationen sind die IDs der an der Ölplattform angedockten
+     * Schiffe mit Unterscheidung der Schiffsgröße und Anzahl der stationierten Arbeiter
+     *
+     * @author Louis Schadewaldt
+     * @see Methods#handleInput(ArrayList)
+     * @return String mit allen Überblick-Informationen einer Plattform
+     */
     public String getInformationOilrig() {
 
         String result = "";
         StringBuilder bigShipsOnOilrigString = new StringBuilder("|");
         StringBuilder smallShipsOnOilrigString = new StringBuilder("|");
 
-        // duplizierte Liste wird nach IDs sortiert bigShip
+        // duplizierte Liste wird nach IDs sortiert für bigShip
         ArrayList<ShipBig> tempArray1 = new ArrayList<>(bigShipsOnOilrig);
         Collections.sort(tempArray1);
 
         for (ShipBig shipBig : tempArray1) {
-            try {    //Integer.toString kann NullPointerException werfen
-                bigShipsOnOilrigString.append(shipBig.getId()).append("|"); //Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
+            // Integer.toString kann NullPointerException werfen
+            try {
+                // Holt ID des Objektes an der Stelle [i] aus Liste bigShipsOnPlatform und konvertiert zu string
+                bigShipsOnOilrigString.append(shipBig.getId()).append("|");
             } catch (NullPointerException npe) {
                 System.out.println("an error occured: " + npe.getMessage());
             }
         }
 
-        // duplizierte Liste wird nach IDs sortiert smallShip
+        // duplizierte Liste wird nach IDs sortiert für smallShip
         ArrayList<ShipSmall> tempArray2 = new ArrayList<>(smallShipsOnOilrig);
         Collections.sort(tempArray2);
 
         for(int i = 0; i < smallShipsOnOilrig.size(); i++) {
+            // siehe oben
             try{
-                smallShipsOnOilrigString.append(tempArray2.get(i).getId()).append("|");  //siehe oben
+                smallShipsOnOilrigString.append(tempArray2.get(i).getId()).append("|");
             }catch(NullPointerException npe){
                 System.out.println("an error occured: " + npe.getMessage());
             }
         }
 
-        // Output
+        // Output String - Formatierung
         result += "Oilrig ID: " + id + "\n";
         result += "------------------------------\n";
         result += "big ships             : " + bigShipsOnOilrigString + "\n";
@@ -243,7 +378,21 @@ public class Oilrig{
         return result;
     }
 
-     public void checkEvacuationSpace(){
+
+    // -- Evakuierung Methoden --
+
+    /**
+     * Bestimmt, ob eine Ölplattform für eine Evakuierung weitere Schiffe von anderen Ölplattformen benötigt. Die Größe
+     * und Menge der benötigten Schiffe wird je nach benötigter Kapazität bestimmt. Die benötigten Schiffe für eine
+     * mögliche Evakuierung werden als EvacuationPlanerItem in einer Array-Liste gespeichert.
+     *
+     * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
+     * @see Oilrig#getEvacuationPlanerInfo(ArrayList)
+     * @see Oilrig#executePlan(ArrayList)
+     * @see EvacuationPlanerItem
+     * @author Jonas Hüllse
+     */
+    public void checkEvacuationSpace(){
         ArrayList<EvacuationPlanerItem> ep = new ArrayList<>();
 
         int spaceAvailable = (this.smallShipsOnOilrig.size() * 50) + (this.bigShipsOnOilrig.size() * 100);
@@ -295,6 +444,14 @@ public class Oilrig{
         }
     }
 
+    /**
+     *
+     * @param spaceNeeded
+     * @param epSmallShips
+     * @param epBigShips
+     * @param ep
+     * @author Jonas Hülse
+     */
     private void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
         ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(getId());
 
@@ -397,6 +554,11 @@ public class Oilrig{
         }
     }
 
+    /**
+     *
+     * @param ep
+     * @author Jonas Hülse
+     */
     private void executePlan(ArrayList<EvacuationPlanerItem> ep){
         for (EvacuationPlanerItem epItem : ep) {
             if (epItem.toCall){
@@ -409,7 +571,14 @@ public class Oilrig{
         System.out.println("Evacuation successful...");
     }
 
-    // @autor Louis, Jonas
+
+    /**
+     *
+     *
+     * @param ep
+     * @return
+     * @author Jonas Hülse, Louis Schadewaldt
+     */
      private String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
         ArrayList<Oilrig> allOilrigs = Methods.getAllOilrigs();
 
@@ -420,7 +589,7 @@ public class Oilrig{
 
             int maxCapacity = 0;
 
-            //setzt maxCapacity in Abhängigkeit ob epItem.shipId ein großes oder kleines Schiff ist
+            // setzt maxCapacity in Abhängigkeit ob epItem.shipId ein großes oder kleines Schiff ist
             for (Oilrig temp : allOilrigs) {
                 Ship ship = temp.getShipById(epItem.shipId);
                 if (ship != null){
@@ -434,7 +603,6 @@ public class Oilrig{
                 }
             }
 
-            // Output
             String shipOriginID = String.valueOf(Ship.getShipOriginID(epItem.shipId));
 
             result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t→→→    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n");
