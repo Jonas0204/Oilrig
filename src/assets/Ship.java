@@ -3,6 +3,10 @@ package assets;
 import programm.Methods;
 
 /**
+ * Die abstrakte Klasse Ship dient als Basisklasse für ShipBig und ShipSmall.
+ * Sie enthält grundlegende Methoden und Eigenschaften, die von Schiffen gemeinsam genutzt werden.
+ * Was leider nicht viele sind.
+ *
  * @author Jonas Hülse, Louis Schadewaldt
  */
 public abstract class Ship{

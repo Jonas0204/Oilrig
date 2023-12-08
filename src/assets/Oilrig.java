@@ -340,7 +340,7 @@ public class Oilrig{
      * @see ShipBig#compareTo(ShipBig)
      * @see ShipSmall#compareTo(ShipSmall)
      * @author Louis Schadewaldt
-     * @see Methods#handleInput(ArrayList)
+     * @see /*Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
      */
     public String getInformationOilrig() {
@@ -396,6 +396,7 @@ public class Oilrig{
      *
      * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
      * @see Oilrig#getEvacuationPlanerInfo(ArrayList)
+     * @see Oilrig#callForShipEP(ArrayList, String)
      * @see Oilrig#executePlan(ArrayList)
      * @see EvacuationPlanerItem
      * @author Jonas Hüllse
@@ -421,11 +422,11 @@ public class Oilrig{
 
             while (difference < 0){
                 if (difference < -50){
-                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "bigship");
+                    EvacuationPlanerItem tempForNotNull = callForShipEP(otherOrs, "bigship");
                     if (tempForNotNull != null) {
                         tempForNotNull.toCallID_S[1] = this.id;
                         epBigShips.add(tempForNotNull);
-                        System.out.println("Helping ship => ID " + tempForNotNull.shipId);
+                        //System.out.println("Helping ship => ID " + tempForNotNull.shipId);
                         difference += 100;
                     }
                     else {
@@ -434,11 +435,11 @@ public class Oilrig{
                     }
                     // Abbruchbedingung für kein Schiff vorhanden
                 } else {
-                    EvacuationPlanerItem tempForNotNull = callForBigShipEP(otherOrs, "smallship");
+                    EvacuationPlanerItem tempForNotNull = callForShipEP(otherOrs, "smallship");
                     if (tempForNotNull != null) {
                         tempForNotNull.toCallID_S[1] = this.id;
                         epSmallShips.add(tempForNotNull);
-                        System.out.println("Helping ship => ID " + tempForNotNull.shipId);
+                        //System.out.println("Helping ship => ID " + tempForNotNull.shipId);
                         difference += 50;
                     }
                     else {
@@ -453,16 +454,25 @@ public class Oilrig{
     }
 
     /**
+     * Berechnet einen Evakuierungsplan für Schiffe und Arbeiter auf dieser Ölplattform basierend auf dem benötigten Platz.
+     * Der Plan wird unter Berücksichtigung der verfügbaren Schiffe und der Arbeitskapazität der Zielplattformen erstellt.
      *
-     * @param spaceNeeded
-     * @param epSmallShips
-     * @param epBigShips
-     * @param ep
+     * @param spaceNeeded Die benötigte Kapazität für die Evakuierung
+     * @param epSmallShips Eine Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell voher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden ist diese Liste leer.
+     * @param epBigShips Eine Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell voher angefordert wurden. Wenn keine großen Schiffe angefordert wurden ist diese Liste leer.
+     * @param ep Eine Liste von Evakuierungsplan-Elementen, also der letztendliche Evakuierungsplan
+     * @see Methods#getOtherOilrigs(int)
+     * @see Oilrig#getFreeCapacity()
+     * @see Oilrig#addEmptyWorkers(int)
+     * @see Oilrig#getEvacuationPlanerInfo(ArrayList)
+     * @see Oilrig#executePlan(ArrayList)
      * @author Jonas Hülse
      */
     private void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
+        // Erhalten der anderen Ölplattformen außer dieser
         ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(getId());
 
+        // Fügt Evakuierungsplan-Elemente für die zu evakuierende Plattform hinzu, also die eigenen Schiffe
         for (ShipSmall ship : smallShipsOnOilrig) {
             epSmallShips.add(new EvacuationPlanerItem(ship.getId(), "smallship"));
         }
@@ -472,10 +482,10 @@ public class Oilrig{
 
         int avaSmallShips = epSmallShips.size();
         int avaBigShips = epBigShips.size();
-        System.out.println("Bigships: " + avaBigShips + ", Smallships: " + avaSmallShips);
+        //System.out.println("Bigships: " + avaBigShips + ", Smallships: " + avaSmallShips);
 
-        // Rechnung zur gleichmäßigen Verteilung der Arbeiter auf die Schiffe
-        int totalEqualShips = (2 * avaBigShips) + avaSmallShips;        // ShipBig entspricht nach Kapazität zwei kleinen Schiffen
+        // Logik zur gleichmäßigen Verteilung der Arbeiter auf die Schiffe und Zielplattformen...
+        int totalEqualShips = (2 * avaBigShips) + avaSmallShips;        // ShipBig entspricht nach der Kapazität zwei kleinen Schiffen
         double workerPerShip = (double) spaceNeeded / totalEqualShips;  // runterbrechen: wie viele Arbeiter pro Schiff (Dezimalzahl)
         int evenWorkerPerShip = (int) Math.floor(workerPerShip);        // Dezimalzahl abrunden (Zahl wird ungenau)
         int temp = evenWorkerPerShip * totalEqualShips;                 // Hochrechnung der ungenauen Zahl auf den benötigten Gesamtwert für Arbeiter
@@ -484,6 +494,7 @@ public class Oilrig{
         for (EvacuationPlanerItem epBigShip : epBigShips) {
             int localEvenWorkerPerShip;
 
+            // Zu jedem Schiff wird, falls noch vorhanden, noch ein Überschüssiger Arbeiter zugewiesen
             if (diffFormDouble > 0) {
                 localEvenWorkerPerShip = (2 * evenWorkerPerShip) + 1;
                 diffFormDouble--;
@@ -491,7 +502,7 @@ public class Oilrig{
 
             for (Oilrig otherOr : otherOrs) {
                 int freeSpace = otherOr.getFreeCapacity();
-                // Wenn voll zum Nächsten
+                // Wenn die Plattform voll ist, zum Nächsten
                 if (freeSpace <= localEvenWorkerPerShip) {
                     continue;
                 }
@@ -499,10 +510,15 @@ public class Oilrig{
                     continue;
                 }
 
+                // Es werden der Ölplattformkopien leere Objekte hinzugefügt um eine Befüllung zu simulieren
                 if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && epBigShip != null)) {
+                    // Hinzufügen von leeren Arbeitern zur Zielplattform
                     otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
+                    // Hinzufügen eines leeren großen Schiffs zur Zielplattform
                     otherOr.bigShipsOnOilrig.add(new ShipBig(1));
+                    // Aktualisierung der Zielplattform im Evakuierungsplan
                     epBigShip.destinationOr = otherOr.getId();
+                    // Aktualisierung der verwendeten Arbeitskräfte im Evakuierungsplan
                     epBigShip.usedCrew = localEvenWorkerPerShip;
                     ep.add(epBigShip);
                     break;
@@ -512,6 +528,7 @@ public class Oilrig{
         for (EvacuationPlanerItem epSmallShip : epSmallShips) {
             int localEvenWorkerPerShip;
 
+            // Zu jedem Schiff wird, falls noch vorhanden, noch ein Überschüssiger Arbeiter zugewiesen
             if (diffFormDouble > 0) {
                 localEvenWorkerPerShip = evenWorkerPerShip + 1;
                 diffFormDouble--;
@@ -519,7 +536,7 @@ public class Oilrig{
 
             for (Oilrig otherOr : otherOrs) {
                 int freeSpace = otherOr.getFreeCapacity();
-                // Wenn voll zum Nächsten
+                // Wenn die Plattform voll ist, zum Nächsten
                 if (freeSpace <= localEvenWorkerPerShip) {
                     continue;
                 }
@@ -527,10 +544,15 @@ public class Oilrig{
                     continue;
                 }
 
+                // Es werden der Ölplattformkopien leere Objekte hinzugefügt um eine Befüllung zu simulieren
                 if ((freeSpace - evenWorkerPerShip) >= 0 && epSmallShip != null) {
+                    // Hinzufügen von leeren Arbeitern zur Zielplattform
                     otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
+                    // Hinzufügen eines leeren kleinen Schiffs zur Zielplattform
                     otherOr.smallShipsOnOilrig.add(new ShipSmall(1));
+                    // Aktualisierung der Zielplattform im Evakuierungsplan
                     epSmallShip.destinationOr = otherOr.getId();
+                    // Aktualisierung der verwendeten Arbeitskräfte im Evakuierungsplan
                     epSmallShip.usedCrew = localEvenWorkerPerShip;
                     ep.add(epSmallShip);
                     break;
@@ -539,6 +561,7 @@ public class Oilrig{
         }
         System.out.println(getEvacuationPlanerInfo(ep));
 
+        // Abfrage, ob der vorgeschlagene Evakuierungsplan ausgeführt werden soll
         Scanner yesOrNo = new Scanner(System.in);
         String input;
         boolean repeat = true;
@@ -563,9 +586,13 @@ public class Oilrig{
     }
 
     /**
+     * Führt den Evakuierungsplan aus, der auf der berechneten Evakuierungsplanliste basiert.
+     * Geht jeden Eintrag in der Liste durch und bewegt Arbeiter und Schiffe entsprechend des Evakuierungsplans.
      *
-     * @param ep
-     * @author Jonas Hülse
+     * @param ep Eine Liste von Evakuierungsplan-Elementen, die die Aktionen für die Evakuierung darstellen
+     * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
+     * @see Methods#moveWorkers(String, String, String, String, boolean)
+     * @autor Jonas Hülse
      */
     private void executePlan(ArrayList<EvacuationPlanerItem> ep){
         for (EvacuationPlanerItem epItem : ep) {
@@ -579,12 +606,12 @@ public class Oilrig{
         System.out.println("Evacuation successful...");
     }
 
-
     /**
+     * Gibt eine formatierte Übersicht des Evakuierungsplans, anhand des Parameters [ep], aus.
+     * Geht die Liste von Evakuierungsplan-Elementen durch und generiert Informationen zu Schiffen, ihrer aktuellen Crew und ihren Ziel- und Ursprungsplattformen.
      *
-     *
-     * @param ep
-     * @return
+     * @param ep Eine Liste von Evakuierungsplan-Elementen, die die geplanten Evakuierungsschritte darstellen
+     * @return String, der eine Übersicht des Evakuierungsplans enthält
      * @author Jonas Hülse, Louis Schadewaldt
      */
      private String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
@@ -597,7 +624,7 @@ public class Oilrig{
 
             int maxCapacity = 0;
 
-            // setzt maxCapacity in Abhängigkeit ob epItem.shipId ein großes oder kleines Schiff ist
+            // Ermitteln der maximalen Kapazität des Schiffes (abhängig von großem oder kleinem Schiff)
             for (Oilrig temp : allOilrigs) {
                 Ship ship = temp.getShipById(epItem.shipId);
                 if (ship != null){
@@ -619,6 +646,13 @@ public class Oilrig{
         return result.toString();
     }
 
+    /**
+     * Erstellt und liefert eine Liste von leeren Arbeitern basierend auf der angegebenen Anzahl.
+     * Jeder leere Arbeiter erhält eine eindeutige negative ID.
+     *
+     * @param i Die Anzahl der leeren Arbeiter, die erstellt werden sollen
+     * @return Liste von leeren Arbeitern
+     */
     private static ArrayList<Worker> addEmptyWorkers(int i){
         ArrayList<Worker> temp = new ArrayList<>();
         for (int j = 1; j <= i; j++) {
@@ -627,13 +661,28 @@ public class Oilrig{
         return temp;
     }
 
+    /**
+     * Berechnet und liefert die verfügbare Kapazität von Arbeitern auf der Ölplattform.
+     * Die verfügbare Kapazität ist die Differenz zwischen der maximalen Kapazität (das doppelte der anfänglichen Besatzung) der Plattform und der aktuellen Anzahl von Arbeitern.
+     *
+     * @return Integer verfügbarer Kapazität auf der Ölplattform
+     */
     private int getFreeCapacity(){
         int maxCapacity = 2 * initialCrewOilrig;
         int usedCapacity = workersOnOilrig.size();
         return maxCapacity - usedCapacity;
     }
 
-    private static EvacuationPlanerItem callForBigShipEP(ArrayList<Oilrig> otherOr, String type){
+    /**
+     * Sucht nach einem verfügbaren Schiff eines bestimmten Typs auf anderen Ölplattformen und erstellt
+     * ein EvacuationPlanerItem für den Ruf nach einem solchen Schiff, um eine Evakuierung vorzubereiten.
+     *
+     * @param otherOr Eine Liste der anderen Ölplattformen
+     * @param type Der Typ des gesuchten Schiffs ("bigship" oder "smallship")
+     * @return EvacuationPlanerItem, das den Ruf nach einem passenden Schiff repräsentiert;
+     *         null, wenn kein passendes Schiff gefunden wurde
+     */
+    private static EvacuationPlanerItem callForShipEP(ArrayList<Oilrig> otherOr, String type){
         if (Objects.equals(type, "bigship")){
             for (Oilrig oilrig : otherOr) {
                 if (!oilrig.bigShipsOnOilrig.isEmpty()) {

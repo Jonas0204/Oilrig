@@ -147,7 +147,6 @@ public abstract class Methods {
         }
     }
 
-    // @author Jonas
     // gibt true zurück, wenn beide IDs vorhanden sind, andernfalls wird false zurückgegeben
     private static boolean existsID(int senderID, int receiverID){
         boolean senderIsTrue = false;
@@ -170,7 +169,6 @@ public abstract class Methods {
         return senderIsTrue && receiverIsTrue;
     }
 
-    // @author Jonas
     // WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
     private static Oilrig getPlatByID(int ID) {
         try {
@@ -426,6 +424,8 @@ public abstract class Methods {
 
     /**
      * Erhöht den Zähler für Schiffe um eins.
+     * Das ist Wichtig, damit die Schiffe eine Indivieduelle ID erhalten
+     * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterShips(){
         counterShips++;
@@ -433,6 +433,8 @@ public abstract class Methods {
 
     /**
      * Erhöht den Zähler für Arbeiter um eins.
+     * Das ist Wichtig, damit die Arbeiter eine Indivieduelle ID erhalten
+     * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterWorker(){
         counterWorker++;
