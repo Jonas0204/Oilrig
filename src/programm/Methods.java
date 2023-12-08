@@ -239,19 +239,18 @@ public abstract class Methods {
 
         //  Feststellen, welche Art von Schiff verschoben wird, indem die entsprechenden Schiff-Objekte abgerufen werden.
         assert senderOr != null;
-        ShipSmall smallShip = senderOr.getSmallShipById(shipID);
-        ShipBig bigShip = senderOr.getBigShipById(shipID);
+        Ship ship = senderOr.getShipById(shipID);
         String ShipType = "";
 
         //  Überprüfen, ob das Schiff mit der angegebenen ID existiert. Und stellt fest zu welchem Schiffstyp die ID gehört.
         //  Falls nicht, wird eine Fehlermeldung ausgegeben und die Methode verlassen.
-        if (smallShip == null && bigShip == null) {
+        if (ship == null) {
             System.out.println("an error occurred: could not find ship with id " + shipID);
             return;
         }
-        else if (smallShip == null) {
+        else if (ship instanceof ShipBig) {
             ShipType = "bigship";
-        } else if (bigShip == null) {
+        } else if (ship instanceof ShipSmall) {
             ShipType = "smallship";
         }
 
@@ -302,26 +301,19 @@ public abstract class Methods {
 
         // Abhängig vom Schiffstyp wird der entsprechende Ablauf für den Transport der Arbeiter ausgeführt.
         switch(ShipType){
-            case "smallship":
-                senderOr.transferWorkerOilrigToShip(amount, smallShip);
-                senderOr.undockShip(smallShip);
-                System.out.println("moving " + smallShip.getShipInformation());
+            case "smallship", "bigship":
+                senderOr.transferWorkerOilrigToShip(amount, ship);
+                senderOr.undockShip(ship);
+                System.out.println("moving " + ship.getShipInformation());
                 // → Schiff beladen und abdocken von der Startplattform
 
                 // Andocken an die Zielplattform
-                receiverOr.dockShip(smallShip);
-                receiverOr.transferAllWorkerShipToOilrig(smallShip);
+                receiverOr.dockShip(ship);
+                receiverOr.transferAllWorkerShipToOilrig(ship);
                 break;
-            case "bigship":
-                senderOr.transferWorkerOilrigToShip(amount, bigShip);
-                senderOr.undockShip(bigShip);
-                System.out.println("moving " + bigShip.getShipInformation());
-                // → Schiff beladen und abdocken von Startplattform
+            // → Schiff beladen und abdocken von Startplattform
 
                 // Andocken an Zielplattform
-                receiverOr.dockShip(bigShip);
-                receiverOr.transferAllWorkerShipToOilrig(bigShip);
-                break;
             default:
                 System.out.println("an error occurred: ship does not exist");
                 break;

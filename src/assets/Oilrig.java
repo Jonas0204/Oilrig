@@ -105,42 +105,12 @@ public class Oilrig{
     }
 
     /**
-     * Gibt ein kleines Schiff-Objekt anhand der ID zurück.
-     *
-     * @see  Oilrig#getShipById(int)
-     * @see Oilrig#getBigShipById(int)
-     * @param id Integer ID des Schiffes, dass zurückgegeben wird
-     * @return kleines Schiff-Objekt der entsprechenden ID
-     */
-    public ShipSmall getSmallShipById(int id){
-        for (ShipSmall ship : smallShipsOnOilrig){
-            if (ship.getId() == id) return ship;
-        }
-        return null;
-    }
+     * Gibt ein Schiff-Objekt anhand der ID zurück.
 
-    /**
-     * Gibt ein großes Schiff-Objekt anhand der ID zurück.
-     * @see  Oilrig#getShipById(int)
-     * @see Oilrig#getSmallShipById(int)
-     * @param id Integer ID des Schiffes, dass zurückgegeben wird
-     * @return großes Schiff-Objekt der entsprechenden ID
-     */
-    public ShipBig getBigShipById(int id){
-        for (ShipBig ship : bigShipsOnOilrig) {
-            if (ship.getId() == id) return ship;
-        }
-        return null;
-    }
-
-    /**
-     * Gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id).
-     * @see  Oilrig#getBigShipById(int)
-     * @see Oilrig#getSmallShipById(int)
      * @param id ID des Schiffes, dass zurückgegeben wird
      * @return Schiff-Objekt der entsprechenden ID
      */
-    protected Ship getShipById(int id){
+    public Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
             if (ship.getId() == id) return ship;
         }
@@ -150,6 +120,16 @@ public class Oilrig{
         return null;
     }
 
+    public ShipBig getShipBigById(int id){
+        for (ShipBig ship : bigShipsOnOilrig) {
+            if (ship.getId() == id) return ship;
+        } return null;
+    }
+    public ShipSmall getShipSmallById(int id){
+        for (ShipSmall ship : smallShipsOnOilrig) {
+            if (ship.getId() == id) return ship;
+        } return null;
+    }
 
     // -- Check-Methoden Ölplattform und angedockte Schiffe --
 
@@ -192,15 +172,7 @@ public class Oilrig{
 
     // -- Hilfsmethoden zum Bewegen eines Schiffs --
 
-    /**
-     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein kleines, angedocktes Schiff.
-     *
-     * @param amount Anzahl der zu transferierenden Arbeiter
-     * @param ship kleines Schiff, auf dass die Arbeiter transferiert werden
-     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
-     * @see ShipSmall#receiveWorker(Worker)
-     */
-    public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
+    public void transferWorkerOilrigToShip(int amount, Ship ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
             workersOnOilrig.remove(0);
@@ -208,103 +180,51 @@ public class Oilrig{
         }
     }
 
-    /**
-     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein großes, angedocktes Schiff.
-     *
-     * @param amount Anzahl der zu transferierenden Arbeiter
-     * @param ship großes Schiff, auf dass die Arbeiter transferiert werden
-     * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
-     * @see ShipBig#receiveWorker(Worker)
-     */
-    public void transferWorkerOilrigToShip(int amount, ShipBig ship) {
-        for (int i = 1; i <= amount; i++){
-            Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
-            workersOnOilrig.remove(0);
-            ship.receiveWorker(tempWorker);
-        }
-    }
-
-    /**
-     * Transferiert alle Arbeiter auf einem kleinen Schiff auf eine Ölplattform.
-     *
-     * @param ship kleines Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
-     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
-     * @see ShipSmall#departureAll()
-     */
-    public void transferAllWorkerShipToOilrig(ShipSmall ship){
+    public void transferAllWorkerShipToOilrig(Ship ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
         workersOnOilrig.addAll(wTransfer);
     }
 
-    /**
-     * Transferiert alle Arbeiter auf einem großen Schiff auf eine Ölplattform.
-     *
-     * @param ship großes Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
-     * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
-     * @see ShipBig#departureAll()
-     */
-    public void transferAllWorkerShipToOilrig(ShipBig ship){
-        ArrayList<Worker> wTransfer = ship.departureAll();
-        workersOnOilrig.addAll(wTransfer);
-    }
-
-    /**
-     * Dockt ein kleines Schiff von einer Ölplattform ab.
-     *
-     * @param ship kleines Schiff, dass von einer Ölplattform abgedockt wird
-     * @see Oilrig#undockShip(ShipBig)
-     */
-    public void undockShip(ShipSmall ship){
+    public void undockShip(Ship ship){
         int id = ship.getId();
-        for (int i = 0; i < smallShipsOnOilrig.size(); i++) {
-            if (smallShipsOnOilrig.get(i).getId() == id) {
-                try{
-                    smallShipsOnOilrig.remove(i);
-                }catch (IndexOutOfBoundsException oobe){
-                    System.out.println("an error occurred: " + oobe.getMessage());
+
+        if(ship instanceof ShipBig){
+            for (int i = 0; i < bigShipsOnOilrig.size(); i++) {
+                if (bigShipsOnOilrig.get(i).getId() == id) {
+                    try{
+                        bigShipsOnOilrig.remove(i);
+                    }catch (IndexOutOfBoundsException oobe){
+                        System.out.println("an error occurred: " + oobe.getMessage());
+                    }
                 }
             }
-        }
-    }
-
-    /**
-     * Dockt ein großes Schiff von einer Ölplattform ab.
-     *
-     * @param ship großes Schiff, dass von einer Ölplattform abgedockt wird
-     * @see Oilrig#undockShip(ShipSmall)
-     */
-    public void undockShip(ShipBig ship){
-        int id = ship.getId();
-        for (int i = 0; i < bigShipsOnOilrig.size(); i++) {
-            if (bigShipsOnOilrig.get(i).getId() == id) {
-                try{
-                    bigShipsOnOilrig.remove(i);
-                }catch (IndexOutOfBoundsException oobe){
-                    System.out.println("an error occurred: " + oobe.getMessage());
+        }else if(ship instanceof ShipSmall){
+            for (int i = 0; i < smallShipsOnOilrig.size(); i++) {
+                if (smallShipsOnOilrig.get(i).getId() == id) {
+                    try{
+                        smallShipsOnOilrig.remove(i);
+                    }catch (IndexOutOfBoundsException oobe){
+                        System.out.println("an error occurred: " + oobe.getMessage());
+                    }
                 }
             }
+        }else{
+            System.out.println("an error occurred: ship not found");
         }
+
     }
 
-    /**
-     * Dockt ein kleines Schiff an einer Ölplattform an.
-     *
-     * @param ship kleines Schiff, dass an einer Ölplattform angedockt wird
-     * @see Oilrig#dockShip(ShipBig)
-     */
-    public void dockShip(ShipSmall ship){
-        smallShipsOnOilrig.add(ship);
+    public void dockShip(Ship ship){
+        if(ship instanceof ShipBig){
+            bigShipsOnOilrig.add((ShipBig) ship);
+        }else if (ship instanceof ShipSmall){
+            smallShipsOnOilrig.add((ShipSmall) ship);
+        }else{
+            System.out.println("an error occurred: ship not found");
+        }
+
     }
 
-    /**
-     * Dockt ein großes Schiff an einer Ölplattform an.
-     *
-     * @param ship großes Schiff, dass an einer Ölplattform angedockt wird
-     * @see Oilrig#dockShip(ShipSmall)
-     */
-    public void dockShip(ShipBig ship){
-        bigShipsOnOilrig.add(ship);
-    }
 
     /**
      * Schreibt die Überblick-Informationen einer Ölplattform in einen String und gibt diesen zurück. Über den Aufruf
@@ -337,8 +257,7 @@ public class Oilrig{
      * Ölplattform angedockten Schiffe (nach Größe aufsteigend sortiert) mit Unterscheidung der Schiffsgröße und Anzahl
      * der stationierten Arbeiter.
      *
-     * @see ShipBig#compareTo(ShipBig)
-     * @see ShipSmall#compareTo(ShipSmall)
+     * @see Ship#compareTo(Ship)
      * @author Louis Schadewaldt
      * @see /*Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
