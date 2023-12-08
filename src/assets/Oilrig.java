@@ -1,6 +1,6 @@
 package assets;
 
-import programm.Methods;
+import programm.Manager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -45,10 +45,10 @@ public class Oilrig{
      * @param initialCrew       Die Anfangsbesatzung der Ölplattform
      * @param initialBigShips   Die Anzahl der anfänglichen großen Schiffe auf der Ölplattform
      * @param initialSmallShips Die Anzahl der anfänglichen kleinen Schiffe auf der Ölplattform
-     * @see Methods#addCounterShips()
-     * @see Methods#getCounterShips()
-     * @see Methods#addCounterWorker()
-     * @see Methods#getCounterWorker()
+     * @see Manager#addCounterShips()
+     * @see Manager#getCounterShips()
+     * @see Manager#addCounterWorker()
+     * @see Manager#getCounterWorker()
      */
     public Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips) {
         this.id = id;
@@ -60,26 +60,26 @@ public class Oilrig{
         // @see Methods.getCounterShips @autor Jonas
         // Debug System.out.println(String.valueOf(Methods.getCounterWorker()) + " < " + String.valueOf(initialCrew + Methods.getCounterWorker()));
 
-        int initMax = initialCrew + Methods.getCounterWorker();
+        int initMax = initialCrew + Manager.getCounterWorker();
 
-        for (int i = Methods.getCounterWorker(); i < initMax; i++) {
+        for (int i = Manager.getCounterWorker(); i < initMax; i++) {
             this.workersOnOilrig.add(new Worker(i));
-            Methods.addCounterWorker();
+            Manager.addCounterWorker();
         }
 
-        initMax = initialBigShips + Methods.getCounterShips();
+        initMax = initialBigShips + Manager.getCounterShips();
         //Add BigShips to Oilrig
         // @see Methods.getCounterShips
-        for (int i = Methods.getCounterShips(); i < initMax; i++) {
+        for (int i = Manager.getCounterShips(); i < initMax; i++) {
             this.bigShipsOnOilrig.add(new ShipBig());
-            Methods.addCounterShips();
+            Manager.addCounterShips();
         }
 
-        initMax = initialSmallShips + Methods.getCounterShips();
+        initMax = initialSmallShips + Manager.getCounterShips();
         //Add SmallShips to Oilrig
-        for (int i = Methods.getCounterShips(); i < initMax; i++) {
+        for (int i = Manager.getCounterShips(); i < initMax; i++) {
             this.smallShipsOnOilrig.add(new ShipSmall());
-            Methods.addCounterShips();
+            Manager.addCounterShips();
         }
     }
 
@@ -108,7 +108,7 @@ public class Oilrig{
      * Gibt ein Schiff-Objekt anhand der ID zurück.
 
      * @param id ID des Schiffes, dass zurückgegeben wird
-     * @return Schiff-Objekt der entsprechenden ID
+     * @return Schiff, der entsprechenden ID
      */
     public Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
@@ -120,16 +120,6 @@ public class Oilrig{
         return null;
     }
 
-    public ShipBig getShipBigById(int id){
-        for (ShipBig ship : bigShipsOnOilrig) {
-            if (ship.getId() == id) return ship;
-        } return null;
-    }
-    public ShipSmall getShipSmallById(int id){
-        for (ShipSmall ship : smallShipsOnOilrig) {
-            if (ship.getId() == id) return ship;
-        } return null;
-    }
 
     // -- Check-Methoden Ölplattform und angedockte Schiffe --
 
@@ -137,7 +127,7 @@ public class Oilrig{
      * Überprüft, ob mindestens ein Schiff an der Ölplattform angedockt ist und somit die Bedingung für
      * die Mindestanzahl an Schiffen an einer Plattform erfüllt.
      *
-     * @see Methods#moveWorkers(String, String, String, String, boolean)
+     * @see Manager#moveWorkers(String, String, String, String, boolean)
      * @return true, wenn mindestens ein Schiff an der Ölplattform angedockt ist
      */
     public boolean checkTotalShipCountBiggerOne(){
@@ -196,6 +186,12 @@ public class Oilrig{
         workersOnOilrig.addAll(wTransfer);
     }
 
+    /**
+     * Entfernt das angegebene Schiff aus der Liste der angedockten Schiffe der Ölplattform.
+     *
+     * @see Manager#moveWorkers(String, String, String, String, boolean) 
+     * @param ship Schiff, das von der Ölplattform abgedockt werden soll
+     */
     public void undockShip(Ship ship){
         int id = ship.getId();
 
@@ -223,12 +219,17 @@ public class Oilrig{
         }else{
             System.out.println("an error occurred: ship not found");
         }
-
     }
 
+    /**
+     * Dockt ein Schiff an diese Ölplattform an, indem es entsprechend seinem Typ der Plattform hinzugefügt wird.
+     *
+     * @param ship Das Schiff, das angedockt werden soll
+     */
     public void dockShip(Ship ship){
         if(ship instanceof ShipBig){
-            bigShipsOnOilrig.add((ShipBig) ship);
+            // Falls es sich um ein großes Schiff handelt, wird es der Liste der großen Schiffe auf dieser Ölplattform hinzugefügt
+            bigShipsOnOilrig.add((ShipBig)ship);
         }else if (ship instanceof ShipSmall){
             // Falls es sich um ein kleines Schiff handelt, wird es der Liste der kleinen Schiffe auf dieser Ölplattform hinzugefügt
             smallShipsOnOilrig.add((ShipSmall) ship);
@@ -236,7 +237,6 @@ public class Oilrig{
             // Wenn der Schiffstyp nicht erkannt wird, wird eine Fehlermeldung ausgegeben
             System.out.println("an error occurred: ship not found");
         }
-
     }
 
 
@@ -247,7 +247,6 @@ public class Oilrig{
      * Schiffen an der Ölplattform (auch mit Unterscheidung der Schiffsgröße) und Anzahl der stationierten Arbeiter.
      *
      * @author Louis Schadewaldt
-     * @see Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
      */
     public String getInformationOverview() {
@@ -348,7 +347,7 @@ public class Oilrig{
         }
         else {
             //Weiter Schiffe anfordern
-            ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(getId());
+            ArrayList<Oilrig> otherOrs = Manager.getOtherOilrigs(getId());
             ArrayList<EvacuationPlanerItem> epSmallShips = new ArrayList<>();
             ArrayList<EvacuationPlanerItem> epBigShips = new ArrayList<>();
 
@@ -398,7 +397,8 @@ public class Oilrig{
      * @param epSmallShips Eine Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell vorher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden, ist diese Liste leer.
      * @param epBigShips Eine Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell vorher angefordert wurden. Wenn keine großen Schiffe angefordert wurden, ist diese Liste leer.
      * @param ep Eine Liste von Evakuierungsplan-Elementen, also der letztendliche Evakuierungsplan
-     * @see Methods#getOtherOilrigs(int)
+     * @see Manager#getOtherOilrigs(int)
+     * @see EvacuationPlanerItem
      * @see Oilrig#getFreeCapacity()
      * @see Oilrig#addEmptyWorkers(int)
      * @see Oilrig#getEvacuationPlanerInfo(ArrayList)
@@ -407,7 +407,7 @@ public class Oilrig{
      */
     private void calculatePlan(int spaceNeeded, ArrayList<EvacuationPlanerItem> epSmallShips, ArrayList<EvacuationPlanerItem> epBigShips, ArrayList<EvacuationPlanerItem> ep) {
         // Erhalten der anderen Ölplattformen außer dieser
-        ArrayList<Oilrig> otherOrs = Methods.getOtherOilrigs(getId());
+        ArrayList<Oilrig> otherOrs = Manager.getOtherOilrigs(getId());
 
         // Fügt Evakuierungsplan-Elemente für die zu evakuierende Plattform hinzu, also die eigenen Schiffe
         for (ShipSmall ship : smallShipsOnOilrig) {
@@ -528,16 +528,16 @@ public class Oilrig{
      *
      * @param ep Eine Liste von Evakuierungsplan-Elementen, die die Aktionen für die Evakuierung darstellen
      * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
-     * @see Methods#moveWorkers(String, String, String, String, boolean)
+     * @see Manager#moveWorkers(String, String, String, String, boolean)
      * @autor Jonas Hülse
      */
     private void executePlan(ArrayList<EvacuationPlanerItem> ep){
         for (EvacuationPlanerItem epItem : ep) {
             if (epItem.toCall){
-                Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(0), String.valueOf(epItem.toCallID_S[0]),
+                Manager.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(0), String.valueOf(epItem.toCallID_S[0]),
                         String.valueOf(epItem.toCallID_S[1]),  true);
             }
-            Methods.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(epItem.usedCrew),
+            Manager.moveWorkers(String.valueOf(epItem.shipId), String.valueOf(epItem.usedCrew),
                     String.valueOf(Ship.getShipOriginID(epItem.shipId)), String.valueOf(epItem.destinationOr), true);
         }
         System.out.println("Evacuation successful...");
@@ -552,7 +552,7 @@ public class Oilrig{
      * @author Jonas Hülse, Louis Schadewaldt
      */
      private String getEvacuationPlanerInfo(ArrayList<EvacuationPlanerItem> ep){
-        ArrayList<Oilrig> allOilrigs = Methods.getAllOilrigs();
+        ArrayList<Oilrig> allOilrigs = Manager.getAllOilrigs();
 
         StringBuilder result = new StringBuilder("---------------------------------- Evacuation Plan ---------------------------------- \n");
         // unfertig

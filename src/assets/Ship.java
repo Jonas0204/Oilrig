@@ -1,7 +1,6 @@
 package assets;
 
-import programm.Methods;
-
+import programm.Manager;
 import java.util.ArrayList;
 
 /**
@@ -78,7 +77,7 @@ public abstract class Ship implements Comparable<Ship>{
      * @return Die ID der Ölplattform, an der das Schiff angedockt ist. Gibt -1 zurück, wenn das Schiff nicht gefunden wurde.
      */
     public static int getShipOriginID(int id){
-        for (Oilrig temp : Methods.getAllOilrigs()) {
+        for (Oilrig temp : Manager.getAllOilrigs()) {
             Ship tempShipById = temp.getShipById(id);
             if (tempShipById != null && tempShipById.getId() == id){
                 return temp.getId();

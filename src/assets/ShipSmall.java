@@ -1,7 +1,6 @@
 package assets;
 
-import java.util.ArrayList;
-import static programm.Methods.getCounterShips;
+import static programm.Manager.getCounterShips;
 
 /**
  * Die Klasse ShipSmall repräsentiert ein kleines Schiff im System.

@@ -2,8 +2,8 @@ package programm;
 
 import assets.Oilrig;
 import java.util.ArrayList;
-import static programm.Methods.printStartupHeader;
-import static programm.Methods.handleInput;
+import static programm.Manager.printStartupHeader;
+import static programm.Manager.handleInput;
 
 /**
  * Die Main-Klasse ist der Einstiegspunkt des Programms und initialisiert die Ölplattformen gemäß den vorgegebenen Parametern.
@@ -15,9 +15,10 @@ import static programm.Methods.handleInput;
 public class Main {
 
     /**
-     * Main-Methode initialisiert die Ölplattformen nach vorgegebenen Parametern und ruft printStartupHeader() und handleInput() auf
+     * Main-Methode initialisiert die Ölplattformen nach vorgegebenen Parametern und ruft printStartupHeader() und handleInput() auf.
+     *
      * @see Oilrig#Oilrig(Oilrig)
-     * @see Methods#handleInput(ArrayList)
+     * @see Manager#handleInput(ArrayList)
      * @param args Argumente
      */
     public static void main(String[] args) {

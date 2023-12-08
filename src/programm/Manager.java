@@ -5,15 +5,28 @@ import java.util.Objects;
 import java.util.Scanner;
 import assets.*;
 
-public abstract class Methods {
+/**
+ * Manager ist eine abstrakte Klasse, die die Steuerung des Programms übernimmt. Sie enthält Methoden
+ * zur Verwaltung von Ölplattformen, Schiffen und zur Interaktion mit dem Benutzer über die Befehlseingabe.
+ * Die Klasse enthält auch Methoden zur Überwachung von Evakuierungen, zum Transfer von Arbeitern zwischen
+ * Ölplattformen und Schiffen sowie zur Anzeige von Informationen und der möglichen Befehle.
+ * Sie erbt von keiner anderen Klasse und wird als zentrale Steuerungseinheit des Programms genutzt.
+ *
+ * @see Oilrig
+ * @see Ship
+ */
+public abstract class Manager {
 
     private static ArrayList<Oilrig> oilrigs = new ArrayList<>();
 
     /**
-     * Behandelt die Benutzereingabe zur Ausführung von Befehlen.
+     * Verarbeitet Benutzereingaben und steuert die Interaktion mit dem Programm anhand von Befehlen.
+     * Diese Methode überwacht ständig die Eingaben des Benutzers und führt die entsprechenden Aktionen aus,
+     * um die Ölplattformen und Schiffe zu verwalten, die Evakuierung zu steuern und Informationen anzuzeigen.
+     *
      * @param oilrigsParam ArrayList von Oilrig-Objekten, die die verfügbaren Ölplattformen darstellen
-     * @see Methods#moveWorkers(String, String, String, String, boolean)
-     * @see Methods#evacuation(int)
+     * @see Manager#moveWorkers(String, String, String, String, boolean)
+     * @see Manager#evacuation(int)
      * @see Oilrig#getInformationOverview()
      * @see Oilrig#getInformationOilrig()
      * @autor Louis Schadewaldt, Jonas Hülse
@@ -40,7 +53,7 @@ public abstract class Methods {
                         System.out.println("invalid amount of arguments provided");
                         break;
                     }
-                    Methods.printHelp();
+                    Manager.printHelp();
                     break;
 
                 //@author Jonas
@@ -70,7 +83,7 @@ public abstract class Methods {
                     }
                     // prüft, ob die angegebene ID vorhanden (1 bis 4) ist
                     if (id == 1 || id == 2 || id == 3 || id == 4) {
-                        Oilrig or = getPlatByID(id);
+                        Oilrig or = getRigByID(id);
                         if (or == null) {
                             System.out.println("an error occurred: Oilrig not found!");
                         }
@@ -170,10 +183,10 @@ public abstract class Methods {
     }
 
     // WICHTIG: Wenn diese Methode verwendet wird, muss der Rückgabewert auf NULL geprüft werden
-    private static Oilrig getPlatByID(int ID) {
+    private static Oilrig getRigByID(int id) {
         try {
             for (Oilrig opf : oilrigs) {
-                if (ID == opf.getId())
+                if (id == opf.getId())
                     return opf;
             }
         } catch (NullPointerException npe) {
@@ -184,7 +197,7 @@ public abstract class Methods {
 
     //@author Jonas
     private static void evacuation(int evacuationId){
-        Oilrig eOr = new Oilrig(Objects.requireNonNull(getPlatByID(evacuationId)));
+        Oilrig eOr = new Oilrig(Objects.requireNonNull(getRigByID(evacuationId)));
         eOr.checkEvacuationSpace();
     }
 
@@ -225,15 +238,15 @@ public abstract class Methods {
 
         //  Überprüft, ob die IDs für Ölplattformen gültig sind, indem die Methode existsID aufgerufen wird.
         //  Falls nicht, wird eine Fehlermeldung ausgegeben und die Methode verlassen.
-        boolean idExists = Methods.existsID(senderID, receiverID);
+        boolean idExists = Manager.existsID(senderID, receiverID);
         if (!idExists) {
             System.out.println("an error occurred: ID invalid for oilrig");
             return;
         }
 
         // Erhalten der Ölplattform-Objekte mithilfe der Methode getPlatByID aus der Klasse Methods.
-        Oilrig senderOr = Methods.getPlatByID(senderID);
-        Oilrig receiverOr = Methods.getPlatByID(receiverID);
+        Oilrig senderOr = Manager.getRigByID(senderID);
+        Oilrig receiverOr = Manager.getRigByID(receiverID);
 
         //  Feststellen, welche Art von Schiff verschoben wird, indem die entsprechenden Schiff-Objekte abgerufen werden.
         assert senderOr != null;
@@ -353,8 +366,10 @@ public abstract class Methods {
     // @author Louis, Ayman
     // Output Header und Ladebalken
     protected static void printStartupHeader() {
+        // Thread.sleep kann InterruptedException werfen
         try {
-            System.out.print("\n\n"); //Header
+            //Header
+            System.out.print("\n\n");
             System.out.println(" ____  ____  _      ____   ____   ____ ");
             System.out.println("/    \\l    j| T    |    \\ l    j /    T");
             System.out.println("|    | |  T | |    |  D  ) |  T Y   __j");
@@ -363,7 +378,8 @@ public abstract class Methods {
             System.out.println("|    |j    l|     T|  .  Y j  l |     |");
             System.out.println("\\____/|____jl_____jl__j\\_j|____jl___,_/");
 
-            System.out.print("\n\nLoading   "); //Ladebalken
+            //Ladebalken
+            System.out.print("\n\nLoading   ");
             Thread.sleep(800);
             System.out.print("..........................");
             Thread.sleep(500);
@@ -376,7 +392,7 @@ public abstract class Methods {
             System.out.print("\n\n");
             System.out.print("type in 'help' for information");
             System.out.print("\n\n");
-        } catch (InterruptedException ie) {     //Thread.sleep kann InterruptedException werfen
+        } catch (InterruptedException ie) {
             System.out.println("an error occured: " + ie.getMessage());
         }
     }
