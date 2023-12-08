@@ -10,19 +10,19 @@ public abstract class Ship{
     protected int id;
 
     /**
-     * Getter-Methode für die ID eines Schiffes
+     * Gibt die ID dieses Schiffes zurück.
      *
-     * @return gibt die ID des Schiffes zurück
+     * @return Die eindeutige ID des Schiffes
      */
     public int getId() {
         return id;
     }
 
     /**
+     * Ermittelt die ID der Ölplattform, an der das Schiff mit der angegebenen ID ursprünglich angedockt ist.
      *
-     *
-     * @param id Integer, der die ID des Schiffes angibt
-     * @return
+     * @param id Die ID des zu suchenden Schiffs
+     * @return Die ID der Ölplattform, an der das Schiff angedockt ist. Gibt -1 zurück, wenn das Schiff nicht gefunden wurde.
      */
     public static int getShipOriginID(int id){
         for (Oilrig temp : Methods.getAllOilrigs()) {

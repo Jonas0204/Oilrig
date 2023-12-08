@@ -3,24 +3,37 @@ package assets;
 import java.util.ArrayList;
 import static programm.Methods.getCounterShips;
 
+/**
+ *
+ */
 public class ShipBig extends Ship implements Comparable<ShipBig>{
 
     private ArrayList<Worker> crewBig = new ArrayList<>();
     protected final int maxCapacity = 100;
 
-    //@author Jonas, Louis
-    // Constructor
+    /**
+     *
+     */
     public ShipBig(){
         this.id = getCounterShips();
     }
 
+    /**
+     *
+     * @param id
+     */
     // Die negative ID stellt klar, dass das nur ein theoretischer Platzhalter ist
     public ShipBig(int id){
         this.id = -id;
     }
 
-    //@author Matthias
-    // fügt Arbeiter der Crew hinzu
+    /**
+     * Fügt der Besatzung eines großen Schiffes einen Arbeiter hinzu, falls dadurch nicht die maximale Kapazität des
+     * Schiffes überschritten wird. Andernfalls wird ein String ausgegeben, der auf die Auslastung des Schiffes
+     * hinweist.
+     *
+     * @param worker Arbeiter-Objekt, das der Besatzung des großen Schiffes hinzugefügt werden soll
+     */
     public void receiveWorker(Worker worker) {
         if (crewBig.size() < maxCapacity) {
             crewBig.add(worker);
@@ -29,7 +42,10 @@ public class ShipBig extends Ship implements Comparable<ShipBig>{
         }
     }
 
-    //@author Matthias
+    /**
+     *
+     * @return
+     */
     public ArrayList<Worker> departureAll() {
         ArrayList<Worker> temp = new ArrayList<>(crewBig);
         crewBig.clear();
@@ -52,8 +68,15 @@ public class ShipBig extends Ship implements Comparable<ShipBig>{
         return result;
     }
 
-    //@author Nino, Jonas
-    // Sortierung für getInformationOilrig()
+    /**
+     * Vergleicht die IDs des als Parameter mitgegebenen großen Schiffes und des aufrufenden großen Schiffes miteinander.
+     *
+     * @param o großes Schiff, dessen ID mit der des aufrufenden großen Schiffes verglichen wird
+     * @see ShipSmall#compareTo(ShipSmall)
+     * @return 1, wenn die ID des aufrufenden großen Schiffes größer als die ID des mitgegebenen großen Schiffes ist;
+     *        -1, wenn die ID des aufrufenden großen Schiffes kleiner als die ID des mitgegebenen großen Schiffes ist;
+     *         0, wenn die ID des aufrufenden großen Schiffes gleich der ID des mitgegebenen großen Schiffes ist
+     */
     @Override
     public int compareTo(ShipBig o) {
         return Integer.compare(this.getId(), o.getId());

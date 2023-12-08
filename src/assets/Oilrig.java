@@ -23,8 +23,9 @@ public class Oilrig{
     private boolean evacuated = false;
 
     /**
-     * Kopierkonstruktor, der eine Kopie einer Ölplattform erstellt.     *
-     * @param or Die zu kopierende Ölplattform
+     * Kopierkonstruktor, der eine Kopie einer Ölplattform erstellt.
+     *
+     * @param or zu kopierendes Ölplattform-Objekt
      */
     public Oilrig(Oilrig or){
         this.id = or.id;
@@ -86,18 +87,18 @@ public class Oilrig{
     // -- Get-Methoden --
 
     /**
-     * Getter-Methode für die ID einer Ölplattform
+     * Getter-Methode für die ID der Ölplattform.
      *
-     * @return gibt die ID der Ölplattform zurück
+     * @return Integer ID der Ölplattform
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Getter-Methode für die Anzahl der an der Ölplattform stationierten Arbeiter
+     * Getter-Methode für die Anzahl der an der Ölplattform stationierten Arbeiter.
      *
-     * @return gibt Anzahl der an der Ölplattform stationierten Arbeiter zurück
+     * @return Integer Anzahl der an der Ölplattform stationierten Arbeiter
      */
     public int getWorkerAmount(){
         return this.workersOnOilrig.size();
@@ -105,10 +106,11 @@ public class Oilrig{
 
     /**
      * Gibt ein kleines Schiff-Objekt anhand der ID zurück.
+     *
      * @see  Oilrig#getShipById(int)
      * @see Oilrig#getBigShipById(int)
-     * @param id ID des Schiffes, dass zurückgegeben wird
-     * @return Schiffobjekt der entsprechenden ID
+     * @param id Integer ID des Schiffes, dass zurückgegeben wird
+     * @return kleines Schiff-Objekt der entsprechenden ID
      */
     public ShipSmall getSmallShipById(int id){
         for (ShipSmall ship : smallShipsOnOilrig){
@@ -121,8 +123,8 @@ public class Oilrig{
      * Gibt ein großes Schiff-Objekt anhand der ID zurück.
      * @see  Oilrig#getShipById(int)
      * @see Oilrig#getSmallShipById(int)
-     * @param id ID des Schiffes, dass zurückgegeben wird
-     * @return Schiffobjekt der entsprechenden ID
+     * @param id Integer ID des Schiffes, dass zurückgegeben wird
+     * @return großes Schiff-Objekt der entsprechenden ID
      */
     public ShipBig getBigShipById(int id){
         for (ShipBig ship : bigShipsOnOilrig) {
@@ -132,11 +134,11 @@ public class Oilrig{
     }
 
     /**
-     * Gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id)
+     * Gibt ein Schiff-Objekt anhand der ID zurück. Vereint getSmallShipById(int id) und getBigShipById(int id).
      * @see  Oilrig#getBigShipById(int)
      * @see Oilrig#getSmallShipById(int)
      * @param id ID des Schiffes, dass zurückgegeben wird
-     * @return Schiffobjekt der entsprechenden ID
+     * @return Schiff-Objekt der entsprechenden ID
      */
     protected Ship getShipById(int id){
         for (Ship ship : bigShipsOnOilrig) {
@@ -191,11 +193,12 @@ public class Oilrig{
     // -- Hilfsmethoden zum Bewegen eines Schiffs --
 
     /**
-     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein kleines, angedocktes Schiff
+     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein kleines, angedocktes Schiff.
      *
      * @param amount Anzahl der zu transferierenden Arbeiter
      * @param ship kleines Schiff, auf dass die Arbeiter transferiert werden
      * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
+     * @see ShipSmall#receiveWorker(Worker)
      */
     public void transferWorkerOilrigToShip(int amount, ShipSmall ship) {
         for (int i = 1; i <= amount; i++){
@@ -206,11 +209,12 @@ public class Oilrig{
     }
 
     /**
-     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein großes, angedocktes Schiff
+     * Transferiert eine Menge an Arbeitern einer Ölplattform auf ein großes, angedocktes Schiff.
      *
      * @param amount Anzahl der zu transferierenden Arbeiter
      * @param ship großes Schiff, auf dass die Arbeiter transferiert werden
      * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
+     * @see ShipBig#receiveWorker(Worker)
      */
     public void transferWorkerOilrigToShip(int amount, ShipBig ship) {
         for (int i = 1; i <= amount; i++){
@@ -221,10 +225,11 @@ public class Oilrig{
     }
 
     /**
-     * Transferiert alle Arbeiter auf einem kleinen Schiff auf eine Ölplattform
+     * Transferiert alle Arbeiter auf einem kleinen Schiff auf eine Ölplattform.
      *
      * @param ship kleines Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
      * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
+     * @see ShipSmall#departureAll()
      */
     public void transferAllWorkerShipToOilrig(ShipSmall ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
@@ -232,10 +237,11 @@ public class Oilrig{
     }
 
     /**
-     * Transferiert alle Arbeiter auf einem großen Schiff auf eine Ölplattform
+     * Transferiert alle Arbeiter auf einem großen Schiff auf eine Ölplattform.
      *
      * @param ship großes Schiff, von dem alle Arbeiter auf eine Ölplattform transferiert werden
      * @see Oilrig#transferWorkerOilrigToShip(int, ShipSmall)
+     * @see ShipBig#departureAll()
      */
     public void transferAllWorkerShipToOilrig(ShipBig ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
@@ -304,7 +310,7 @@ public class Oilrig{
      * Schreibt die Überblick-Informationen einer Ölplattform in einen String und gibt diesen zurück. Über den Aufruf
      * in einer For-Each-Schleife in handleInput(ArrayList) wird der Überblick für alle Plattformen ausgegeben. Der
      * String ist für das Userinterface passend formatiert. Überblick-Informationen sind die Menge an angedockten
-     * Schiffen an der Ölplattform (auch mit Unterscheidung der Schiffsgröße) und Anzahl der stationierten Arbeiter
+     * Schiffen an der Ölplattform (auch mit Unterscheidung der Schiffsgröße) und Anzahl der stationierten Arbeiter.
      *
      * @author Louis Schadewaldt
      * @see Methods#handleInput(ArrayList)
@@ -327,9 +333,12 @@ public class Oilrig{
     /**
      * Schreibt die genauen Informationen einer spezifischen Ölplattform in einen String und gibt diesen zurück. Die
      * spezifische Ölplattform wird über deren ID in der Methode handleInput(ArrayList) bestimmt. Der String ist für
-     * das Userinterface passend formatiert. Genaue Informationen sind die IDs der an der Ölplattform angedockten
-     * Schiffe mit Unterscheidung der Schiffsgröße und Anzahl der stationierten Arbeiter
+     * das Userinterface passend formatiert. Die zurückgegebenen Genaue Informationen sind die IDs der an der
+     * Ölplattform angedockten Schiffe (nach Größe aufsteigend sortiert) mit Unterscheidung der Schiffsgröße und Anzahl
+     * der stationierten Arbeiter.
      *
+     * @see ShipBig#compareTo(ShipBig)
+     * @see ShipSmall#compareTo(ShipSmall)
      * @author Louis Schadewaldt
      * @see Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
@@ -602,6 +611,7 @@ public class Oilrig{
                 }
             }
 
+            // sucht, wo das Schiff ursprünglich angedockt ist
             String shipOriginID = String.valueOf(Ship.getShipOriginID(epItem.shipId));
 
             result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t→→→    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n");
