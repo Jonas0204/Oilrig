@@ -42,8 +42,9 @@ public abstract class Ship implements Comparable<Ship>{
     }
 
     /**
+     * Entlädt alle Arbeiter vom Schiff und gibt eine Liste der entlassenen Arbeiter zurück.
      *
-     * @return
+     * @return Eine Liste aller entlassenen Arbeiter
      */
     public ArrayList<Worker> departureAll() {
         ArrayList<Worker> temp = new ArrayList<>(crew);
@@ -51,6 +52,11 @@ public abstract class Ship implements Comparable<Ship>{
         return temp;
     }
 
+    /**
+     * Gibt Informationen über das Schiff in einem übersichtlichen Format zurück.
+     *
+     * @return Eine Zeichenfolge mit Details zur Kapazität des Schiffs
+     */
     public String getShipInformation() {
         int freeCapacity = maxCapacity - crew.size();
         String result = "";
@@ -66,7 +72,7 @@ public abstract class Ship implements Comparable<Ship>{
     }
 
     /**
-     * Ermittelt die ID der Ölplattform, an der das Schiff mit der angegebenen ID ursprünglich angedockt ist.
+     * Ermittelt die ID der Ölplattform, an der das Schiff mit der angegebenen ID angedockt ist.
      *
      * @param id Die ID des zu suchenden Schiffs
      * @return Die ID der Ölplattform, an der das Schiff angedockt ist. Gibt -1 zurück, wenn das Schiff nicht gefunden wurde.

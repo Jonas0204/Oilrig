@@ -6,7 +6,11 @@ import static programm.Methods.printStartupHeader;
 import static programm.Methods.handleInput;
 
 /**
- * Main Klasse ist die Anfangsklasse
+ * Die Main-Klasse ist der Einstiegspunkt des Programms und initialisiert die Ölplattformen gemäß den vorgegebenen Parametern.
+ * Sie ruft die Methode printStartupHeader() auf, um den Start des Programms anzuzeigen, und die Methode handleInput(), um mit dem Benutzer zu interagieren.
+ *
+ * @see Oilrig
+ * @see Manager
  */
 public class Main {
 
@@ -27,8 +31,11 @@ public class Main {
         oilrigs.add(platform3);
         oilrigs.add(platform4);
 
-        printStartupHeader();
         handleInput(oilrigs);
+    }
+
+    static {
+        printStartupHeader();
     }
 }
 

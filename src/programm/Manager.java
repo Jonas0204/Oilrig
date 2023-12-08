@@ -189,22 +189,20 @@ public abstract class Methods {
     }
 
     /**
-     * Verschiebt Arbeiter von einer Ölplattform auf ein Schiff und von dort zu einer anderen Ölplattform,
-     * unter Berücksichtigung verschiedener Bedingungen und Schiffstypen.
+     * Diese Methode ist für den Transfer von Arbeitern zwischen Ölplattformen und Schiffen zuständig.
+     * Sie ermöglicht das Bewegen von Arbeitern von einer Ölplattform auf ein bestimmtes Schiff
+     * und dann von diesem Schiff zu einer anderen Ölplattform. Diese Aktionen werden unter Berücksichtigung
+     * der vorgegebenen Bedingungen und Schiffstypen durchgeführt.
+     *
      *
      * @param shipIdParam Die ID des Schiffs, das die Arbeiter transportiert
      * @param amountparam Die Anzahl der Arbeiter, die verschoben werden sollen
      * @param senderIdParam Die ID der Ölplattform, von der die Arbeiter verschoben werden
      * @param receiverIdParam Die ID der Ölplattform, auf die die Arbeiter verschoben werden
      * @param mayday Ein Indikator, ob es sich um eine Evakuierung handelt oder nicht
-     * @see Oilrig#transferWorkerOilrigToShip(int, ShipBig)
      * @see Oilrig#checkOilrigCanReceiveBigShip()
      * @see Oilrig#checkOilrigCanReceiveSmallShip()
      * @see Oilrig#checkTotalShipCountBiggerOne()
-     * @see Oilrig#dockShip(ShipBig)
-     * @see Oilrig#dockShip(ShipSmall)
-     * @see Oilrig#undockShip(ShipBig)
-     * @see Oilrig#undockShip(ShipSmall)
      * @autor Jonas Hülse
      */
     public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
@@ -416,7 +414,7 @@ public abstract class Methods {
 
     /**
      * Erhöht den Zähler für Schiffe um eins.
-     * Das ist Wichtig, damit die Schiffe eine Indivieduelle ID erhalten
+     * Das ist wichtig, damit die Schiffe eine Indivieduelle ID erhalten
      * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterShips(){
@@ -425,7 +423,7 @@ public abstract class Methods {
 
     /**
      * Erhöht den Zähler für Arbeiter um eins.
-     * Das ist Wichtig, damit die Arbeiter eine Indivieduelle ID erhalten
+     * Das ist wichtig, damit die Arbeiter eine Indivieduelle ID erhalten
      * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterWorker(){

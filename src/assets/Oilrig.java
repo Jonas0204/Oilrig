@@ -98,7 +98,7 @@ public class Oilrig{
     /**
      * Getter-Methode für die Anzahl der an der Ölplattform stationierten Arbeiter.
      *
-     * @return Integer Anzahl der an der Ölplattform stationierten Arbeiter
+     * @return Integer, Anzahl der an der Ölplattform stationierten Arbeiter
      */
     public int getWorkerAmount(){
         return this.workersOnOilrig.size();
@@ -172,6 +172,12 @@ public class Oilrig{
 
     // -- Hilfsmethoden zum Bewegen eines Schiffs --
 
+    /**
+     * Transferiert eine angegebene Anzahl von Arbeitern von der Ölplattform zu einem Schiff.
+     *
+     * @param amount Die Anzahl der zu transferierenden Arbeiter
+     * @param ship   Schiff, zu dem die Arbeiter transferiert werden sollen
+     */
     public void transferWorkerOilrigToShip(int amount, Ship ship) {
         for (int i = 1; i <= amount; i++){
             Worker tempWorker = workersOnOilrig.get(0); // i oder 0, wenn das Objekt gelöscht wird ändert sich die Liste
@@ -180,6 +186,11 @@ public class Oilrig{
         }
     }
 
+    /**
+     * Verschiebt alle Arbeiter von einem Schiff zur Ölplattform.
+     *
+     * @param ship Schiff, von dem die Arbeiter zur Ölplattform transferiert werden sollen
+     */
     public void transferAllWorkerShipToOilrig(Ship ship){
         ArrayList<Worker> wTransfer = ship.departureAll();
         workersOnOilrig.addAll(wTransfer);
@@ -188,6 +199,7 @@ public class Oilrig{
     public void undockShip(Ship ship){
         int id = ship.getId();
 
+        // Je nach Schiffstyp wir die entsprechende Liste verwendet
         if(ship instanceof ShipBig){
             for (int i = 0; i < bigShipsOnOilrig.size(); i++) {
                 if (bigShipsOnOilrig.get(i).getId() == id) {
@@ -218,8 +230,10 @@ public class Oilrig{
         if(ship instanceof ShipBig){
             bigShipsOnOilrig.add((ShipBig) ship);
         }else if (ship instanceof ShipSmall){
+            // Falls es sich um ein kleines Schiff handelt, wird es der Liste der kleinen Schiffe auf dieser Ölplattform hinzugefügt
             smallShipsOnOilrig.add((ShipSmall) ship);
         }else{
+            // Wenn der Schiffstyp nicht erkannt wird, wird eine Fehlermeldung ausgegeben
             System.out.println("an error occurred: ship not found");
         }
 
@@ -253,13 +267,12 @@ public class Oilrig{
     /**
      * Schreibt die genauen Informationen einer spezifischen Ölplattform in einen String und gibt diesen zurück. Die
      * spezifische Ölplattform wird über deren ID in der Methode handleInput(ArrayList) bestimmt. Der String ist für
-     * das Userinterface passend formatiert. Die zurückgegebenen Genaue Informationen sind die IDs der an der
+     * das Userinterface passend formatiert. Die zurückgegebenen genauen Informationen sind die IDs der an der
      * Ölplattform angedockten Schiffe (nach Größe aufsteigend sortiert) mit Unterscheidung der Schiffsgröße und Anzahl
      * der stationierten Arbeiter.
      *
      * @see Ship#compareTo(Ship)
      * @author Louis Schadewaldt
-     * @see /*Methods#handleInput(ArrayList)
      * @return String mit allen Überblick-Informationen einer Plattform
      */
     public String getInformationOilrig() {
@@ -374,11 +387,16 @@ public class Oilrig{
 
     /**
      * Berechnet einen Evakuierungsplan für Schiffe und Arbeiter auf dieser Ölplattform basierend auf dem benötigten Platz.
-     * Der Plan wird unter Berücksichtigung der verfügbaren Schiffe und der Arbeitskapazität der Zielplattformen erstellt.
+     * Der Plan wird unter Berücksichtigung der verfügbaren Schiffe und der Arbeiter der Zielplattformen erstellt.
+     *
+     * Die Methode berücksichtigt die vorhandenen Schiffe und die benötigte Kapazität für die Evakuierung. Sie erstellt einen Plan,
+     * der die Arbeiter gleichmäßig auf die Schiffe verteilt und sicherstellt, dass die Arbeiterkapazität jeder Zielplattform
+     * nicht überschritten wird. Der Plan wird in Form von Evakuierungsplan-Elementen dargestellt, die die benötigten Informationen für
+     * den Transfer von Arbeitern und Schiffen enthalten.
      *
      * @param spaceNeeded Die benötigte Kapazität für die Evakuierung
-     * @param epSmallShips Eine Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell voher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden ist diese Liste leer.
-     * @param epBigShips Eine Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell voher angefordert wurden. Wenn keine großen Schiffe angefordert wurden ist diese Liste leer.
+     * @param epSmallShips Eine Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell vorher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden, ist diese Liste leer.
+     * @param epBigShips Eine Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell vorher angefordert wurden. Wenn keine großen Schiffe angefordert wurden, ist diese Liste leer.
      * @param ep Eine Liste von Evakuierungsplan-Elementen, also der letztendliche Evakuierungsplan
      * @see Methods#getOtherOilrigs(int)
      * @see Oilrig#getFreeCapacity()
@@ -506,7 +524,7 @@ public class Oilrig{
 
     /**
      * Führt den Evakuierungsplan aus, der auf der berechneten Evakuierungsplanliste basiert.
-     * Geht jeden Eintrag in der Liste durch und bewegt Arbeiter und Schiffe entsprechend des Evakuierungsplans.
+     * Geht jeden Eintrag in der Liste durch und bewegt Arbeiter und Schiffe entsprechend dem Evakuierungsplan.
      *
      * @param ep Eine Liste von Evakuierungsplan-Elementen, die die Aktionen für die Evakuierung darstellen
      * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
