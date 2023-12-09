@@ -40,8 +40,3 @@ public class Main {
     }
 }
 
-//TO DO:
-// auskommentieren
-// unused Stuff löschen!
-// welche Nachricht wann prüfen!
-// Testfälle

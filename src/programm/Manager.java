@@ -236,6 +236,12 @@ public abstract class Manager {
             return;
         }
 
+        // prüft, onb Anzahl der Worker negativ ist
+        if(amount < 0){
+            System.out.println("amount of workers must be equal or bigger than 0");
+            return;
+        }
+
         //  Überprüft, ob die IDs für Ölplattformen gültig sind, indem die Methode existsID aufgerufen wird.
         //  Falls nicht, wird eine Fehlermeldung ausgegeben und die Methode verlassen.
         boolean idExists = Manager.existsID(senderID, receiverID);
@@ -402,9 +408,9 @@ public abstract class Manager {
     private static void printHelp() {
         System.out.println("-------------------------------------------------------- HELP --------------------------------------------------------");
         System.out.println("help                                                                        = (This window)");
-        System.out.println("overview                                                                    = open overview");
-        System.out.println("oilrig [oilrig ID]                                                          = open oilrig");
-        System.out.println("move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]    = transfer Ship with amount of workers");
+        System.out.println("overview                                                                    = show overview of all oilrigs ");
+        System.out.println("oilrig [oilrig ID]                                                          = show specific information about the oilrig");
+        System.out.println("move [ship ID] [worker amount] [sending oilrig ID] [receiving oilrig ID]    = transfer ship with an amount of workers");
         System.out.println("evacuate [oilrig ID]                                                        = evacuate oilrig");
         System.out.println("exit                                                                        = exit program");
         System.out.println("\n\n");
