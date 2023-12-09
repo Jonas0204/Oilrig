@@ -305,8 +305,9 @@ public abstract class Manager {
         if (!mayday) {
             // Bedingung I) "Auf jeder Plattform müssen sich immer mindestens 10 % initialen Besatzung an Mitarbeitenden befinden, außer die Plattform wurde evakuiert."
             int minWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
-            if (minWorkers >  senderOr.getWorkerAmount()){
-                System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + Math.ceil(0.1 * senderOr.initialCrewOilrig) + "workers");
+            if (minWorkers >  (senderOr.getWorkerAmount() - amount)){
+                int neededWorkers = (int) Math.ceil(0.1 * senderOr.initialCrewOilrig);
+                System.out.println("an error occurred: Invalid amount of workers. Oilrig needs at least " + neededWorkers + " workers");
                 return;
             }
             // Bedingung IV) "Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung."
