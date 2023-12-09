@@ -132,7 +132,7 @@ public class Oilrig{
      */
     public boolean checkTotalShipCountBiggerOne(){
         int i = bigShipsOnOilrig.size() + smallShipsOnOilrig.size();
-        return i >= 1;
+        return i - 1 >= 1;
     }
 
     /**
@@ -578,7 +578,7 @@ public class Oilrig{
             // sucht, wo das Schiff ursprünglich angedockt ist
             String shipOriginID = String.valueOf(Ship.getShipOriginID(epItem.shipId));
 
-            result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t→→→    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n");
+            result.append("Ship: [").append(epItem.shipId).append("] from Oilrig [").append(shipOriginID).append("]").append("\tCrew: [").append(epItem.usedCrew).append("/").append(maxCapacity).append("]").append("\t\t>>>    \t\t").append("destinated Oilrig: [").append(epItem.destinationOr).append("]").append("\n");
         }
         return result.toString();
     }

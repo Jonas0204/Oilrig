@@ -296,7 +296,7 @@ public abstract class Manager {
         }
         if (ShipType.equals("bigship")) {
             if (!Objects.requireNonNull(receiverOr).checkOilrigCanReceiveBigShip()) {
-                System.out.println("an error occurred: receiving oilrig cannot hold that amount of small ships at a time");
+                System.out.println("an error occurred: receiving oilrig cannot hold that amount of big ships at a time");
                 return;
             }
         }
@@ -312,7 +312,7 @@ public abstract class Manager {
             }
             // Bedingung IV) "Keine Plattform darf weniger als ein Versorgungschiff haben, außer im Falle einer Evakuierung."
             if (!senderOr.checkTotalShipCountBiggerOne()) {
-                System.out.println("an error occurred: more ships required");
+                System.out.println("an error occurred: it is required that at least 1 ship remains on oirlig " + senderOr.getId());
                 return;
             }
         }
