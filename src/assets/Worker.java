@@ -8,6 +8,8 @@ package assets;
  * @see ShipSmall
  */
 public class Worker {
+
+    // ID der Arbeiter wird in dieser Fassung noch nicht genutzt
     private final int id;
 
     /**

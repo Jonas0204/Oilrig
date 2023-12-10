@@ -1,8 +1,5 @@
 package assets;
 
-
-import java.util.ArrayList;
-
 import static programm.Manager.getCounterShips;
 
 /**
@@ -22,8 +19,8 @@ public class ShipBig extends Ship{
     }
 
     /**
-     * Alternativer Konstruktor für ein großes Schiff der "leere Schiffe" erstellt.
-     * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList) 
+     * Alternativer Konstruktor für ein großes Schiff, der "leere Schiffe" erstellt.
+     *
      * @param id Die eindeutige ID des großen Schiffs
      *            (Negative IDs dienen hier als theoretische Platzhalter und sollten nicht in der Praxis verwendet werden.)
      */
