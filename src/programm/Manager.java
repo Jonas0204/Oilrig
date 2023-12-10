@@ -29,7 +29,7 @@ public abstract class Manager {
      * @see Manager#evacuation(int)
      * @see Oilrig#getInformationOverview()
      * @see Oilrig#getInformationOilrig()
-     * @autor Louis Schadewaldt, Jonas Hülse
+     * @author Louis Schadewaldt, Jonas Hülse
      */
     protected static void handleInput(ArrayList<Oilrig> oilrigsParam) {
         oilrigs = oilrigsParam;
@@ -216,7 +216,7 @@ public abstract class Manager {
      * @see Oilrig#checkOilrigCanReceiveBigShip()
      * @see Oilrig#checkOilrigCanReceiveSmallShip()
      * @see Oilrig#checkTotalShipCountBiggerOne()
-     * @autor Jonas Hülse
+     * @author Jonas Hülse
      */
     public static void moveWorkers(String shipIdParam, String amountparam, String senderIdParam, String receiverIdParam, boolean mayday) {
         int senderID;

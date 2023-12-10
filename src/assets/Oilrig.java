@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * Klasse Oilrig
  *
- * @autor Matthias Bergs, Jonas Hülse, Louis Schadewaldt
+ * @author Matthias Bergs, Jonas Hülse, Louis Schadewaldt
  */
 public class Oilrig{
 
