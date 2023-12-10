@@ -385,13 +385,13 @@ public abstract class Manager {
         try {
             //Header
             System.out.print("\n\n");
-            System.out.println(" ____  ____  _      ____   ____   ____ ");
-            System.out.println("/    \\l    j| T    |    \\ l    j /    T");
-            System.out.println("|    | |  T | |    |  D  ) |  T Y   __j");
-            System.out.println("|  O | |  | | |    |    |  |  | T  |  _");
-            System.out.println("|    | |  | | l___ |    \\  |  | |  l_j|");
-            System.out.println("|    |j    l|     T|  .  Y j  l |     |");
-            System.out.println("\\____/|____jl_____jl__j\\_j|____jl___,_/");
+            System.out.println("\t  ___  ____  _      ____   ____   ____                 ___ ___   ____  ____    ____   ____    ___  ____  ");
+            System.out.println("\t /   \\|    || |    |    \\ |    | /    |               |   |   | /    ||    \\  /    | /    |  /  _]|    \\ ");
+            System.out.println("\t|     ||  | | |    |  D  ) |  | |   __|     _____     | _   _ ||  o  ||  _  ||  o  ||   __| /  [_ |  D  )");
+            System.out.println("\t|  O  ||  | | |    |    /  |  | |  |  _    |     |    |  \\_/  ||     ||  |  ||     ||  |  _|    _]|    / ");
+            System.out.println("\t|     ||  | |  ___ |    \\  |  | |  |_ |    |_____|    |   |   ||  _  ||  |  ||  _  ||  |_ ||   [_ |    \\ ");
+            System.out.println("\t|     ||  | |     ||  .  \\ |  | |     |               |   |   ||  |  ||  |  ||  |  ||     ||     ||  .  \\");
+            System.out.println("\t \\___/|____||_____||__|\\_||____||___,_|               |___|___||__|__||__|__||__|__||___,_||_____||__|\\_|");
 
             //Ladebalken
             System.out.print("\n\nLoading   ");
@@ -401,6 +401,8 @@ public abstract class Manager {
             System.out.print("..........");
             Thread.sleep(1000);
             System.out.print(".................");
+            Thread.sleep(300);
+            System.out.print("............................................");
             Thread.sleep(600);
             System.out.print("   finshed");
             Thread.sleep(800);
