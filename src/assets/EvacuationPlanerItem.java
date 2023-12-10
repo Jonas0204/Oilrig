@@ -22,7 +22,6 @@ public class EvacuationPlanerItem {
      *
      * @param shipId Integer, der die ID des Schiffs speichert
      * @param type String, der beschreibt, ob es sich um ein großes oder kleines Schiff handelt
-     * @author Jonas Hülse
      */
     public EvacuationPlanerItem(int shipId, String type){
         this.shipId = shipId;

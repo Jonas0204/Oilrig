@@ -343,7 +343,6 @@ public abstract class Manager {
      *
      * @param senderID Die ID der Sender-Ölplattform, die nicht in dieser Liste sein soll
      * @return Eine Liste von Ölplattformen, die nicht die angegebene Sender-ID hat
-     * @author Jonas Hülse
      */
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
