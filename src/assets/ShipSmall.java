@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import static programm.Manager.getCounterShips;
 
 /**
- * Die Klasse ShipSmall repräsentiert ein kleines Schiff im System.
- * Kleine Schiffe haben eine maximale Kapazität von 50.
+ * Die Klasse ShipSmall definiert ein kleines Schiff-Objekt.
+ * Ein kleines Schiff hat eine kleinere Kapazität als ein großes Schiff.
+ * Diese Klasse erbt von der abstrakten Klasse Ship.
+ *
+ * @see Ship
+ * @see ShipBig
  */
 public class ShipSmall extends Ship{
 
@@ -21,7 +25,7 @@ public class ShipSmall extends Ship{
     /**
      * Alternativer Konstruktor für ein kleines Schiff, der "leere Schiffe" erstellt.
      *
-     * @param id Die eindeutige ID des großen Schiffs
+     * @param id eindeutige ID des großen Schiffes
      *            (Negative IDs dienen hier als theoretische Platzhalter und sollten nicht in der Praxis verwendet werden.)
      */
     // Die negative ID stellt klar, dass das nur ein theoretischer Platzhalter ist

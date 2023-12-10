@@ -15,7 +15,7 @@ public class Worker {
     /**
      * Konstruktor für die Erstellung eines neuen Arbeiters mit einer eindeutigen ID.
      *
-     * @param id Die eindeutige ID des Arbeiters
+     * @param id eindeutige ID des Arbeiters
      */
     protected Worker(int id) {
         this.id = id;

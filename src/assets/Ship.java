@@ -6,7 +6,6 @@ import java.util.ArrayList;
 /**
  * Die abstrakte Klasse Ship dient als Basisklasse für ShipBig und ShipSmall.
  * Sie enthält grundlegende Methoden und Eigenschaften, die von Schiffen gemeinsam genutzt werden.
- * Was leider nicht viele sind.
  *
  * @author Jonas Hülse, Louis Schadewaldt
  */
@@ -54,7 +53,7 @@ public abstract class Ship implements Comparable<Ship>{
     /**
      * Gibt Informationen über das Schiff in einem übersichtlichen Format zurück.
      *
-     * @return Eine Zeichenfolge mit Details zur Kapazität des Schiffs
+     * @return Zeichenfolge mit Details zur Kapazität des Schiffes
      */
     public String getShipInformation() {
         int freeCapacity = maxCapacity - crew.size();
@@ -73,8 +72,8 @@ public abstract class Ship implements Comparable<Ship>{
     /**
      * Ermittelt die ID der Ölplattform, an der das Schiff mit der angegebenen ID angedockt ist.
      *
-     * @param id Die ID des zu suchenden Schiffs
-     * @return Die ID der Ölplattform, an der das Schiff angedockt ist. Gibt -1 zurück, wenn das Schiff nicht gefunden wurde.
+     * @param id ID des zu suchenden Schiffes
+     * @return ID der Ölplattform, an der das Schiff angedockt ist. Gibt -1 zurück, wenn das Schiff nicht gefunden wurde.
      */
     public static int getShipOriginID(int id){
         for (Oilrig temp : Manager.getAllOilrigs()) {

@@ -3,10 +3,12 @@ package assets;
 import static programm.Manager.getCounterShips;
 
 /**
- * Die Klasse ShipBig repräsentiert ein großes Schiff.
- * Ein großes Schiff hat eine höhere Kapazität im Vergleich zu kleinen Schiffen.
+ * Die Klasse ShipBig definiert ein großes Schiff-Objekt.
+ * Ein großes Schiff hat eine höhere Kapazität als ein kleines Schiff.
  * Diese Klasse erbt von der abstrakten Klasse Ship.
+ *
  * @see Ship
+ * @see ShipSmall
  */
 public class ShipBig extends Ship{
 
@@ -21,7 +23,7 @@ public class ShipBig extends Ship{
     /**
      * Alternativer Konstruktor für ein großes Schiff, der "leere Schiffe" erstellt.
      *
-     * @param id Die eindeutige ID des großen Schiffs
+     * @param id eindeutige ID des großen Schiffes
      *            (Negative IDs dienen hier als theoretische Platzhalter und sollten nicht in der Praxis verwendet werden.)
      */
     // Die negative ID stellt klar, dass das nur ein theoretischer Platzhalter ist

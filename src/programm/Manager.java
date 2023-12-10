@@ -195,10 +195,18 @@ public abstract class Manager {
         return null;
     }
 
-    //@author Jonas
+    /**
+     * Löst den Evakuierungsvorgang einer Ölplattform aus.
+     *
+     * @param evacuationId ID der zu evakuierenden Ölplattform
+     */
     private static void evacuation(int evacuationId){
-        Oilrig eOr = new Oilrig(Objects.requireNonNull(getRigByID(evacuationId)));
-        eOr.checkEvacuationSpace();
+        try{
+            Oilrig eOr = new Oilrig(Objects.requireNonNull(getRigByID(evacuationId)));
+            eOr.checkEvacuationSpace();
+        }catch(NullPointerException npe){
+            System.out.println("an error occurred: " + npe.getMessage());
+        }
     }
 
     /**
@@ -208,11 +216,11 @@ public abstract class Manager {
      * der vorgegebenen Bedingungen und Schiffstypen durchgeführt.
      *
      *
-     * @param shipIdParam Die ID des Schiffs, das die Arbeiter transportiert
-     * @param amountparam Die Anzahl der Arbeiter, die verschoben werden sollen
-     * @param senderIdParam Die ID der Ölplattform, von der die Arbeiter verschoben werden
-     * @param receiverIdParam Die ID der Ölplattform, auf die die Arbeiter verschoben werden
-     * @param mayday Ein Indikator, ob es sich um eine Evakuierung handelt oder nicht
+     * @param shipIdParam ID des Schiffes, das die Arbeiter transportiert
+     * @param amountparam Anzahl der Arbeiter, die verschoben werden sollen
+     * @param senderIdParam ID der Ölplattform, von der die Arbeiter verschoben werden
+     * @param receiverIdParam ID der Ölplattform, auf die die Arbeiter verschoben werden
+     * @param mayday Indikator, ob es sich um eine Evakuierung handelt oder nicht
      * @see Oilrig#checkOilrigCanReceiveBigShip()
      * @see Oilrig#checkOilrigCanReceiveSmallShip()
      * @see Oilrig#checkTotalShipCountBiggerOne()
@@ -341,8 +349,8 @@ public abstract class Manager {
     /**
      * Gibt eine Liste von anderen Ölplattformen zurück, außer der Ölplattform mit der angegebenen ID.
      *
-     * @param senderID Die ID der Sender-Ölplattform, die nicht in dieser Liste sein soll
-     * @return Eine Liste von Ölplattformen, die nicht die angegebene Sender-ID hat
+     * @param senderID ID der Sender-Ölplattform, die nicht in dieser Liste sein soll
+     * @return Liste von Ölplattformen, die nicht die angegebene Sender-ID hat
      */
     public static ArrayList<Oilrig> getOtherOilrigs(int senderID){
         ArrayList<Oilrig> returnOrList = new ArrayList<>();
@@ -363,7 +371,8 @@ public abstract class Manager {
 
     /**
      * Gibt eine Liste aller vorhandenen Ölplattformen zurück.
-     * @return Eine Liste, die alle Ölplattformen enthält
+     *
+     * @return Liste, die alle Ölplattformen enthält
      */
     public static ArrayList<Oilrig> getAllOilrigs(){
         return oilrigs;
@@ -420,7 +429,8 @@ public abstract class Manager {
 
     /**
      * Gibt den aktuellen Wert des Zählers für Schiffe zurück.
-     * @return Der aktuelle Wert des Zählers für Schiffe
+     *
+     * @return aktuelle Wert des Zählers für Schiffe
      */
     public static int getCounterShips() {
         return counterShips;
@@ -428,7 +438,8 @@ public abstract class Manager {
 
     /**
      * Gibt den aktuellen Wert des Zählers für Arbeiter zurück.
-     * @return Der aktuelle Wert des Zählers für Arbeiter
+     *
+     * @return aktuelle Wert des Zählers für Arbeiter
      */
     public static int getCounterWorker(){
         return counterWorker;
@@ -436,7 +447,8 @@ public abstract class Manager {
 
     /**
      * Erhöht den Zähler für Schiffe um eins.
-     * Das ist wichtig, damit die Schiffe eine Indivieduelle ID erhalten
+     * Dies ist wichtig, damit die Schiffe eine Indivieduelle ID erhalten.
+     *
      * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterShips(){
@@ -445,7 +457,8 @@ public abstract class Manager {
 
     /**
      * Erhöht den Zähler für Arbeiter um eins.
-     * Das ist wichtig, damit die Arbeiter eine Indivieduelle ID erhalten
+     * Dies ist wichtig, damit die Arbeiter eine Indivieduelle ID erhalten.
+     *
      * @see Oilrig#Oilrig(int id, int initialCrew, int initialBigShips, int initialSmallShips)
      */
     public static void addCounterWorker(){

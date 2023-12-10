@@ -7,8 +7,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 /**
- * Klasse Oilrig
+ * Die Klasse Oilrig definiert ein Ölplattform-Objekt. Außerdem umfasst die Klasse alle grundlegfenden Methoden einer 
+ * Ölplattform, die für die Verwaltung dieser notwendig sind und die Basis für das Evakuieren und Transportieren von 
+ * Schiffen und Arbeitern bilden.
  *
+ * @see Manager#moveWorkers(String, String, String, String, boolean)
+ * @see Manager#evacuation(int) 
  * @author Matthias Bergs, Jonas Hülse, Louis Schadewaldt
  */
 public class Oilrig{
@@ -160,13 +164,13 @@ public class Oilrig{
     }
 
 
-    // -- Hilfsmethoden zum Bewegen eines Schiffs --
+    // -- Hilfsmethoden zum Bewegen eines Schiffes --
 
     /**
      * Transferiert eine angegebene Anzahl von Arbeitern von der Ölplattform zu einem Schiff.
      *
-     * @param amount Die Anzahl der zu transferierenden Arbeiter
-     * @param ship   Schiff, zu dem die Arbeiter transferiert werden sollen
+     * @param amount Anzahl der zu transferierenden Arbeiter
+     * @param ship Schiff, zu dem die Arbeiter transferiert werden sollen
      */
     public void transferWorkerOilrigToShip(int amount, Ship ship) {
         for (int i = 1; i <= amount; i++){
@@ -224,7 +228,7 @@ public class Oilrig{
     /**
      * Dockt ein Schiff an diese Ölplattform an, indem es entsprechend seinem Typ der Plattform hinzugefügt wird.
      *
-     * @param ship Das Schiff, das angedockt werden soll
+     * @param ship Schiff, das an eine Ölplattform angedockt werden soll
      */
     public void dockShip(Ship ship){
         if(ship instanceof ShipBig){
@@ -393,10 +397,10 @@ public class Oilrig{
      * nicht überschritten wird. Der Plan wird in Form von Evakuierungsplan-Elementen dargestellt, die die benötigten Informationen für
      * den Transfer von Arbeitern und Schiffen enthalten.
      *
-     * @param spaceNeeded Die benötigte Kapazität für die Evakuierung
-     * @param epSmallShips Eine Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell vorher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden, ist diese Liste leer.
-     * @param epBigShips Eine Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell vorher angefordert wurden. Wenn keine großen Schiffe angefordert wurden, ist diese Liste leer.
-     * @param ep Eine Liste von Evakuierungsplan-Elementen, also der letztendliche Evakuierungsplan
+     * @param spaceNeeded für die Evakuierung benötigte Kapazität
+     * @param epSmallShips Liste von Evakuierungsplan-Elementen für kleine Schiffe, die eventuell vorher angefordert wurden. Wenn keine kleinen Schiffe angefordert wurden, ist diese Liste leer.
+     * @param epBigShips Liste von Evakuierungsplan-Elementen für große Schiffe, die eventuell vorher angefordert wurden. Wenn keine großen Schiffe angefordert wurden, ist diese Liste leer.
+     * @param ep Liste von Evakuierungsplan-Elementen, also der letztendliche Evakuierungsplan
      * @see Manager#getOtherOilrigs(int)
      * @see EvacuationPlanerItem
      * @see Oilrig#getFreeCapacity()
@@ -451,7 +455,7 @@ public class Oilrig{
                 if ((freeSpace - (2 * evenWorkerPerShip) >= 0 && epBigShip != null)) {
                     // Hinzufügen von leeren Arbeitern zur Zielplattform
                     otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
-                    // Hinzufügen eines leeren großen Schiffs zur Zielplattform
+                    // Hinzufügen eines leeren großen Schiffes zur Zielplattform
                     otherOr.bigShipsOnOilrig.add(new ShipBig(1));
                     // Aktualisierung der Zielplattform im Evakuierungsplan
                     epBigShip.destinationOr = otherOr.getId();
@@ -485,7 +489,7 @@ public class Oilrig{
                 if ((freeSpace - evenWorkerPerShip) >= 0 && epSmallShip != null) {
                     // Hinzufügen von leeren Arbeitern zur Zielplattform
                     otherOr.workersOnOilrig.addAll(addEmptyWorkers(localEvenWorkerPerShip));
-                    // Hinzufügen eines leeren kleinen Schiffs zur Zielplattform
+                    // Hinzufügen eines leeren kleinen Schiffes zur Zielplattform
                     otherOr.smallShipsOnOilrig.add(new ShipSmall(1));
                     // Aktualisierung der Zielplattform im Evakuierungsplan
                     epSmallShip.destinationOr = otherOr.getId();
@@ -526,7 +530,7 @@ public class Oilrig{
      * Führt den Evakuierungsplan aus, der auf der berechneten Evakuierungsplanliste basiert.
      * Geht jeden Eintrag in der Liste durch und bewegt Arbeiter und Schiffe entsprechend dem Evakuierungsplan.
      *
-     * @param ep Eine Liste von Evakuierungsplan-Elementen, die die Aktionen für die Evakuierung darstellen
+     * @param ep Liste von Evakuierungsplan-Elementen, die die Aktionen für die Evakuierung darstellen
      * @see Oilrig#calculatePlan(int, ArrayList, ArrayList, ArrayList)
      * @see Manager#moveWorkers(String, String, String, String, boolean)
      * @autor Jonas Hülse
@@ -547,7 +551,7 @@ public class Oilrig{
      * Gibt eine formatierte Übersicht des Evakuierungsplans, anhand des Parameters [ep], aus.
      * Geht die Liste von Evakuierungsplan-Elementen durch und generiert Informationen zu Schiffen, ihrer aktuellen Crew und ihren Ziel- und Ursprungsplattformen.
      *
-     * @param ep Eine Liste von Evakuierungsplan-Elementen, die die geplanten Evakuierungsschritte darstellen
+     * @param ep Liste von Evakuierungsplan-Elementen, die die geplanten Evakuierungsschritte darstellen
      * @return String, der eine Übersicht des Evakuierungsplans enthält
      * @author Jonas Hülse, Louis Schadewaldt
      */
@@ -587,7 +591,7 @@ public class Oilrig{
      * Erstellt und liefert eine Liste von leeren Arbeitern basierend auf der angegebenen Anzahl.
      * Jeder leere Arbeiter erhält eine eindeutige negative ID.
      *
-     * @param i Die Anzahl der leeren Arbeiter, die erstellt werden sollen
+     * @param i Anzahl der leeren Arbeiter, die erstellt werden sollen
      * @return Liste von leeren Arbeitern
      */
     private static ArrayList<Worker> addEmptyWorkers(int i){
@@ -614,8 +618,8 @@ public class Oilrig{
      * Sucht nach einem verfügbaren Schiff eines bestimmten Typs auf anderen Ölplattformen und erstellt
      * ein EvacuationPlanerItem für den Ruf nach einem solchen Schiff, um eine Evakuierung vorzubereiten.
      *
-     * @param otherOr Eine Liste der anderen Ölplattformen
-     * @param type Der Typ des gesuchten Schiffs ("bigship" oder "smallship")
+     * @param otherOr Liste der anderen Ölplattformen
+     * @param type Typ des gesuchten Schiffes ("bigship" oder "smallship")
      * @return EvacuationPlanerItem, das den Ruf nach einem passenden Schiff repräsentiert;
      *         null, wenn kein passendes Schiff gefunden wurde
      */
