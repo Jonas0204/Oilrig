@@ -330,16 +330,14 @@ public abstract class Manager {
             case "smallship", "bigship":
                 senderOr.transferWorkerOilrigToShip(amount, ship);
                 senderOr.undockShip(ship);
-                System.out.println("moving " + ship.getShipInformation());
+                System.out.println("moving ship from oilrig [" + senderOr.getId() + "] to oilrig [" + receiverOr.getId() + "]\n" + ship.getShipInformation());
                 // → Schiff beladen und abdocken von der Startplattform
 
                 // Andocken an die Zielplattform
                 receiverOr.dockShip(ship);
                 receiverOr.transferAllWorkerShipToOilrig(ship);
+                System.out.println("transfer complete...\n");
                 break;
-            // → Schiff beladen und abdocken von Startplattform
-
-                // Andocken an Zielplattform
             default:
                 System.out.println("an error occurred: ship does not exist");
                 break;
